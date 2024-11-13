@@ -1,11 +1,11 @@
 package com.badlogic.drop;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -13,7 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
@@ -24,7 +23,7 @@ import java.util.Map;
 public class StartScreen extends ScreenAdapter {
 
     private Main mainGame;
-    private Texture backgroundTexture;
+
     private SpriteBatch spriteBatch;
     private ScreenViewport viewport;
 
@@ -44,17 +43,20 @@ public class StartScreen extends ScreenAdapter {
 
     private Image parentQuestion;
 
+    private BitmapFont font;
+
 
     public StartScreen(Main game) {
 
         mainGame = game;
 
-        // get shared resources from main game
-        backgroundTexture = mainGame.getMainBackground();
         spriteBatch = mainGame.getSharedBatch();
         viewport = mainGame.getViewport();
 
         stage = new Stage(viewport, spriteBatch);
+
+        // load and set font color
+        font = mainGame.resourceManager.getTitleFont();
 
         loadTextures();
         loadActors();
@@ -63,6 +65,7 @@ public class StartScreen extends ScreenAdapter {
         initializeUI();
 
         setStage();
+
     }
 
     private void initializeUI() {
@@ -139,7 +142,6 @@ public class StartScreen extends ScreenAdapter {
         }
     }
 
-
     private float getButtonWidth() {
         return viewport.getWorldWidth() * 0.375f; // 25% of viewport width
     }
@@ -154,13 +156,15 @@ public class StartScreen extends ScreenAdapter {
 
     private void loadTextures() {
         textures = new HashMap<>();
-        textures.put("start", new Texture(Gdx.files.internal("start2.png")));
-        textures.put("load", new Texture(Gdx.files.internal("load2.png")));
-        textures.put("credits", new Texture(Gdx.files.internal("credits2.png")));
-        textures.put("parent", new Texture(Gdx.files.internal("parent2.png")));
-        textures.put("confirm", new Texture(Gdx.files.internal("areYoutheParent.png")));
-        textures.put("yes", new Texture(Gdx.files.internal("yesProceed.png")));
-        textures.put("no", new Texture(Gdx.files.internal("noTakemeBack.png")));
+
+        // all textures that are native to StartScreen.java page
+        textures.put("start", new Texture(Gdx.files.internal("startScreen/start-game-btn.png")));
+        textures.put("load", new Texture(Gdx.files.internal("startScreen/load-game-btn.png")));
+        textures.put("credits", new Texture(Gdx.files.internal("startScreen/credits-btn.png")));
+        textures.put("parent", new Texture(Gdx.files.internal("startScreen/parental-controls-btn.png")));
+        textures.put("confirm", new Texture(Gdx.files.internal("startScreen/parent-textbox.png")));
+        textures.put("yes", new Texture(Gdx.files.internal("startScreen/proceed-parent-btn.png")));
+        textures.put("no", new Texture(Gdx.files.internal("startScreen/back-parent-btn.png")));
     }
 
     private void loadActors() {
@@ -177,8 +181,7 @@ public class StartScreen extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("StartButton", "Start Game button clicked!");
-//                mainGame.setScreen(new NameInputScreen(mainGame, StartScreen.this));
-                mainGame.setScreen(new StartingGame(mainGame, StartScreen.this));
+                mainGame.setScreen(new StoryScreen(mainGame, StartScreen.this));
 
             }
         });
@@ -213,7 +216,9 @@ public class StartScreen extends ScreenAdapter {
 
         // Draw the background
         spriteBatch.begin();
-        spriteBatch.draw(backgroundTexture, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
+
+        mainGame.drawBackground(spriteBatch, mainGame.resourceManager.get("mainBackground"), font, "Wiktor Simulator");
+
         spriteBatch.end();
 
         // Draw the stage

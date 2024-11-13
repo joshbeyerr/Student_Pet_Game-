@@ -38,9 +38,15 @@ public class NameInput extends ScreenAdapter {
     private Map<String, Texture> textures;
     private TextField nameInputField;
 
+    BitmapFont font;
+    BitmapFont textFont;
+
     public NameInput(Main game, characterSelection previousScreenn) {
         mainGame = game;
         previousScreen = previousScreenn;
+
+        font = mainGame.resourceManager.getTitleFont();
+        textFont = mainGame.resourceManager.getFont(true);
 
         textures = new HashMap<>();
         loadTextures();
@@ -143,13 +149,15 @@ public class NameInput extends ScreenAdapter {
         float cursorWidth = viewport.getWorldWidth() * 0.004f;  // Adjust the width to 1% of the viewport width
 
         // Load the custom font
-        BitmapFont font = new BitmapFont(Gdx.files.internal("fonts/dick.fnt"));
-        font.getData().setScale(fontScale); // Set font scale dynamically
+        textFont.getData().setScale(fontScale); // Set font scale dynamically
 
         // Create the TextFieldStyle
         TextField.TextFieldStyle textFieldStyle = new TextField.TextFieldStyle();
-        textFieldStyle.font = font; // Use the scaled font
+        textFieldStyle.font = textFont; // Use the scaled font
+
+
         textFieldStyle.fontColor = com.badlogic.gdx.graphics.Color.BLACK; // Text color
+        Gdx.app.log("weirdwtf", "herehHERE");
 
         // Input box background
         textFieldStyle.background = new TextureRegionDrawable(new TextureRegion(textures.get("inputBox")));
@@ -183,11 +191,10 @@ public class NameInput extends ScreenAdapter {
 
     public void loadTextures(){
 
-        textures.put("newBackground", new Texture(Gdx.files.internal("newGame.png")));
-        textures.put("inputQuestion", new Texture(Gdx.files.internal("nameQuestion.png")));
-        textures.put("inputBegin", new Texture(Gdx.files.internal("inputBegin.png")));
-        textures.put("inputBox", new Texture(Gdx.files.internal("nameInput.png"))); // Replace with your image path
-        textures.put("cursor", new Texture(Gdx.files.internal("nameCursor.png")));
+        textures.put("inputQuestion", new Texture(Gdx.files.internal("NameInput/name-txtbox.png")));
+        textures.put("inputBegin", new Texture(Gdx.files.internal("NameInput/begin-btn.png")));
+        textures.put("inputBox", new Texture(Gdx.files.internal("NameInput/name-input-box.png"))); // Replace with your image path
+        textures.put("cursor", new Texture(Gdx.files.internal("NameInput/cursor.png")));
         textures.put("character", new Texture(Gdx.files.internal(previousScreen.getCharacter())));
     }
 
@@ -214,7 +221,8 @@ public class NameInput extends ScreenAdapter {
 
         spriteBatch.begin();
         // Draw the current background
-        spriteBatch.draw(textures.get("newBackground"), 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
+        mainGame.drawBackground(spriteBatch, mainGame.resourceManager.get("mainBackground"), font, "New Game");
+
 
         spriteBatch.end();
 

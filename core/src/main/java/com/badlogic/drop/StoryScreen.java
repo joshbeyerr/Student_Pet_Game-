@@ -1,6 +1,4 @@
 package com.badlogic.drop;
-
-import com.badlogic.drop.Main;
 import com.badlogic.gdx.Gdx;
 
 import com.badlogic.gdx.InputMultiplexer;
@@ -8,7 +6,7 @@ import com.badlogic.gdx.InputAdapter;
 
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -18,11 +16,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import java.util.HashMap;
-import java.util.Map;
 
-
-public class StartingGame extends ScreenAdapter {
+public class StoryScreen extends ScreenAdapter {
 
     private Main mainGame;
     private Screen previousScreen;
@@ -31,20 +26,24 @@ public class StartingGame extends ScreenAdapter {
     private Stage stage;
     private ScreenViewport viewport;
 
+    // two fonts because this page has two different font colors/sizes needed
     private BitmapFont font;
+    private BitmapFont textFont;
+
     private String[] storyTexts = new String[4];
     private int currentTextIndex = 0;
 
     private ImageButton backButton;
 
-    private Map<String, Texture> textures;
-
     InputMultiplexer multiplexer;
 
 
-    public StartingGame(Main game, Screen previousScreenn) {
+    public StoryScreen(Main game, Screen previousScreenn) {
         mainGame = game;
         previousScreen = previousScreenn;
+
+        font = mainGame.resourceManager.getTitleFont();
+        textFont = mainGame.resourceManager.getFont(true);
 
         spriteBatch = mainGame.getSharedBatch();
         viewport = mainGame.getViewport();
@@ -54,10 +53,6 @@ public class StartingGame extends ScreenAdapter {
 
         setStage();
 
-        // Load your custom font from the fonts folder
-        font = new BitmapFont(Gdx.files.internal("fonts/dick.fnt")); // Adjust path as necessary
-
-        loadTextures();
         createUI();
     }
 
@@ -71,12 +66,6 @@ public class StartingGame extends ScreenAdapter {
         }
 
         LoadText();
-    }
-
-
-    private void loadTextures() {
-        textures = new HashMap<>();
-        textures.put("storyBackground", new Texture(Gdx.files.internal("gameStart.png")));
     }
 
     private void createBackButton() {
@@ -138,8 +127,9 @@ public class StartingGame extends ScreenAdapter {
             storyTexts[3] = stringFormatter("They are waiting for you, so we won’t keep you any longer.  Good luck! And take good care.");
         }
 
+        textFont.setColor(Color.WHITE);
         float scaleFactor = viewport.getWorldHeight() * 0.0011f; // Scale as a percentage
-        font.getData().setScale(scaleFactor);
+        textFont.getData().setScale(scaleFactor);
 
     }
 
@@ -147,7 +137,7 @@ public class StartingGame extends ScreenAdapter {
         // Draw the story text
 
         GlyphLayout layout = new GlyphLayout();
-        layout.setText(font, storyTexts[currentTextIndex]);
+        layout.setText(textFont, storyTexts[currentTextIndex]);
 
         float textWidth = layout.width;
         float textHeight = layout.height;
@@ -157,7 +147,7 @@ public class StartingGame extends ScreenAdapter {
         float textY = (viewport.getWorldHeight() + textHeight) / 2; // Center vertically
 
         // Draw the story text
-        font.draw(spriteBatch, storyTexts[currentTextIndex], textX, textY);
+        textFont.draw(spriteBatch, storyTexts[currentTextIndex], textX, textY);
     }
 
     @Override
@@ -168,7 +158,8 @@ public class StartingGame extends ScreenAdapter {
         spriteBatch.begin();
         // Draw the current background
 
-        spriteBatch.draw(textures.get("storyBackground"), 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
+        mainGame.drawBackground(spriteBatch, mainGame.resourceManager.get("storyBackground"), font, "New Game");
+
         calculateTextRender();
 
         // No extra drawing logic for SPRITE_CHOOSE here; handled by stage
@@ -181,7 +172,7 @@ public class StartingGame extends ScreenAdapter {
 
     private void handleKeyPress() {
         if (currentTextIndex == 3) {
-            mainGame.setScreenNoDispose(new characterSelection(mainGame, StartingGame.this));
+            mainGame.setScreenNoDispose(new characterSelection(mainGame, StoryScreen.this));
         } else if (0 <= currentTextIndex && currentTextIndex < 3) {
             currentTextIndex++;
             createUI();
@@ -202,12 +193,6 @@ public class StartingGame extends ScreenAdapter {
     @Override
     public void dispose() {
 
-        for (Texture texture : textures.values()) {
-            texture.dispose();
-        }
-
-        font.dispose();
-//        currentBackground.dispose();
         stage.dispose();
     }
 

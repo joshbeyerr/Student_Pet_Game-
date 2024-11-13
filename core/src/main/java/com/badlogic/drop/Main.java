@@ -3,41 +3,40 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import java.util.Stack;
-
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends Game {
 
-    Texture backgroundTexture;
     private ScreenViewport viewport;
     private ImageButton backButton;
 
     private SpriteBatch sharedBatch;
 
     // global resource manager
-    private ResourceManager resourceManager;
-    private Stack stack;
+    public ResourceManager resourceManager;
+
 
     @Override
     public void create() {
 
         sharedBatch = new SpriteBatch();
+        resourceManager = new ResourceManager();
+
+        loadTextures();
+        resourceManager.setFont(new BitmapFont(Gdx.files.internal("fonts/dick.fnt"))); // Adjust path as necessary);
 
         this.setScreen(new StartScreen(this));
-
-        resourceManager = new ResourceManager();
-        stack = new Stack();
 
     }
 
@@ -57,6 +56,12 @@ public class Main extends Game {
         super.setScreen(screen);
     }
 
+    private void loadTextures(){
+
+        resourceManager.add("mainBackground", new Texture(Gdx.files.internal("globalAssets/menu-bg.png")));
+        resourceManager.add("storyBackground", new Texture(Gdx.files.internal("globalAssets/story-bg.png")));
+    }
+
     @Override
     public void render() {
         super.render(); // important!
@@ -68,13 +73,6 @@ public class Main extends Game {
         super.dispose();
     }
 
-    public Texture getMainBackground() {
-        if (backgroundTexture == null) {
-            backgroundTexture = new Texture(Gdx.files.internal("background2.png"));
-        }
-        return backgroundTexture;
-    }
-
     public ScreenViewport getViewport(){
         if (viewport == null) {
             // Initialize viewport and stage
@@ -82,7 +80,6 @@ public class Main extends Game {
         }
         return viewport;
     }
-
 
     // for creating any custom Button !
     public ImageButton createImageButton(Texture upTexture) {
@@ -114,33 +111,54 @@ public class Main extends Game {
 
     public ImageButton getBackButton(){
         // Create the back button using the loaded texture
-       if (backButton == null){
-           Texture backText = new Texture(Gdx.files.internal("backButton.png"));
-           backButton = createImageButton(backText);
+        if (backButton == null) {
+            Texture backText = new Texture(Gdx.files.internal("globalAssets/backButton.png"));
+            backButton = createImageButton(backText);
+        }
 
-           // Calculate size and position relative to the viewport
-           float buttonWidth = viewport.getWorldWidth() * 0.1f; // 10% of the viewport width
-           float buttonHeight = viewport.getWorldHeight() * 0.1f; // 10% of the viewport height
-           backButton.setSize(buttonWidth, buttonHeight);
-           backButton.setPosition(buttonWidth, viewport.getWorldHeight() - buttonHeight - buttonHeight);
-       }
-       else{
-           // Calculate size and position relative to the viewport
-           float buttonWidth = viewport.getWorldWidth() * 0.1f; // 10% of the viewport width
-           float buttonHeight = viewport.getWorldHeight() * 0.1f; // 10% of the viewport height
-           backButton.setSize(buttonWidth, buttonHeight);
-           backButton.setPosition(buttonWidth, viewport.getWorldHeight() - buttonHeight - buttonHeight);
-       }
+        // Calculate size and position relative to the viewport
+        float buttonWidth = viewport.getWorldWidth() * 0.1f; // 10% of the viewport width
+        float buttonHeight = viewport.getWorldHeight() * 0.1f; // 10% of the viewport height
+        backButton.setSize(buttonWidth, buttonHeight);
+        backButton.setPosition(buttonWidth, viewport.getWorldHeight() - buttonHeight - buttonHeight);
 
 
 
-       return backButton;
+        return backButton;
 
+    }
+
+
+
+    public void drawBackground(SpriteBatch batch, Texture backgroundTexture, BitmapFont font, String title) {
+        // Draw the background texture
+        batch.draw(backgroundTexture, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
+
+        float scaleFactor = viewport.getWorldHeight() * 0.0025f; // Scale as a percentage
+        font.getData().setScale(scaleFactor);
+
+        // Use GlyphLayout to calculate the width and height of the text
+        GlyphLayout layout = new GlyphLayout();
+        layout.setText(font, title);
+
+        // Calculate text position to center it in the viewport
+        float textX = (viewport.getWorldWidth() - layout.width) / 2f;
+
+        float textY; // Declare textY outside the conditional
+
+        // title should be a bit higher on the new game screens for formatting
+        if (title.equals("New Game")) {
+            textY = (float) ((viewport.getWorldHeight() + layout.height) / 2f + (viewport.getWorldHeight() * 0.32)); // Center vertically
+        } else {
+            textY = (float) ((viewport.getWorldHeight() + layout.height) / 2f + (viewport.getWorldHeight() * 0.25)); // Center vertically
+        }
+
+        // Draw the text
+        font.draw(batch, title, textX, textY);
     }
 
     public SpriteBatch getSharedBatch() {
         return sharedBatch;
     }
-
 
 }

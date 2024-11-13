@@ -1,11 +1,11 @@
 package com.badlogic.drop;
 
-import com.badlogic.drop.Main;
 import com.badlogic.gdx.Gdx;
 
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -40,6 +40,8 @@ public class characterSelection extends ScreenAdapter {
     private int curCharacterIndex = 0;
     Image curChar;
 
+    BitmapFont font;
+
 
 
     public characterSelection(Main game, Screen previousScreenn) {
@@ -51,6 +53,8 @@ public class characterSelection extends ScreenAdapter {
         backButton = mainGame.getBackButton();
 
         stage = new Stage(viewport, spriteBatch);
+
+        font = mainGame.resourceManager.getTitleFont();
 
         // Clear any actors from the stage before adding new ones
         stage.clear();
@@ -78,11 +82,11 @@ public class characterSelection extends ScreenAdapter {
 
     private String getCharacterType(int index) {
         switch (index) {
-            case 0: return "char-relaxed";
-            case 1: return "char-hasty";
-            case 2: return "char-quirky";
-            case 3: return "char-serious";
-            case 4: return "char-brave";
+            case 0: return "relaxed";
+            case 1: return "hasty";
+            case 2: return "quirky";
+            case 3: return "serious";
+            case 4: return "brave";
             default: throw new IllegalArgumentException("Invalid character index: " + index);
         }
     }
@@ -92,7 +96,7 @@ public class characterSelection extends ScreenAdapter {
             String charKey = "char" + (index + 1); // Generate the key dynamically (e.g., "char1", "char2", ...)
 
             if (!textures.containsKey(charKey)) {
-                textures.put(charKey, new Texture(Gdx.files.internal(getCharacterType(index) + ".png")));
+                textures.put(charKey, new Texture(Gdx.files.internal("characterSelect/" + getCharacterType(index) + "-btn.png")));
             }
 
             characters[index] = mainGame.createImage(textures.get(charKey));
@@ -103,12 +107,11 @@ public class characterSelection extends ScreenAdapter {
 
     private void loadTextures() {
         textures = new HashMap<>();
-        textures.put("newBackground", new Texture(Gdx.files.internal("newGame.png")));
 
-        textures.put("charQuestion", new Texture(Gdx.files.internal("charQuestion.png")));
-        textures.put("arrow", new Texture(Gdx.files.internal("arrow.png")));
+        textures.put("charQuestion", new Texture(Gdx.files.internal("characterSelect/type-textbox.png")));
+        textures.put("arrow", new Texture(Gdx.files.internal("characterSelect/character-arrow.png")));
 
-        textures.put("select", new Texture(Gdx.files.internal("char-select.png")));
+        textures.put("select", new Texture(Gdx.files.internal("characterSelect/select-btn.png")));
     }
 
     private void createBackButton() {
@@ -122,8 +125,8 @@ public class characterSelection extends ScreenAdapter {
                 Gdx.app.log("ParentalButton", "BACKHERE!");
 
                 // Ensure the previous screen resets its input processor
-                if (previousScreen instanceof StartingGame) {
-                    ((StartingGame) previousScreen).setStage();
+                if (previousScreen instanceof StoryScreen) {
+                    ((StoryScreen) previousScreen).setStage();
                 }
             }
         });
@@ -224,7 +227,7 @@ public class characterSelection extends ScreenAdapter {
     }
 
     public String getCharacter(){
-        return "characters/char" + Integer.toString(curCharacterIndex) + ".png";
+        return "characters/" + getCharacterType(curCharacterIndex) + "-head.png";
     }
 
 
@@ -236,7 +239,7 @@ public class characterSelection extends ScreenAdapter {
 
         spriteBatch.begin();
         // Draw the current background
-        spriteBatch.draw(textures.get("newBackground"), 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
+        mainGame.drawBackground(spriteBatch, mainGame.resourceManager.get("mainBackground"), font, "New Game");
 
         spriteBatch.end();
 
