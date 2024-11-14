@@ -93,7 +93,7 @@ public class NameInput extends ScreenAdapter {
 
                 // starting game
 
-                Character newCharacter = new Character(nameInputField.getText(), characterImage);
+                Character newCharacter = new Character(nameInputField.getText(), characterImage, previousScreen.getCharacterIndex(), previousScreen.getCharacterType(previousScreen.getCharacterIndex()));
                 GameSession newGame = new GameSession(newCharacter);
 
                 Gdx.app.log("NAME", nameInputField.getText());
@@ -155,9 +155,7 @@ public class NameInput extends ScreenAdapter {
         TextField.TextFieldStyle textFieldStyle = new TextField.TextFieldStyle();
         textFieldStyle.font = textFont; // Use the scaled font
 
-
         textFieldStyle.fontColor = com.badlogic.gdx.graphics.Color.BLACK; // Text color
-        Gdx.app.log("weirdwtf", "herehHERE");
 
         // Input box background
         textFieldStyle.background = new TextureRegionDrawable(new TextureRegion(textures.get("inputBox")));
@@ -195,7 +193,9 @@ public class NameInput extends ScreenAdapter {
         textures.put("inputBegin", new Texture(Gdx.files.internal("NameInput/begin-btn.png")));
         textures.put("inputBox", new Texture(Gdx.files.internal("NameInput/name-input-box.png"))); // Replace with your image path
         textures.put("cursor", new Texture(Gdx.files.internal("NameInput/cursor.png")));
-        textures.put("character", new Texture(Gdx.files.internal(previousScreen.getCharacter())));
+
+        String charImagePath = "characters/" + previousScreen.getCharacterType(previousScreen.getCharacterIndex()) + "-head.png";
+        textures.put("character", new Texture(Gdx.files.internal(charImagePath)));
     }
 
     private void createBackButton() {
@@ -207,8 +207,8 @@ public class NameInput extends ScreenAdapter {
                 mainGame.setScreen(previousScreen);
 
                 // Ensure the previous screen resets its input processor
-                if (previousScreen instanceof characterSelection) {
-                    ((characterSelection) previousScreen).setStage(); // Explicit cast is unnecessary due to instanceof check
+                if (previousScreen != null) {
+                    (previousScreen).setStage(); // Explicit cast is unnecessary due to instanceof check
                 }
             }
         });

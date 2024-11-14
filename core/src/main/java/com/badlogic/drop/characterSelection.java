@@ -80,13 +80,13 @@ public class characterSelection extends ScreenAdapter {
         setupSpriteChooseState();
     }
 
-    private String getCharacterType(int index) {
+    public String getCharacterType(int index) {
         switch (index) {
             case 0: return "relaxed";
-            case 1: return "hasty";
-            case 2: return "quirky";
-            case 3: return "serious";
-            case 4: return "brave";
+            case 1: return "quirky";
+            case 2: return "hasty";
+            case 3: return "brave";
+            case 4: return "serious";
             default: throw new IllegalArgumentException("Invalid character index: " + index);
         }
     }
@@ -226,8 +226,8 @@ public class characterSelection extends ScreenAdapter {
         updateCharacterInTable();
     }
 
-    public String getCharacter(){
-        return "characters/" + getCharacterType(curCharacterIndex) + "-head.png";
+    public int getCharacterIndex(){
+        return curCharacterIndex;
     }
 
 
