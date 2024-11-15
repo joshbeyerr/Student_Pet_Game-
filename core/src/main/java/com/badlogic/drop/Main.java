@@ -19,6 +19,8 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 public class Main extends Game {
 
     private ScreenViewport viewport;
+
+
     private ImageButton backButton;
 
     private SpriteBatch sharedBatch;
@@ -50,7 +52,6 @@ public class Main extends Game {
         }
         super.setScreen(screen);
     }
-
 
     public void setScreenNoDispose(Screen screen) {
         super.setScreen(screen);

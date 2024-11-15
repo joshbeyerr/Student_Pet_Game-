@@ -86,6 +86,7 @@ public class StartScreen extends ScreenAdapter {
 
         // Add table to the stage
         stage.clear(); // Clear existing actors (if any)
+
         stage.addActor(table);
     }
 
@@ -229,15 +230,18 @@ public class StartScreen extends ScreenAdapter {
 
     @Override
     public void resize(int width, int height) {
-        viewport.update(width, height, true);
-        stage.getViewport().update(width, height, true);
+        if (width != 0 && height != 0) {
+            viewport.update(width, height, true);
+            stage.getViewport().update(width, height, true);
 
-        // Reinitialize UI based on current state
-        if (currentState == UIState.MAIN_MENU) {
-            initializeUI();
-        } else if (currentState == UIState.PARENTAL_CONTROLS) {
-            parentsButton();
+            // Reinitialize UI based on current state
+            if (currentState == UIState.MAIN_MENU) {
+                initializeUI();
+            } else if (currentState == UIState.PARENTAL_CONTROLS) {
+                parentsButton();
+            }
         }
+
     }
 
     public void dispose() {
