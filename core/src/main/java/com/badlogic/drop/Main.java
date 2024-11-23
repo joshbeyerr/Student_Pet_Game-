@@ -12,13 +12,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Scaling;
+import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends Game {
 
-    private ScreenViewport viewport;
+    private Viewport viewport;
 
 
     private ImageButton backButton;
@@ -29,14 +32,25 @@ public class Main extends Game {
     public ResourceManager resourceManager;
 
 
+    private int baseWidth;
+    private int baseHeight;
+
+
     @Override
     public void create() {
+
+        baseWidth = Gdx.graphics.getDisplayMode().width;  // Fullscreen width
+        baseHeight = Gdx.graphics.getDisplayMode().height; // Fullscreen height
 
         sharedBatch = new SpriteBatch();
         resourceManager = new ResourceManager();
 
         loadTextures();
         resourceManager.setFont(new BitmapFont(Gdx.files.internal("fonts/dick.fnt"))); // Adjust path as necessary);
+
+        // Create a ScalingViewport to maintain aspect ratio
+        viewport = new ScalingViewport(Scaling.fit, baseWidth, baseHeight);
+        viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
 
         this.setScreen(new StartScreen(this));
 
@@ -74,11 +88,7 @@ public class Main extends Game {
         super.dispose();
     }
 
-    public ScreenViewport getViewport(){
-        if (viewport == null) {
-            // Initialize viewport and stage
-            viewport = new ScreenViewport();
-        }
+    public Viewport getViewport(){
         return viewport;
     }
 
@@ -160,6 +170,12 @@ public class Main extends Game {
 
     public SpriteBatch getSharedBatch() {
         return sharedBatch;
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        // Ensure the viewport updates its size while maintaining aspect ratio
+        viewport.update(width, height, true);
     }
 
 }

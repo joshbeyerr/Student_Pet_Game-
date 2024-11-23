@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +26,7 @@ public class StartScreen extends ScreenAdapter {
     private Main mainGame;
 
     private SpriteBatch spriteBatch;
-    private ScreenViewport viewport;
+    private Viewport viewport;
 
     private Stage stage;
 
@@ -217,7 +218,6 @@ public class StartScreen extends ScreenAdapter {
 
         // Draw the background
         spriteBatch.begin();
-
         mainGame.drawBackground(spriteBatch, mainGame.resourceManager.get("mainBackground"), font, "Wiktor Simulator");
 
         spriteBatch.end();

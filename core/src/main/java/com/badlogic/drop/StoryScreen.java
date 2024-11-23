@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 
 public class StoryScreen extends ScreenAdapter {
@@ -24,7 +25,7 @@ public class StoryScreen extends ScreenAdapter {
 
     private SpriteBatch spriteBatch;
     private Stage stage;
-    private ScreenViewport viewport;
+    private Viewport viewport;
 
     // two fonts because this page has two different font colors/sizes needed
     private BitmapFont font;

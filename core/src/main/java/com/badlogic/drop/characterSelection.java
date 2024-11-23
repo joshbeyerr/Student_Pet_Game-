@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +30,7 @@ public class characterSelection extends ScreenAdapter {
 
     private SpriteBatch spriteBatch;
     private Stage stage;
-    private ScreenViewport viewport;
+    private Viewport viewport;
 
     private ImageButton backButton;
 
