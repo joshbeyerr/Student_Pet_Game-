@@ -51,7 +51,7 @@ public class characterSelection extends ScreenAdapter {
 
         spriteBatch = mainGame.getSharedBatch();
         viewport = mainGame.getViewport();
-        backButton = mainGame.getBackButton();
+        backButton = mainGame.getBackButton(game,previousScreenn);
 
         stage = new Stage(viewport, spriteBatch);
 
@@ -255,7 +255,6 @@ public class characterSelection extends ScreenAdapter {
         viewport.update(width, height, true);
         stage.getViewport().update(width, height, true);
 
-        backButton = mainGame.getBackButton();
         createBackButton();
 
         createUI();

@@ -120,7 +120,7 @@ public class Main extends Game {
         return new Image(new TextureRegionDrawable(new TextureRegion(texture)));
     }
 
-    public ImageButton getBackButton(){
+    public ImageButton getBackButton(Main mainGame,Screen previousScreen){
         // Create the back button using the loaded texture
         if (backButton == null) {
             Texture backText = new Texture(Gdx.files.internal("globalAssets/backButton.png"));
@@ -132,8 +132,14 @@ public class Main extends Game {
         float buttonHeight = viewport.getWorldHeight() * 0.1f; // 10% of the viewport height
         backButton.setSize(buttonWidth, buttonHeight);
         backButton.setPosition(buttonWidth, viewport.getWorldHeight() - buttonHeight - buttonHeight);
-
-
+        backButton.clearListeners(); // Clear any previous listeners to avoid stacking
+        backButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
+                mainGame.setScreen(previousScreen);
+                ((StartScreen) previousScreen).setStage(); // Ensure screen resets its input processor
+            }
+        });
 
         return backButton;
 

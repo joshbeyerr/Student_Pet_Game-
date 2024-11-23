@@ -48,7 +48,7 @@ public class StoryScreen extends ScreenAdapter {
 
         spriteBatch = mainGame.getSharedBatch();
         viewport = mainGame.getViewport();
-        backButton = mainGame.getBackButton();
+        backButton = mainGame.getBackButton(game, previousScreenn);
 
         stage = new Stage(viewport, spriteBatch);
 
@@ -61,34 +61,27 @@ public class StoryScreen extends ScreenAdapter {
         Gdx.app.log("CreateUI", Integer.toString(currentTextIndex));
         stage.clear();
 
-        if (!stage.getActors().contains(backButton, true)) {
-            createBackButton();
-            stage.addActor(backButton);
-        }
+        createBackButton();
+        stage.addActor(backButton);
+
 
         LoadText();
     }
 
     private void createBackButton() {
-        backButton.clearListeners(); // Clear any previous listeners to avoid stacking
-        backButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
-                if (currentTextIndex > 0) {
-                    // Go back to the previous story text
-                    currentTextIndex--;
-                    createUI();
-                } else {
-                    // If we're at the first story text, go back to the StartScreen
-                    mainGame.setScreen(previousScreen);
-
-                    // Ensure the previous screen resets its input processor
-                    if (previousScreen instanceof StartScreen) {
-                        ((StartScreen) previousScreen).setStage();
+        if (currentTextIndex > 0){
+            backButton.clearListeners(); // Clear any previous listeners to avoid stacking
+            backButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
+                    if (currentTextIndex > 0) {
+                        // Go back to the previous story text
+                        currentTextIndex--;
+                        createUI();
                     }
                 }
-            }
-        });
+            });
+        }
     }
 
 
@@ -186,7 +179,6 @@ public class StoryScreen extends ScreenAdapter {
         viewport.update(width, height, true);
         stage.getViewport().update(width, height, true);
 
-        backButton = mainGame.getBackButton();
         createBackButton();
         LoadText();
     }
