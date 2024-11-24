@@ -53,7 +53,6 @@ public class StoryScreen extends ScreenAdapter {
         stage = new Stage(viewport, spriteBatch);
 
         setStage();
-
         createUI();
     }
 
