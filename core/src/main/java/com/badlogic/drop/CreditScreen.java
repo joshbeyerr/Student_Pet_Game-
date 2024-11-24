@@ -3,6 +3,7 @@ package com.badlogic.drop;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -12,6 +13,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import java.util.Map;
+
 public class CreditScreen  extends ScreenAdapter {
     private Main mainGame;
     private Screen previousScreen;
@@ -20,11 +23,9 @@ public class CreditScreen  extends ScreenAdapter {
     private Stage stage;
     private Viewport viewport;
 
-    // two fonts because this page has two different font colors/sizes needed
-    private BitmapFont font;
-    private BitmapFont textFont;
     private ImageButton backButton;
     private Table table;
+    private Map<String, Texture> textures;
     private Image motivationBox;
     private Image contributorBox;
 
@@ -47,6 +48,8 @@ public class CreditScreen  extends ScreenAdapter {
         stage.clear();
         stage.addActor(backButton);
         table = createTable();
+        textures.put("inputQuestion", new Texture(Gdx.files.internal("creditScreen/name-textbox.png")));
+        textures.put("inputBegin", new Texture(Gdx.files.internal("NameInput/begin-btn.png")));
         addActorToTable(table,motivationBox);
         addActorToTable(table,contributorBox);
         stage.addActor(table);
@@ -88,6 +91,11 @@ public class CreditScreen  extends ScreenAdapter {
 
     private float getDynamicPadding() {
         return viewport.getWorldHeight() * 0.02f; // Padding as 2% of viewport height
+    }
+
+    public void loadTextures(){
+        textures.put("inputQuestion", new Texture(Gdx.files.internal("NameInput/name-txtbox.png")));
+        textures.put("inputBegin", new Texture(Gdx.files.internal("NameInput/begin-btn.png")));
     }
 
 }
