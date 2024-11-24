@@ -186,6 +186,15 @@ public class StartScreen extends ScreenAdapter {
             }
         });
 
+        creditsButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.log("CreditButton", "Credits button clicked!");
+                mainGame.setScreen(new CreditScreen(mainGame, StartScreen.this));
+
+            }
+        });
+
         // Add action listener to the parental button
         parentalButton.addListener(new ClickListener() {
             @Override
