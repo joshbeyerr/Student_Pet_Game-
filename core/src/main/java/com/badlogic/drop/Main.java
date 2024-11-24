@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -49,7 +50,8 @@ public class Main extends Game {
         resourceManager.setFont(new BitmapFont(Gdx.files.internal("fonts/dick.fnt"))); // Adjust path as necessary);
 
         // Create a ScalingViewport to maintain aspect ratio
-        viewport = new ScalingViewport(Scaling.fit, baseWidth, baseHeight);
+
+        viewport = new FitViewport(baseWidth, baseHeight);
         viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
 
         this.setScreen(new StartScreen(this));
@@ -123,6 +125,7 @@ public class Main extends Game {
     public ImageButton getBackButton(){
         // Create the back button using the loaded texture
         if (backButton == null) {
+
             Texture backText = new Texture(Gdx.files.internal("globalAssets/backButton.png"));
             backButton = createImageButton(backText);
         }
