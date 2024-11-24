@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -12,11 +13,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -34,6 +33,8 @@ public class GameScreen extends ScreenAdapter{
     private SpriteBatch spriteBatch;
     private Stage stage;
     private Viewport viewport;
+
+    Label.LabelStyle labelStyle;
 
     private Map<String, Texture> textures;
     private Map<String, Table> tables;
@@ -56,6 +57,11 @@ public class GameScreen extends ScreenAdapter{
         tables = new HashMap<>();
         images = new HashMap<>();
 
+        // handling font shit
+        BitmapFont textFont = mainGame.resourceManager.getFont(true);
+        labelStyle = new Label.LabelStyle();
+        labelStyle.font = textFont; // Set the font for the label
+        labelStyle.fontColor = Color.PURPLE;
 
         setStage();
 
@@ -123,7 +129,19 @@ public class GameScreen extends ScreenAdapter{
             nameScoreTable.clear();
         }
 
-        nameScoreTable.add(images.get("purpleBox")).size((worldWidth*0.25f), (worldHeight*0.45f)).padLeft(worldWidth*0.02f);// Example button
+        Drawable purpleBoxDrawable = new TextureRegionDrawable(new TextureRegion(textures.get("purpleBox")));
+
+        Texture purpleBoxTexture = textures.get("purpleBox");
+
+// Adjust width and height
+        float adjustedWidth = purpleBoxTexture.getWidth() * 0.8f; // Reduce width by 10%
+        float adjustedHeight = purpleBoxTexture.getHeight() * 0.65f; // Reduce height by 15%
+
+// Set the size of the table
+        nameScoreTable.setSize(adjustedWidth, adjustedHeight);
+
+// Set the Drawable as the table background
+        nameScoreTable.setBackground(purpleBoxDrawable);
 
 
 
@@ -152,27 +170,30 @@ public class GameScreen extends ScreenAdapter{
             buttonsTable.clear();
         }
 
-        float buttonWidth = viewport.getWorldWidth() * 0.3f;
-        float buttonHeight = viewport.getWorldHeight() * 0.3f;
-        float buttonPad = viewport.getWorldHeight() * 0.01f;
+//        float buttonWidth = viewport.getWorldWidth() * 0.3f;
+//        float buttonHeight = viewport.getWorldHeight() * 0.3f;
+        float buttonPad = viewport.getWorldHeight() * 0.02f;
 
 
+        float buttonWidth = 375f;
+        float ButtonHeight = 220f;
 
-        buttonsTable.add(images.get("feed")).size(300,200).pad(buttonPad).fill();
 
-        buttonsTable.add(images.get("sleep")).size(300,200).pad(buttonPad).fill().row();
+        buttonsTable.add(images.get("feed")).size(buttonWidth,ButtonHeight).padBottom(buttonPad).fill();
 
-        buttonsTable.add(images.get("exercise")).size(300,200).pad(buttonPad).fill();
-        buttonsTable.add(images.get("play")).size(300,200).pad(buttonPad).fill().row();
+        buttonsTable.add(images.get("sleep")).size(buttonWidth,ButtonHeight).padBottom(buttonPad).fill().row();
 
-        buttonsTable.add(images.get("gift")).size(300,200).pad(buttonPad).fill();
-        buttonsTable.add(images.get("doctor")).size(300,200).pad(buttonPad).fill().row();
+        buttonsTable.add(images.get("exercise")).size(buttonWidth,ButtonHeight).padBottom(buttonPad).fill();
+        buttonsTable.add(images.get("play")).size(buttonWidth,ButtonHeight).padBottom(buttonPad).fill().row();
+
+        buttonsTable.add(images.get("gift")).size(buttonWidth,ButtonHeight).padBottom(buttonPad).fill();
+        buttonsTable.add(images.get("doctor")).size(buttonWidth,ButtonHeight).padBottom(buttonPad).fill().row();
         // Add more buttons...
 
         // Add the nested tables to the sidebar
-        sidebar.add(nameScoreTable).padBottom(100).row();
+        sidebar.add(nameScoreTable).padBottom(50).padLeft(60).row();
 //        sidebar.add(statBarsTable).row();
-        sidebar.add(buttonsTable).row();
+        sidebar.add(buttonsTable).padLeft(60).row();
     }
 
 
@@ -233,7 +254,9 @@ public class GameScreen extends ScreenAdapter{
         images.put("gift", mainGame.createImageButton(textures.get("gift")));
         images.put("doctor", mainGame.createImageButton(textures.get("doctor")));
 
-        images.put("purpleBox", mainGame.createImage(textures.get("purpleBox")));
+//        images.put("purpleBox", mainGame.createImage(textures.get("purpleBox")));
+
+        images.put("Name", new Label(session.character.getName(), labelStyle));
     }
 
     @Override
