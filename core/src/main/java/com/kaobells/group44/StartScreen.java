@@ -181,7 +181,7 @@ public class StartScreen extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("StartButton", "Start Game button clicked!");
-                mainGame.setScreen(new StoryScreen(mainGame, StartScreen.this));
+                mainGame.pushScreen(new StoryScreen(mainGame));
 
             }
         });
@@ -190,7 +190,7 @@ public class StartScreen extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("CreditButton", "Credits button clicked!");
-                mainGame.setScreen(new CreditScreen(mainGame, StartScreen.this));
+                mainGame.pushScreen(new CreditScreen(mainGame));
 
             }
         });

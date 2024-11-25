@@ -17,7 +17,6 @@ public class StoryScreen extends ScreenAdapter {
     private final Main mainGame;
 
     // only need to make this a class variable because of the back button logic custom to this class
-    private final Screen previousScreenVar;
 
     private final SpriteBatch spriteBatch;
     private final Stage stage;
@@ -35,9 +34,8 @@ public class StoryScreen extends ScreenAdapter {
     InputMultiplexer multiplexer;
 
 
-    public StoryScreen(Main game, Screen previousScreen) {
+    public StoryScreen(Main game) {
         mainGame = game;
-        previousScreenVar = previousScreen;
 
         // getting fonts, title font is set in resource manager
         font = mainGame.resourceManager.getTitleFont();
@@ -50,8 +48,11 @@ public class StoryScreen extends ScreenAdapter {
 
         stage = new Stage(viewport, spriteBatch);
 
-        // no "show" method again just due to the nature of this class, calling stuff from the constructor
-        setStage();
+    }
+
+    public void show() {
+        super.show();
+        setStage(); // Reset input processor
         createUI();
     }
 
@@ -85,7 +86,7 @@ public class StoryScreen extends ScreenAdapter {
             });
         }
         else{
-            backButton = mainGame.getBackButton(mainGame, previousScreenVar);
+            backButton = mainGame.getBackButton();
         }
     }
 
@@ -172,7 +173,7 @@ public class StoryScreen extends ScreenAdapter {
 
     private void handleKeyPress() {
         if (currentTextIndex == 3) {
-            mainGame.setScreenNoDispose(new characterSelection(mainGame, StoryScreen.this));
+            mainGame.pushScreen(new characterSelection(mainGame));
         } else if (0 <= currentTextIndex && currentTextIndex < 3) {
             currentTextIndex++;
             createUI();
@@ -183,12 +184,10 @@ public class StoryScreen extends ScreenAdapter {
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height, true);
-        stage.getViewport().update(width, height, true);
     }
 
     @Override
     public void dispose() {
-
         stage.dispose();
     }
 

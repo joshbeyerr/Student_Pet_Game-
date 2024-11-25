@@ -1,7 +1,6 @@
 package com.kaobells.group44;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -28,20 +27,20 @@ public class CreditScreen  extends ScreenAdapter {
     private final ImageButton backButton;
     private Map<String, Texture> textures;
 
-    public CreditScreen(Main game, Screen previousScreenn) {
+    public CreditScreen(Main game) {
         mainGame = game;
 
         spriteBatch = mainGame.getSharedBatch();
         viewport = mainGame.getViewport();
 
-        backButton = mainGame.getBackButton(game, previousScreenn);
+        backButton = mainGame.getBackButton();
 
         stage = new Stage(viewport, spriteBatch);
-
-        createUI();
     }
 
     public void show() {
+
+        createUI();
         super.show();
         setStage(); // Reset input processor
     }
@@ -104,7 +103,6 @@ public class CreditScreen  extends ScreenAdapter {
 
     public void resize(int width, int height) {
         viewport.update(width, height, true);
-        stage.getViewport().update(width, height, true);
 
     }
 
