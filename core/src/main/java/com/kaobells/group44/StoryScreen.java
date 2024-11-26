@@ -14,18 +14,19 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class StoryScreen extends ScreenAdapter {
 
-    private Main mainGame;
-    private Screen previousScreen;
+    private final Main mainGame;
 
-    private SpriteBatch spriteBatch;
-    private Stage stage;
-    private Viewport viewport;
+    // only need to make this a class variable because of the back button logic custom to this class
+
+    private final SpriteBatch spriteBatch;
+    private final Stage stage;
+    private final Viewport viewport;
 
     // two fonts because this page has two different font colors/sizes needed
-    private BitmapFont font;
-    private BitmapFont textFont;
+    private final BitmapFont font;
+    private final BitmapFont textFont;
 
-    private String[] storyTexts = new String[4];
+    private final String[] storyTexts = new String[4];
     private int currentTextIndex = 0;
 
     private ImageButton backButton;
@@ -33,30 +34,39 @@ public class StoryScreen extends ScreenAdapter {
     InputMultiplexer multiplexer;
 
 
-    public StoryScreen(Main game, Screen previousScreenn) {
+    public StoryScreen(Main game) {
         mainGame = game;
-        previousScreen = previousScreenn;
 
+        // getting fonts, title font is set in resource manager
         font = mainGame.resourceManager.getTitleFont();
+
+        // text font details (e.g color and size) will be determined in this class, thus this is loading a fresh font object
         textFont = mainGame.resourceManager.getFont(true);
 
         spriteBatch = mainGame.getSharedBatch();
         viewport = mainGame.getViewport();
-        backButton = mainGame.getBackButton(game, previousScreenn);
 
         stage = new Stage(viewport, spriteBatch);
 
-        setStage();
+    }
+
+    public void show() {
+        super.show();
+        setStage(); // Reset input processor
         createUI();
     }
 
     public void createUI(){
+
+        Gdx.app.log("heloo", "hello");
+
         Gdx.app.log("CreateUI", Integer.toString(currentTextIndex));
+
+        // due to this screen displaying multiple different screens, must make sure stage is clear before starting
         stage.clear();
 
         createBackButton();
         stage.addActor(backButton);
-
 
         LoadText();
     }
@@ -75,9 +85,13 @@ public class StoryScreen extends ScreenAdapter {
                 }
             });
         }
+        else{
+            backButton = mainGame.getBackButton();
+        }
     }
 
 
+    // method to adjust story text to fix perfectly on the screen, put new lines in the right place
     public String stringFormatter(String text) {
         StringBuilder newString = new StringBuilder();
         int charCount = 0;
@@ -159,7 +173,7 @@ public class StoryScreen extends ScreenAdapter {
 
     private void handleKeyPress() {
         if (currentTextIndex == 3) {
-            mainGame.setScreenNoDispose(new characterSelection(mainGame, StoryScreen.this));
+            mainGame.pushScreen(new characterSelection(mainGame));
         } else if (0 <= currentTextIndex && currentTextIndex < 3) {
             currentTextIndex++;
             createUI();
@@ -170,15 +184,10 @@ public class StoryScreen extends ScreenAdapter {
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height, true);
-        stage.getViewport().update(width, height, true);
-
-        createBackButton();
-        LoadText();
     }
 
     @Override
     public void dispose() {
-
         stage.dispose();
     }
 
@@ -198,13 +207,5 @@ public class StoryScreen extends ScreenAdapter {
         }
         Gdx.input.setInputProcessor(multiplexer);
 
-
     }
-
-    public void show() {
-        super.show();
-        setStage(); // Reset input processor
-        createUI(); // Recreate the UI elements
-    }
-
 }

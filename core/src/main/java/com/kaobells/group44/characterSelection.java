@@ -1,7 +1,6 @@
 package com.kaobells.group44;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -23,42 +22,35 @@ import java.util.Map;
 
 public class characterSelection extends ScreenAdapter {
 
-    private Main mainGame;
-    private Screen previousScreen;
+    private final Main mainGame;
 
-    private SpriteBatch spriteBatch;
-    private Stage stage;
-    private Viewport viewport;
+    private final SpriteBatch spriteBatch;
+    private final Stage stage;
+    private final Viewport viewport;
 
-    private ImageButton backButton;
+    private final ImageButton backButton;
 
     private Map<String, Texture> textures;
-    private Table characterTable;
+    private final Table characterTable;
 
-    private Image[] characters = new Image[5];
+    private final Image[] characters = new Image[5];
     private int curCharacterIndex = 0;
+
     Image curChar;
 
     BitmapFont font;
 
-
-
-    public characterSelection(Main game, Screen previousScreenn) {
+    public characterSelection(Main game) {
         mainGame = game;
-        previousScreen = previousScreenn;
 
         spriteBatch = mainGame.getSharedBatch();
         viewport = mainGame.getViewport();
-        backButton = mainGame.getBackButton(game,previousScreenn);
+
+        backButton = mainGame.getBackButton();
 
         stage = new Stage(viewport, spriteBatch);
 
         font = mainGame.resourceManager.getTitleFont();
-
-        // Clear any actors from the stage before adding new ones
-        stage.clear();
-
-        setStage();
 
         // Initialize the table and add it to the stage
         characterTable = new Table();
@@ -66,14 +58,22 @@ public class characterSelection extends ScreenAdapter {
 
         loadTextures();
         createUI();
+
+    }
+
+    public void show() {
+        super.show();
+        setStage(); // Reset input processor
+
+        // idk rn, this just works
+        stage.addActor(backButton);
     }
 
 
     public void createUI(){
-        stage.clear();
-        characterTable.clear();
 
-        stage.addActor(backButton);
+        Gdx.app.log("characterSelection", "createUI");
+
         stage.addActor(characterTable);
 
         setupSpriteChooseState();
@@ -111,24 +111,6 @@ public class characterSelection extends ScreenAdapter {
         textures.put("arrow", new Texture(Gdx.files.internal("characterSelect/character-arrow.png")));
 
         textures.put("select", new Texture(Gdx.files.internal("characterSelect/select-btn.png")));
-    }
-
-    private void createBackButton() {
-        backButton.clearListeners(); // Clear any previous listeners to avoid stacking
-        backButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                // If we're at the first story text, go back to the StartScreen
-                mainGame.setScreen(previousScreen);
-
-                Gdx.app.log("ParentalButton", "BACKHERE!");
-
-                // Ensure the previous screen resets its input processor
-                if (previousScreen instanceof StoryScreen) {
-                    ((StoryScreen) previousScreen).setStage();
-                }
-            }
-        });
     }
 
     private void setupSpriteChooseState() {
@@ -189,7 +171,7 @@ public class characterSelection extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // Switch to the previous character
-                mainGame.setScreenNoDispose(new NameInput(mainGame, characterSelection.this));
+                mainGame.pushScreen(new NameInput(mainGame));
 
             }
         });
@@ -211,8 +193,6 @@ public class characterSelection extends ScreenAdapter {
         curChar = newChar;
     }
 
-
-
     public void switchCharacter(boolean left) {
         // Update the character index
         if (left) {
@@ -228,7 +208,6 @@ public class characterSelection extends ScreenAdapter {
     public int getCharacterIndex(){
         return curCharacterIndex;
     }
-
 
 
     @Override
@@ -251,11 +230,6 @@ public class characterSelection extends ScreenAdapter {
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height, true);
-        stage.getViewport().update(width, height, true);
-
-        createBackButton();
-
-        createUI();
     }
 
     @Override
@@ -264,7 +238,6 @@ public class characterSelection extends ScreenAdapter {
         for (Texture texture : textures.values()) {
             texture.dispose();
         }
-//        currentBackground.dispose();
         stage.dispose();
     }
 
@@ -272,10 +245,5 @@ public class characterSelection extends ScreenAdapter {
         Gdx.input.setInputProcessor(stage);
     }
 
-    public void show() {
-        super.show();
-        setStage(); // Reset input processor
-        createUI(); // Recreate the UI elements
-    }
 
 }

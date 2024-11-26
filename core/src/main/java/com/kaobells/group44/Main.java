@@ -15,6 +15,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.badlogic.gdx.files.FileHandle;
+
+import java.util.Stack;
 
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
@@ -30,16 +33,15 @@ public class Main extends Game {
     // global resource manager
     public ResourceManager resourceManager;
 
-
-    private int baseWidth;
-    private int baseHeight;
-
+    private Stack<Screen> screenStack;
 
     @Override
     public void create() {
 
-        baseWidth = Gdx.graphics.getDisplayMode().width;  // Fullscreen width
-        baseHeight = Gdx.graphics.getDisplayMode().height; // Fullscreen height
+        screenStack = new Stack<>();
+
+        int baseWidth = Gdx.graphics.getDisplayMode().width;  // Fullscreen width
+        int baseHeight = Gdx.graphics.getDisplayMode().height; // Fullscreen height
 
         sharedBatch = new SpriteBatch();
         resourceManager = new ResourceManager();
@@ -51,25 +53,42 @@ public class Main extends Game {
 
         viewport = new FitViewport(baseWidth, baseHeight);
         viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
-
-        this.setScreen(new StartScreen(this));
+        initializeLocalFile();
+        this.pushScreen(new StartScreen(this));
 
     }
 
-    @Override
-    public void setScreen(Screen screen) {
-
-
-        // Dispose the previous screen if it exists
-        if (getScreen() != null) {
-            getScreen().dispose();
+    // Push a screen onto the stack and set it as the active screen
+    public void pushScreen(Screen newScreen) {
+        if (!screenStack.isEmpty()) {
+            screenStack.peek().pause(); // Pause the current screen
         }
-        super.setScreen(screen);
+        screenStack.push(newScreen);
+        setScreen(newScreen);
     }
 
-    public void setScreenNoDispose(Screen screen) {
-        super.setScreen(screen);
+    // Pop the current screen, dispose of it, and set the previous one
+    public void popScreen() {
+        if (!screenStack.isEmpty()) {
+            Screen currentScreen = screenStack.pop();
+            currentScreen.dispose(); // Dispose of the current screen
+        }
+        if (!screenStack.isEmpty()) {
+            Gdx.app.log("herrre", "gg");
+            Screen previousScreen = screenStack.peek();
+            previousScreen.resume(); // Resume the previous screen
+            setScreen(previousScreen);
+        }
     }
+
+    public Screen getPreviousScreen() {
+        if (screenStack.size() > 1) {
+            // Get the second-to-last screen in the stack
+            return screenStack.get(screenStack.size() - 1);
+        }
+        return null; // No previous screen exists
+    }
+
 
     private void loadTextures(){
 
@@ -120,8 +139,9 @@ public class Main extends Game {
         return new Image(new TextureRegionDrawable(new TextureRegion(texture)));
     }
 
-    public ImageButton getBackButton(Main mainGame,Screen previousScreen){
+    public ImageButton getBackButton(){
         // Create the back button using the loaded texture
+
         if (backButton == null) {
 
             Texture backText = new Texture(Gdx.files.internal("globalAssets/backButton.png"));
@@ -137,8 +157,7 @@ public class Main extends Game {
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                mainGame.setScreen(previousScreen);
-                ((StartScreen) previousScreen).setStage(); // Ensure screen resets its input processor
+                popScreen();
             }
         });
 
@@ -185,4 +204,21 @@ public class Main extends Game {
         viewport.update(width, height, true);
     }
 
+    //Internal JSON cannot be written too, only local ones
+    //So we must create a local version of database on first launch
+    private void initializeLocalFile(){
+        // Get file handles for the assets and local directories
+        FileHandle internalFile = Gdx.files.internal("database.json");
+        FileHandle localFile = Gdx.files.local("database.json");
+
+        // Check if the local file already exists
+        if (!localFile.exists()) {
+            // Copy the file from assets to local storage
+            internalFile.copyTo(localFile);
+            System.out.println("Database JSON created in local storage");
+        }
+        else {
+            System.out.println("Local Database JSON Previously Created");
+        }
+    }
 }

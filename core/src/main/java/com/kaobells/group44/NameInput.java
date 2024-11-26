@@ -25,45 +25,44 @@ import java.util.Map;
 
 public class NameInput extends ScreenAdapter {
 
-    private Main mainGame;
-    private characterSelection previousScreen;
+    private final Main mainGame;
+    private final characterSelection previousScreenVar;
 
-    private SpriteBatch spriteBatch;
-    private Stage stage;
-    private Viewport viewport;
+    private final SpriteBatch spriteBatch;
+    private final Stage stage;
+    private final Viewport viewport;
 
-    private ImageButton backButton;
+    private final ImageButton backButton;
 
-    private Map<String, Texture> textures;
+    private final Map<String, Texture> textures;
     private TextField nameInputField;
 
     BitmapFont font;
     BitmapFont textFont;
 
-    public NameInput(Main game, characterSelection previousScreenn) {
+    public NameInput(Main game) {
         mainGame = game;
-        previousScreen = previousScreenn;
+        previousScreenVar = (characterSelection)mainGame.getPreviousScreen();
 
         font = mainGame.resourceManager.getTitleFont();
         textFont = mainGame.resourceManager.getFont(true);
 
         textures = new HashMap<>();
-        loadTextures();
 
         spriteBatch = mainGame.getSharedBatch();
         viewport = mainGame.getViewport();
-        backButton = mainGame.getBackButton(game,previousScreenn);
+        backButton = mainGame.getBackButton();
 
         stage = new Stage(viewport, spriteBatch);
 
-        // Clear any actors from the stage before adding new ones
-        stage.clear();
-
-        Gdx.input.setInputProcessor(stage);
-
-        createUI();
     }
 
+    public void show() {
+        super.show();
+        loadTextures();
+        setStage(); // Reset input processor
+        createUI();
+    }
 
     public void createUI() {
         stage.clear();
@@ -92,11 +91,10 @@ public class NameInput extends ScreenAdapter {
 
                 // starting game
 
-                CharacterClass newCharacter = new CharacterClass(nameInputField.getText(), characterImage, previousScreen.getCharacterIndex(), previousScreen.getCharacterType(previousScreen.getCharacterIndex()));
+                CharacterClass newCharacter = new CharacterClass(nameInputField.getText(), characterImage, previousScreenVar.getCharacterIndex(), previousScreenVar.getCharacterType(previousScreenVar.getCharacterIndex()));
                 GameSession newGame = new GameSession(newCharacter);
 
-                mainGame.setScreen(new GameScreen(mainGame, newGame));
-//                mainGame.setScreenNoDispose(new NameInput(mainGame, characterSelection.this));
+                mainGame.pushScreen(new GameScreen(mainGame, newGame));
 
             }
         });
@@ -184,8 +182,6 @@ public class NameInput extends ScreenAdapter {
         return textField;
     }
 
-
-
     public void loadTextures(){
 
         textures.put("inputQuestion", new Texture(Gdx.files.internal("NameInput/name-txtbox.png")));
@@ -193,25 +189,10 @@ public class NameInput extends ScreenAdapter {
         textures.put("inputBox", new Texture(Gdx.files.internal("NameInput/name-input-box.png"))); // Replace with your image path
         textures.put("cursor", new Texture(Gdx.files.internal("NameInput/cursor.png")));
 
-        String charImagePath = "characters/" + previousScreen.getCharacterType(previousScreen.getCharacterIndex()) + "-head.png";
+        String charImagePath = "characters/" + previousScreenVar.getCharacterType(previousScreenVar.getCharacterIndex()) + "-head.png";
         textures.put("character", new Texture(Gdx.files.internal(charImagePath)));
     }
 
-    private void createBackButton() {
-        backButton.clearListeners(); // Clear any previous listeners to avoid stacking
-        backButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                // Go back to the previous screen
-                mainGame.setScreen(previousScreen);
-
-                // Ensure the previous screen resets its input processor
-                if (previousScreen != null) {
-                    (previousScreen).setStage(); // Explicit cast is unnecessary due to instanceof check
-                }
-            }
-        });
-    }
 
     @Override
     public void render(float delta) {
@@ -232,10 +213,7 @@ public class NameInput extends ScreenAdapter {
 
     public void resize(int width, int height) {
         viewport.update(width, height, true);
-        stage.getViewport().update(width, height, true);
-        createBackButton();
 
-        createUI();
     }
 
     @Override
@@ -243,6 +221,10 @@ public class NameInput extends ScreenAdapter {
         for (Texture texture : textures.values()) {
             texture.dispose();
         }
+
         stage.dispose();
+    }
+    public void setStage(){
+        Gdx.input.setInputProcessor(stage);
     }
 }

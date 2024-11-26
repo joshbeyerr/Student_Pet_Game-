@@ -14,17 +14,21 @@ public class CharacterClass {
     // e.g relaxed, brave
     private String characterType;
 
-    private int health;
-    private int sleep;
-    private int happiness;
-    private int fullness;
-    private int stress;
+    private int state;
 
-    private int healthChange;
-    private int sleepChange;
-    private int happinessChange;
-    private int fullnessChange;
-    private int stressChange;
+    private float health;
+    private float sleep;
+    private float happiness;
+    private float fullness;
+    private float stress;
+
+    private float healthChangeMultiplier;
+    private float sleepChangeMultiplier;
+    private float happinessChangeMultiplier;
+    private float fullnessChangeMultiplier;
+    private float stressChangeMultiplier;
+
+
 
     // Constructor
     public CharacterClass(String charName, Image charImage, int characterNumber, String characterType) {
@@ -50,25 +54,26 @@ public class CharacterClass {
     }
 
     // Getter and Setter for health
-    public int getHealth() {
+    public float getHealth() {
         return health;
     }
 
-    public void setHealth(int health) {
-        if (health >= 0 && health <= 100) {
+    public void setHealth(float health) {
+        if (health >= 0.0f && health <= 100.0f) {
             this.health = health;
-        } else {
+        }
+        else {
             System.out.println("Health value must be between 0 and 100.");
         }
     }
 
     // Getter and Setter for happiness
-    public int getHappiness() {
+    public float getHappiness() {
         return happiness;
     }
 
-    public void setHappiness(int happiness) {
-        if (happiness >= 0 && happiness <= 100) {
+    public void setHappiness(float happiness) {
+        if (happiness >= 0.0f && happiness <= 100.0f) {
             this.happiness = happiness;
         } else {
             System.out.println("Happiness value must be between 0 and 100.");
@@ -76,36 +81,36 @@ public class CharacterClass {
     }
 
     // Getter and Setter for hunger
-    public int getHunger() {
+    public float getHunger() {
         return fullness;
     }
 
-    public void setHunger(int hunger) {
-        if (hunger >= 0 && hunger <= 100) {
+    public void setHunger(float hunger) {
+        if (hunger >= 0.0f && hunger <= 100.0f) {
             this.fullness = hunger;
         } else {
             System.out.println("fullness value must be between 0 and 100.");
         }
     }
 
-    public int getSleep() {
+    public float getSleep() {
         return sleep;
     }
 
-    public void setSleep(int sleep) {
-        if (sleep >= 0 && sleep <= 100) {
+    public void setSleep(float sleep) {
+        if (sleep >= 0.0f && sleep <= 100.0f) {
             this.sleep = sleep;
         } else {
             System.out.println("sleep value must be between 0 and 100.");
         }
     }
 
-    public int getStress() {
+    public float getStress() {
         return stress;
     }
 
     public void setStress(int stress) {
-        if (stress >= 0 && stress <= 100) {
+        if (stress >= 0.0f && stress <= 100.0f) {
             this.stress = stress;
         } else {
             System.out.println("stress value must be between 0 and 100.");
@@ -119,43 +124,43 @@ public class CharacterClass {
             // case 0 = relaxed
             case 0:
 
-                setHealth(100);
-                setSleep(100);
-                setHappiness(100);
-                setHunger(100);
+                setHealth(100.0f);
+                setSleep(100.0f);
+                setHappiness(100.0f);
+                setHunger(100.0f);
                 break;
 
             // case 1 = quirky
             case 1:
-                setHealth(90);
-                setSleep(80);
-                setHappiness(100);
-                setHunger(100);
+                setHealth(90.0f);
+                setSleep(80.0f);
+                setHappiness(100.0f);
+                setHunger(100.0f);
                 break;
 
             // case 2 = hasty
             case 2:
-                setHealth(70);
-                setSleep(70);
-                setHappiness(80);
-                setHunger(80);
+                setHealth(70.0f);
+                setSleep(70.0f);
+                setHappiness(80.0f);
+                setHunger(80.0f);
                 break;
 
 
                 // case 3 == brave
             case 3:
-                setHealth(60);
-                setSleep(60);
-                setHappiness(70);
-                setHunger(70);
+                setHealth(60.0f);
+                setSleep(60.0f);
+                setHappiness(70.0f);
+                setHunger(70.0f);
                 break;
 
             // case 4 == serious
             case 4:
-                setHealth(50);
-                setSleep(50);
-                setHappiness(50);
-                setHunger(50);
+                setHealth(50.0f);
+                setSleep(50.0f);
+                setHappiness(50.0f);
+                setHunger(50.0f);
                 break;
 
             default: throw new IllegalArgumentException("Invalid character index: " + characterNumber);
