@@ -35,7 +35,6 @@ public class Main extends Game {
 
     private Stack<Screen> screenStack;
 
-
     @Override
     public void create() {
 
