@@ -2,7 +2,6 @@ package com.kaobells.group44;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -161,9 +160,9 @@ public class GameScreen extends ScreenAdapter{
 
 
         // Add the nested tables to the sidebar
-        sidebar.add(nameScoreTable).height(viewport.getWorldHeight() * 0.40f).padTop(30f).padLeft(60).row();
+        sidebar.add(nameScoreTable).height(viewport.getWorldHeight() * 0.45f).padTop(30f).padLeft(65).row();
 //        sidebar.add(statBarsTable).row();
-        sidebar.add(createButtonsTable()).padTop(50f).padLeft(60);
+        sidebar.add(createButtonsTable()).padTop(50f).padLeft(65);
 
 
     }
