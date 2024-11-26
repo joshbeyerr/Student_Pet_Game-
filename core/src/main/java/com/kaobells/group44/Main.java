@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.badlogic.gdx.files.FileHandle;
 
 import java.util.Stack;
 
@@ -34,7 +35,6 @@ public class Main extends Game {
 
     private Stack<Screen> screenStack;
 
-
     @Override
     public void create() {
 
@@ -53,7 +53,7 @@ public class Main extends Game {
 
         viewport = new FitViewport(baseWidth, baseHeight);
         viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
-
+        initializeLocalFile();
         this.pushScreen(new StartScreen(this));
 
     }
@@ -204,4 +204,21 @@ public class Main extends Game {
         viewport.update(width, height, true);
     }
 
+    //Internal JSON cannot be written too, only local ones
+    //So we must create a local version of database on first launch
+    private void initializeLocalFile(){
+        // Get file handles for the assets and local directories
+        FileHandle internalFile = Gdx.files.internal("database.json");
+        FileHandle localFile = Gdx.files.local("database.json");
+
+        // Check if the local file already exists
+        if (!localFile.exists()) {
+            // Copy the file from assets to local storage
+            internalFile.copyTo(localFile);
+            System.out.println("Database JSON created in local storage");
+        }
+        else {
+            System.out.println("Local Database JSON Previously Created");
+        }
+    }
 }
