@@ -4,9 +4,11 @@ public class Item {
     public int itemID;  // Item identifier
     public String itemStat; // Stat that Item will change
     public float itemStatValue; //Float for calculating how much item will change stat
+    public int itemCount;
 
-    public Item(String ItemID){ //Constructor
+    public Item(int ItemID){ //Constructor
     this.itemID = itemID;
+    this.itemCount = 0;
     setItemValues(itemID);
     }
 
@@ -64,5 +66,18 @@ public class Item {
 
     public int getItemID(){
         return this.itemID;
+    }
+
+    public boolean reduceCount(){
+        if (this.itemCount <= 0){
+            return false;
+        }
+        else{
+            this.itemCount--;
+            return true;
+        }
+    }
+    public void increaseCount(){
+        this.itemCount++;
     }
 }

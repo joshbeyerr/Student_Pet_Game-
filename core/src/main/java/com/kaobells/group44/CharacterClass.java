@@ -4,6 +4,8 @@ package com.kaobells.group44;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
+import java.util.Objects;
+
 public class CharacterClass {
 
     private final Image characterImage;
@@ -14,7 +16,7 @@ public class CharacterClass {
     // e.g relaxed, brave
     private String characterType;
 
-    private int state;
+    private String state;
 
     private float health;
     private float sleep;
@@ -23,23 +25,27 @@ public class CharacterClass {
     private float stress;
 
     // JUST FOR NOW - making all characters health change by 1
-    private float healthChange = 1;
-    private float sleepChange = 1;
-    private float happinessChange = 1;
-    private float fullnessChange = 1;
-    private float stressChange = 1;
+    // In the future this will be unique to each characterType and will be set when character is created.
+    private float healthChange = 1.0f;
+    private float sleepChange = 1.0f;
+    private float happinessChange = 1.0f;
+    private float fullnessChange = 1.0f;
+    private float stressChange = 1.0f;
+
+    private Item[] inventory;
 
 
 
     // Constructor
-    public CharacterClass(String charName, Image charImage, int characterNumber, String characterType) {
+    public CharacterClass(String charName, Image charImage, int characterNumber, String characterType, Item[] inventory, String state) {
         this.name = charName;
         this.characterImage = charImage;
-
+        this.inventory = inventory;
         this.characterNumber = characterNumber;
         this.characterType = characterType;
+        this.state = state;
 
-        // initialize character stats based on character type selected
+        // initialize character stats based on character type selected THIS WILL NEED TO CHANGE WHEN WE START IMPLEMENTING SAVE FILES
         setUpCharacter();
 
         Gdx.app.log("NAME", "health: " + health + "\nsleep: " + sleep + "\nhappiness: " + happiness + "\nfullness: " + fullness + "\nstress: " + stress);
@@ -118,6 +124,27 @@ public class CharacterClass {
         }
     }
 
+    //method tries to use an item
+    public void useItem(int index) {
+        // if the player has the item in the inventory it gets the item values and reduces the count in inventory by 1 then updates the relivent stat
+        if (inventory[index].reduceCount()){
+            Item usedItem = inventory[index];
+            if (Objects.equals(usedItem.itemStat, "fullness")){
+                fullness = fullness+(usedItem.itemStatValue*fullnessChange);
+            }
+            else{
+                happiness = happiness+(usedItem.itemStatValue*happinessChange);
+            }
+        }
+        //need to throw an error for a player trying to use an item they don't have here
+        else {
+        }
+    }
+
+    public void gainItem(int index) {
+        inventory[index].increaseCount();
+    }
+
     public void statBarTick(){
         setHealth(this.getHealth() - healthChange);
         setHappiness(this.getHappiness() - happinessChange);
@@ -128,6 +155,11 @@ public class CharacterClass {
 
     // initialize character stats based on character type selected
     private void setUpCharacter(){
+        //filling inventory with all the items with the count set to zero
+        for (int i = 0; i < 6; i++) {
+            this.inventory[i] = new Item(i);
+        }
+
         switch (characterNumber) {
 
             // case 0 = relaxed
