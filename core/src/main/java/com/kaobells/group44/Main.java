@@ -54,6 +54,7 @@ public class Main extends Game {
         viewport = new FitViewport(baseWidth, baseHeight);
         viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
         initializeLocalFile();
+
         this.pushScreen(new StartScreen(this));
 
     }
@@ -88,6 +89,16 @@ public class Main extends Game {
         }
         return null; // No previous screen exists
     }
+
+    // for when a game is loading, clear all menu screens in memory except for very main menu
+    public void clearStackExceptMain() {
+        while (screenStack.size() > 1) {
+            Screen screen = screenStack.pop();
+            screen.dispose(); // Dispose of each screen being popped
+        }
+        // Leave the main menu (first screen) in the stack
+    }
+
 
 
     private void loadTextures(){

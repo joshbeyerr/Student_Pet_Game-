@@ -91,7 +91,12 @@ public class NameInput extends ScreenAdapter {
 
                 // starting game
 
-                CharacterClass newCharacter = new CharacterClass(nameInputField.getText(), characterImage, previousScreenVar.getCharacterIndex(), previousScreenVar.getCharacterType(previousScreenVar.getCharacterIndex()));
+                // Clear all screens except the main menu, memory saver
+                mainGame.clearStackExceptMain();
+
+                Item[] inventory = new Item[6];
+                CharacterClass newCharacter = new CharacterClass(nameInputField.getText(), characterImage, previousScreenVar.getCharacterIndex(), previousScreenVar.getCharacterType(previousScreenVar.getCharacterIndex()),inventory, "Normal");
+
                 GameSession newGame = new GameSession(newCharacter);
 
                 mainGame.pushScreen(new GameScreen(mainGame, newGame));
