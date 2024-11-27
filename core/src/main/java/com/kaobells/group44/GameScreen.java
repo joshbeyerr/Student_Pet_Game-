@@ -153,13 +153,11 @@ public class GameScreen extends ScreenAdapter{
 
         // Add the tables to the rootTable
         rootTable.add(tables.get("sidebar"))
-            .width(viewport.getWorldWidth() * 0.25f)
-            .fillY()
+            .width(viewport.getWorldHeight() * 0.4f)
             .align(Align.left);
 
         rootTable.add(tables.get("gameSection"))
-            .width(viewport.getWorldWidth() * 0.75f)
-            .fillY()
+            .width(viewport.getWorldHeight() * 1.2f)
             .align(Align.right);
     }
 
@@ -372,9 +370,10 @@ public class GameScreen extends ScreenAdapter{
 
         // Add the background image to the table
         gameSection.add(background)
-            .width(viewport.getWorldWidth() * 0.7f) // Smaller than the allocated 2/3 space
-            .height(viewport.getWorldHeight() * 0.95f) // Leave room for padding at top/bottom
-            .pad(viewport.getWorldWidth() * 0.01f   ); // Add padding for the illusion of a screen within a screen
+            .width(viewport.getWorldHeight() * 1.14f) // Smaller than the allocated 2/3 space
+            .height(viewport.getWorldHeight() * 0.95f)
+                    .padLeft(viewport.getWorldHeight() * 0.025f);
+
 
         // Center the gameSection content within itself
         gameSection.center();
