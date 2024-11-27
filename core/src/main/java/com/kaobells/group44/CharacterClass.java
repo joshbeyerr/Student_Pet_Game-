@@ -22,11 +22,12 @@ public class CharacterClass {
     private float fullness;
     private float stress;
 
-    private float healthChangeMultiplier;
-    private float sleepChangeMultiplier;
-    private float happinessChangeMultiplier;
-    private float fullnessChangeMultiplier;
-    private float stressChangeMultiplier;
+    // JUST FOR NOW - making all characters health change by 1
+    private float healthChange = 1;
+    private float sleepChange = 1;
+    private float happinessChange = 1;
+    private float fullnessChange = 1;
+    private float stressChange = 1;
 
 
 
@@ -109,12 +110,20 @@ public class CharacterClass {
         return stress;
     }
 
-    public void setStress(int stress) {
+    public void setStress(float stress) {
         if (stress >= 0.0f && stress <= 100.0f) {
             this.stress = stress;
         } else {
             System.out.println("stress value must be between 0 and 100.");
         }
+    }
+
+    public void statBarTick(){
+        setHealth(this.getHealth() - healthChange);
+        setHappiness(this.getHappiness() - happinessChange);
+        setSleep(this.getSleep() - sleepChange);
+        setHunger(this.getHunger() - fullnessChange);
+        setStress(this.getStress() - stressChange);
     }
 
     // initialize character stats based on character type selected
@@ -128,6 +137,8 @@ public class CharacterClass {
                 setSleep(100.0f);
                 setHappiness(100.0f);
                 setHunger(100.0f);
+                setStress(100.0f);
+
                 break;
 
             // case 1 = quirky
@@ -136,6 +147,7 @@ public class CharacterClass {
                 setSleep(80.0f);
                 setHappiness(100.0f);
                 setHunger(100.0f);
+                setStress(80.0f);
                 break;
 
             // case 2 = hasty
@@ -144,6 +156,7 @@ public class CharacterClass {
                 setSleep(70.0f);
                 setHappiness(80.0f);
                 setHunger(80.0f);
+                setStress(70.0f);
                 break;
 
 
@@ -153,6 +166,7 @@ public class CharacterClass {
                 setSleep(60.0f);
                 setHappiness(70.0f);
                 setHunger(70.0f);
+                setStress(60.0f);
                 break;
 
             // case 4 == serious
@@ -161,6 +175,7 @@ public class CharacterClass {
                 setSleep(50.0f);
                 setHappiness(50.0f);
                 setHunger(50.0f);
+                setStress(50.0f);
                 break;
 
             default: throw new IllegalArgumentException("Invalid character index: " + characterNumber);

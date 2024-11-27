@@ -40,6 +40,8 @@ public class GameScreen extends ScreenAdapter{
 
     private Map<String, Texture> textures;
     private final Map<String, Table> tables;
+    private Map<String, TextureRegionDrawable> drawables;
+
 
     // stores in images and image buttons
     private final Map<String, Actor> images;
@@ -77,12 +79,18 @@ public class GameScreen extends ScreenAdapter{
                 session.score += 1;
                 scoreLabel.setText("Score: " + (session.score));
 
-                session.character.setHunger(session.character.getHunger() - 10);
-                updateStatBar("fullnessBar", session.character.getHunger(), 100);
+                session.character.statBarTick();
+
+                updateStatBar("fullnessBar", session.character.getHunger());
+                updateStatBar("happinessBar", session.character.getHappiness());
+                updateStatBar("healthBar", session.character.getHealth());
+                updateStatBar("sleepBar", session.character.getSleep());
+                updateStatBar("stressBar", session.character.getSleep());
+
 
 
             }
-        }, 0, 5f); // Update every 5 seconds
+        }, 3, 5f); // Update every 5 seconds
 
     }
 
@@ -94,14 +102,14 @@ public class GameScreen extends ScreenAdapter{
 
     public void setLabelStyles(){
         BitmapFont nameFont = mainGame.resourceManager.getFont(true);
-        nameFont.getData().setScale(4f); // Scale by 1.5x
+        nameFont.getData().setScale((viewport.getWorldHeight() / 500f)); // Scale by 1.5x
         nameLabelStyle = new Label.LabelStyle();
         nameLabelStyle.font = nameFont; // Set the font for the label
 
         nameLabelStyle.fontColor = new Color(0x66 / 255f, 0x2d / 255f, 0x91 / 255f, 1f);
 
         BitmapFont scoreFont = mainGame.resourceManager.getFont(true);
-        scoreFont.getData().setScale(2.0f); // Scale by 1.5x
+        scoreFont.getData().setScale((viewport.getWorldHeight() / 1000f)); // Scale by 1.5x
         scoreLabelStyle = new Label.LabelStyle();
         scoreLabelStyle.font = scoreFont; // Set the font for the label
         scoreLabelStyle.fontColor = new Color(0xb5 / 255f, 0x84 / 255f, 0xdb / 255f, 1f);
@@ -156,13 +164,14 @@ public class GameScreen extends ScreenAdapter{
 
         Table nameScoreTable = createNameScoreTable();
 
-        nameScoreTable.add(createStatBarTable()).pad(10f);
+        nameScoreTable.add(createStatBarTable()).pad((viewport.getWorldHeight() * 0.006f));
 
+        float leftPad = (viewport.getWorldHeight() * 0.035f);
 
         // Add the nested tables to the sidebar
-        sidebar.add(nameScoreTable).height(viewport.getWorldHeight() * 0.45f).padTop(30f).padLeft(65).row();
+        sidebar.add(nameScoreTable).height(viewport.getWorldHeight() * 0.45f).padTop((viewport.getWorldHeight() * 0.018f)).padLeft(leftPad).row();
 //        sidebar.add(statBarsTable).row();
-        sidebar.add(createButtonsTable()).padTop(50f).padLeft(65);
+        sidebar.add(createButtonsTable()).padTop((viewport.getWorldHeight() * 0.025f)).padLeft(leftPad);
 
 
     }
@@ -184,15 +193,15 @@ public class GameScreen extends ScreenAdapter{
         scoreLabel.setAlignment(Align.center);
 
         // Add the Labels to the Table
-        nameScoreTable.add(nameLabel).pad(20f).row(); // Add nameLabel and move to next row
-        nameScoreTable.add(scoreLabel).pad(20f).row();
+        nameScoreTable.add(nameLabel).pad((viewport.getWorldHeight() * 0.012f)).row(); // Add nameLabel and move to next row
+        nameScoreTable.add(scoreLabel).pad((viewport.getWorldHeight() * 0.012f)).row();
 
-        nameScoreTable.add(images.get("openInventory")).pad(10f).row();
+        nameScoreTable.add(images.get("openInventory")).pad((viewport.getWorldHeight() * 0.006f)).row();
 
         return nameScoreTable;
     }
 
-    public Table createStatBar(float currentValue, float maxValue) {
+    public Table createStatBar(float currentValue) {
         Table statBarTable = new Table();
 
         // Background of the stat bar
@@ -200,12 +209,14 @@ public class GameScreen extends ScreenAdapter{
         statBarTable.setBackground(backgroundDrawable); // Set as actual table background
 
         // Foreground (dynamic portion) of the stat bar
-        TextureRegionDrawable foregroundDrawable = new TextureRegionDrawable(new Texture("game/sideBar/stat-bar-foreground.png"));
-        Image barForeground = new Image(foregroundDrawable);
+
+        Image barForeground = (getStatBarColor(currentValue));
 
         // Calculate the width of the bar foreground based on the current stat value
-        float maxBarWidth = 300f; // Maximum width of the bar
-        float currentBarWidth = (currentValue / maxValue) * maxBarWidth;
+        float maxBarWidth = (viewport.getWorldHeight() * 0.166f); // Maximum width of the bar
+
+        // max bar value is always 100
+        float currentBarWidth = (currentValue / 100) * maxBarWidth;
 
         // Wrap the foreground bar in a container to enforce its width
         Container<Image> barForegroundContainer = new Container<>(barForeground);
@@ -213,29 +224,61 @@ public class GameScreen extends ScreenAdapter{
         barForegroundContainer.align(Align.left); // Ensure the foreground is aligned to the left
 
         // Add only the foreground to the table (background is already set)
-        statBarTable.add(barForegroundContainer).width(maxBarWidth).height(20).align(Align.left); // Align the bar container to the left
+        statBarTable.add(barForegroundContainer).width(maxBarWidth).height((viewport.getWorldHeight() * 0.012f)).align(Align.left); // Align the bar container to the left
 
         return statBarTable;
     }
 
-    public void updateStatBar(String statName, float currentValue, float maxValue) {
+    public void updateStatBar(String statName, float currentValue) {
         // Retrieve the stat bar table from the images map
         Table statBarTable = (Table) images.get(statName);
         if (statBarTable != null) {
-            // Get the foreground container (the first child of the table)
-            Container<Image> barForegroundContainer = (Container<Image>) statBarTable.getChildren().get(0);
+            Actor child = statBarTable.getChildren().get(0);
+            if (child instanceof Container) {
+                Container<?> container = (Container<?>) child;
+                if (container.getActor() instanceof Image) {
+                    // Use the already-checked container
+                    @SuppressWarnings("unchecked")
+                    Container<Image> barForegroundContainer = (Container<Image>) container;
 
-            // Calculate the new width of the foreground bar
-            float maxBarWidth = 300f;
-            float newWidth = (currentValue / maxValue) * maxBarWidth;
+                    barForegroundContainer.setActor(getStatBarColor(currentValue));
 
-            // Update the width of the container
-            barForegroundContainer.width(newWidth);
+                    float maxBarWidth = (viewport.getWorldHeight() * 0.166f); // Maximum width of the bar
 
-            // Force the container to relayout with the updated width
-            barForegroundContainer.invalidate();
+                    // 100 being the max value of the stat bar
+                    float newWidth = (currentValue / 100) * maxBarWidth;
+                    // Update the width of the container
+                    barForegroundContainer.width(newWidth);
+
+                    // Force the container to relayout with the updated width
+                    barForegroundContainer.invalidate();
+                } else {
+                    throw new IllegalStateException("The container does not contain an Image!");
+                }
+            } else {
+                throw new IllegalStateException("The first child is not a Container!");
+            }
         }
     }
+
+    public Image getStatBarColor(float currentValue) {
+        if (currentValue >= 0.0f && currentValue <= 100.0f) {
+            if (currentValue >= 80.0f) {
+                return new Image(drawables.get("greenBar"));
+            } else if (currentValue >= 60.0f) {
+                return new Image(drawables.get("grellowBar"));
+            } else if (currentValue >= 40.0f) {
+                return new Image(drawables.get("yellowBar"));
+            } else if (currentValue >= 20.0f) {
+                return new Image(drawables.get("orangeBar"));
+            } else {
+                return new Image(drawables.get("redBar"));
+            }
+        }
+        return null;
+    }
+
+
 
 
 
@@ -243,23 +286,25 @@ public class GameScreen extends ScreenAdapter{
         // Stat Bars Section
         Table statBarsTable = getOrCreateTable("statBarsTable");
 
-        statBarsTable.padTop(20f);
+        statBarsTable.padTop(viewport.getWorldHeight() * 0.012f);
 
-        statBarsTable.add(images.get("fullnessBox")).pad(10f);
+        float padValue = viewport.getWorldHeight() * 0.006f;
 
-        statBarsTable.add(images.get("fullnessBar")).pad(10f).row();
+        statBarsTable.add(images.get("fullnessBox")).pad(padValue);
 
-        statBarsTable.add(images.get("sleepBox")).pad(10f);
-        statBarsTable.add(images.get("sleepBar")).pad(10f).row();
+        statBarsTable.add(images.get("fullnessBar")).pad(padValue).row();
 
-        statBarsTable.add(images.get("happinessBox")).pad(10f);
-        statBarsTable.add(images.get("happinessBar")).pad(10f).row();
+        statBarsTable.add(images.get("sleepBox")).pad(padValue);
+        statBarsTable.add(images.get("sleepBar")).pad(padValue).row();
 
-        statBarsTable.add(images.get("healthBox")).pad(10f);
-        statBarsTable.add(images.get("healthBar")).pad(10f).row();
+        statBarsTable.add(images.get("happinessBox")).pad(padValue);
+        statBarsTable.add(images.get("happinessBar")).pad(padValue).row();
 
-        statBarsTable.add(images.get("stressBox")).pad(10f);
-        statBarsTable.add(images.get("stressBar")).pad(10f).row();
+        statBarsTable.add(images.get("healthBox")).pad(padValue);
+        statBarsTable.add(images.get("healthBar")).pad(padValue).row();
+
+        statBarsTable.add(images.get("stressBox")).pad(padValue);
+        statBarsTable.add(images.get("stressBar")).pad(padValue).row();
 
         return statBarsTable;
 
@@ -271,19 +316,19 @@ public class GameScreen extends ScreenAdapter{
 
         float buttonPad = viewport.getWorldHeight() * 0.03f;
 
-        float buttonWidth = 375f;
-        float ButtonHeight = 240f;
+        float buttonWidth = viewport.getWorldWidth() * 0.13f; // 13% of viewport width
+        float buttonHeight = viewport.getWorldHeight() * 0.13f; // 13% of viewport height
 
 
-        buttonsTable.add(images.get("feed")).size(buttonWidth,ButtonHeight).padBottom(buttonPad).fill();
+        buttonsTable.add(images.get("feed")).size(buttonWidth,buttonHeight).padBottom(buttonPad).fill();
 
-        buttonsTable.add(images.get("sleep")).size(buttonWidth,ButtonHeight).padBottom(buttonPad).fill().row();
+        buttonsTable.add(images.get("sleep")).size(buttonWidth,buttonHeight).padBottom(buttonPad).fill().row();
 
-        buttonsTable.add(images.get("exercise")).size(buttonWidth,ButtonHeight).padBottom(buttonPad).fill();
-        buttonsTable.add(images.get("play")).size(buttonWidth,ButtonHeight).padBottom(buttonPad).fill().row();
+        buttonsTable.add(images.get("exercise")).size(buttonWidth,buttonHeight).padBottom(buttonPad).fill();
+        buttonsTable.add(images.get("play")).size(buttonWidth,buttonHeight).padBottom(buttonPad).fill().row();
 
-        buttonsTable.add(images.get("gift")).size(buttonWidth,ButtonHeight).padBottom(buttonPad).fill();
-        buttonsTable.add(images.get("doctor")).size(buttonWidth,ButtonHeight).padBottom(buttonPad).fill().row();
+        buttonsTable.add(images.get("gift")).size(buttonWidth,buttonHeight).padBottom(buttonPad).fill();
+        buttonsTable.add(images.get("doctor")).size(buttonWidth,buttonHeight).padBottom(buttonPad).fill().row();
         // Add more buttons...
 
         return buttonsTable;
@@ -359,23 +404,32 @@ public class GameScreen extends ScreenAdapter{
         images.put("Name", new Label(session.character.getName(), nameLabelStyle));
         images.put("Score", new Label("Score: " + (session.score), scoreLabelStyle));
 
+        // star bar colors
+        drawables = new HashMap<>();
 
-        // stat bar creation
-        Table fullnessBar = createStatBar(session.character.getHunger(), 100);
+        drawables.put("greenBar", new TextureRegionDrawable(new Texture("game/sideBar/stat/stat-green-bg.png")));
+        drawables.put("grellowBar", new TextureRegionDrawable(new Texture("game/sideBar/stat/stat-grellow-bg.png")));
+        drawables.put("yellowBar", new TextureRegionDrawable(new Texture("game/sideBar/stat/stat-yellow-bg.png")));
+        drawables.put("orangeBar", new TextureRegionDrawable(new Texture("game/sideBar/stat/stat-orange-bg.png")));
+        drawables.put("redBar", new TextureRegionDrawable(new Texture("game/sideBar/stat/stat-red-bg.png")));
 
-        images.put("fullnessBar", fullnessBar);
-
-        Table sleepBar = createStatBar(session.character.getSleep(), 100);
+        // creating actual stat bar images (tables)
+        Table sleepBar = createStatBar(session.character.getSleep());
         images.put("sleepBar", sleepBar);
 
-        Table happinessBar = createStatBar(session.character.getHappiness(), 100);
+        Table happinessBar = createStatBar(session.character.getHappiness());
         images.put("happinessBar", happinessBar);
 
-        Table stressBar = createStatBar(session.character.getStress(), 100);
+        Table stressBar = createStatBar(session.character.getStress());
         images.put("stressBar", stressBar);
 
-        Table healthBar = createStatBar(session.character.getHealth(), 100);
+        Table healthBar = createStatBar(session.character.getHealth());
         images.put("healthBar", healthBar);
+
+        // stat bar creation
+        Table fullnessBar = createStatBar(session.character.getHunger());
+        images.put("fullnessBar", fullnessBar);
+
 
 
 
@@ -406,9 +460,7 @@ public class GameScreen extends ScreenAdapter{
 
     public void resize(int width, int height) {
         viewport.update(width, height, true);
-        stage.getViewport().update(width, height, true);
 
-        createUI();
 
     }
 

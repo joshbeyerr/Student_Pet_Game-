@@ -175,7 +175,7 @@ public class NameInput extends ScreenAdapter {
             @Override
             public boolean acceptChar(TextField textField, char c) {
                 // Allow the character only if the text length is less than 15
-                return textField.getText().length() < 15;
+                return textField.getText().length() < 10;
             }
         });
 
