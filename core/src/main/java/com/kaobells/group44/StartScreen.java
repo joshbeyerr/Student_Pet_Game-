@@ -21,7 +21,7 @@ import java.util.Map;
 
 public class StartScreen extends ScreenAdapter {
 
-    private Main mainGame;
+    private Main mainGame;  // Main game class for shared resources transitioning screens
 
     private SpriteBatch spriteBatch;
     private Viewport viewport;
@@ -39,8 +39,8 @@ public class StartScreen extends ScreenAdapter {
     private ImageButton parentalButton;
     private ImageButton yesProceed;
     private ImageButton noBack;
-
     private Image parentQuestion;
+    private ImageButton exitButton;
 
     private BitmapFont font;
 
@@ -69,6 +69,9 @@ public class StartScreen extends ScreenAdapter {
 
     private void initializeUI() {
 
+        // Add table to the stage
+        stage.clear(); // Clear existing actors (if any)
+
         currentState = UIState.MAIN_MENU; // Update state
 
         if (table != null){
@@ -83,8 +86,9 @@ public class StartScreen extends ScreenAdapter {
         addActorToTable(table, creditsButton, false);
         addActorToTable(table, parentalButton, false);
 
-        // Add table to the stage
-        stage.clear(); // Clear existing actors (if any)
+        exitButton = formatExitButton();
+
+        stage.addActor(exitButton); // Add the exitButton to the stage
 
         stage.addActor(table);
     }
@@ -112,6 +116,16 @@ public class StartScreen extends ScreenAdapter {
         stage.clear(); // Clear existing actors (if any)
         stage.addActor(table);
 
+    }
+
+    private ImageButton formatExitButton(){
+        // Set the size and position of the exitButton
+        float buttonWidth = viewport.getWorldWidth() * 0.08f; // 8% of viewport width
+        float buttonHeight = viewport.getWorldHeight() * 0.08f; // 8% of viewport height
+        float padding = 100; // Padding from edges
+        exitButton.setSize(buttonWidth, buttonHeight); // Set button size
+        exitButton.setPosition(padding, viewport.getWorldHeight() - buttonHeight - padding); // Position button
+        return exitButton;
     }
 
     private void addActorToTable(Table table, Actor actor, boolean newRow) {
@@ -165,6 +179,7 @@ public class StartScreen extends ScreenAdapter {
         textures.put("confirm", new Texture(Gdx.files.internal("startScreen/parent-textbox.png")));
         textures.put("yes", new Texture(Gdx.files.internal("startScreen/proceed-parent-btn.png")));
         textures.put("no", new Texture(Gdx.files.internal("startScreen/back-parent-btn.png")));
+        textures.put("exit", new Texture(Gdx.files.internal("startScreen/exit-btn.png")));
     }
 
     private void loadActors() {
@@ -175,6 +190,7 @@ public class StartScreen extends ScreenAdapter {
         yesProceed = mainGame.createImageButton(textures.get("yes"));
         noBack = mainGame.createImageButton(textures.get("no"));
         parentQuestion = mainGame.createImage(textures.get("confirm"));
+        exitButton = mainGame.createImageButton(textures.get("exit"));
 
 
         startButton.addListener(new ClickListener() {
@@ -212,6 +228,17 @@ public class StartScreen extends ScreenAdapter {
                 // Perform an action, for example, print a message or switch screens
                 Gdx.app.log("noBack", "noBack clicked!");
                 initializeUI();
+
+            }
+        });
+
+        // Add action listener to the exit button
+        exitButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                // Perform an action, for example, print a message or switch screens
+                Gdx.app.log("exitButton", "Exiting game...");
+                Gdx.app.exit();
 
             }
         });
