@@ -3,7 +3,6 @@ package com.kaobells.group44;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Timer;
 
@@ -241,7 +240,7 @@ public class CharacterClass {
         setBody(bodyDetermine());
     }
 
-    public Image getCurrentHead() {
+    public Image getHead() {
         return currentHead;
     }
 
@@ -251,7 +250,7 @@ public class CharacterClass {
         }
     }
 
-    public Image getCurrentBody() {
+    public Image getBody() {
         return currentBody;
     }
 
@@ -282,6 +281,11 @@ public class CharacterClass {
             return characterBodies.get("neutral");
         }
     }
+
+    public String getState(){
+        return state;
+    }
+
 
     public void startCharacter() {
         if (blinkTask != null) {

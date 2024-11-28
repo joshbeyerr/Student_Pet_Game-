@@ -13,7 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.scenes.scene2d.utils.TransformDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -106,8 +105,8 @@ public class GameScreen extends ScreenAdapter{
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
-                updateHead(gameSession.character.getCurrentHead());
-                updateBody(gameSession.character.getCurrentBody());
+                updateHead(gameSession.character.getHead());
+                updateBody(gameSession.character.getBody());
             }
         }, 1, 0.1f);
     }
@@ -368,7 +367,7 @@ public class GameScreen extends ScreenAdapter{
         // Create a container for the head
         headContainer = new Container<>();
         headContainer.size(viewport.getWorldHeight() * 0.25f, viewport.getWorldHeight() * 0.22f);
-        headContainer.setActor(session.character.getCurrentHead());
+        headContainer.setActor(session.character.getHead());
 
         // Add the head container to the table
         gameSection.add(headContainer)
@@ -378,7 +377,7 @@ public class GameScreen extends ScreenAdapter{
         // Create a container for the body
         bodyContainer = new Container<>();
         bodyContainer.size(viewport.getWorldHeight() * 0.36f, viewport.getWorldHeight() * 0.20f);
-        bodyContainer.setActor(session.character.getCurrentBody());
+        bodyContainer.setActor(session.character.getBody());
 
         // Add the body container to the table
         gameSection.add(bodyContainer);
