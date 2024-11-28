@@ -1,23 +1,20 @@
 package com.kaobells.group44;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Container;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TransformDrawable;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.JsonWriter;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.utils.Timer;
@@ -42,16 +39,26 @@ public class GameScreen extends ScreenAdapter{
     private final Map<String, Table> tables;
     private Map<String, TextureRegionDrawable> drawables;
 
-    // delete later
-    private Actor test;
+
 
 
     // stores in images and image buttons
     private final Map<String, Actor> images;
 
+    Container<Image> headContainer;
+    Container<Image> bodyContainer;
+
 
     // Root table for storing the sidebar section, and the game section
     Table rootTable;
+
+    // test vars
+    // delete later
+    private Actor test;
+    boolean blink = false;
+
+    InputMultiplexer multiplexer;
+
 
     public GameScreen(Main game, GameSession gameSession){
 
@@ -89,25 +96,20 @@ public class GameScreen extends ScreenAdapter{
                 updateStatBar("healthBar", session.character.getHealth());
                 updateStatBar("sleepBar", session.character.getSleep());
                 updateStatBar("stressBar", session.character.getSleep());
+
+
+
             }
-        }, 1, 0.05f); // Update every 5 seconds
+        }, 1, 1f); // Update every 5 seconds
 
 
-        // test timer for discovering image auto size
-//        Timer.schedule(new Timer.Task() {
-//            @Override
-//            public void run() {
-//                Actor openInventory = images.get("openInventory");
-//                Label scoreLabel = (Label) images.get("Score");
-//
-//                // Log their sizes
-//                Gdx.app.log("openInventory Size", "Width: " + openInventory.getWidth() + ", Height: " + openInventory.getHeight());
-//                Gdx.app.log("ScoreLabel Size", "Width: " + scoreLabel.getWidth() + ", Height: " + scoreLabel.getHeight());
-//
-//                Gdx.app.log("TEST Size", "Width: " + test.getWidth() + ", Height: " + test.getHeight());
-//            }
-//        }, 0.1f); // Wait 0.1 seconds before logging
-
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                updateHead(gameSession.character.getCurrentHead());
+                updateBody(gameSession.character.getCurrentBody());
+            }
+        }, 1, 0.1f);
     }
 
     @Override
@@ -129,10 +131,7 @@ public class GameScreen extends ScreenAdapter{
         scoreLabelStyle = new Label.LabelStyle();
         scoreLabelStyle.font = scoreFont; // Set the font for the label
         scoreLabelStyle.fontColor = new Color(0xb5 / 255f, 0x84 / 255f, 0xdb / 255f, 1f);
-
-
     }
-
 
 
     public void createUI() {
@@ -156,8 +155,11 @@ public class GameScreen extends ScreenAdapter{
             .width(viewport.getWorldHeight() * 0.4f)
             .align(Align.left);
 
+
         rootTable.add(tables.get("gameSection"))
-            .width(viewport.getWorldHeight() * 1.2f)
+                .width(viewport.getWorldHeight() * 1.13f) // This will control the table size and hence the background size
+                .height(viewport.getWorldHeight() * 0.95f)
+                .padLeft(viewport.getWorldHeight() * 0.04f)
             .align(Align.right);
     }
 
@@ -181,9 +183,9 @@ public class GameScreen extends ScreenAdapter{
 
         Table nameScoreTable = createNameScoreTable();
 
-        nameScoreTable.add(createStatBarTable()).size(height * 0.34f, height * 0.23f).pad((height * 0.006f));
+        nameScoreTable.add(createStatBarTable()).size(height * 0.34f, height * 0.23f);
 
-        float leftPad = (height * 0.035f);
+        float leftPad = (height * 0.025f);
 
         // Add the nested tables to the sidebar
         sidebar.add(nameScoreTable).size(height * 0.42f, height * 0.45f).padTop((height * 0.018f)).padLeft(leftPad).row();
@@ -216,7 +218,7 @@ public class GameScreen extends ScreenAdapter{
         nameScoreTable.add(nameLabel).size((height* 0.11f), (height * 0.045f)).pad((height * 0.012f)).row(); // Add nameLabel and move to next row
         nameScoreTable.add(scoreLabel).size((height * 0.15f), (height * 0.022f)).pad((height * 0.012f)).row();
 
-        nameScoreTable.add(images.get("openInventory")).size((height * 0.2f), (height * 0.045f)).pad((height * 0.006f)).row();
+        nameScoreTable.add(images.get("openInventory")).size((height * 0.35f), (height * 0.045f)).padTop((height * 0.006f)).row();
 
         return nameScoreTable;
     }
@@ -229,11 +231,8 @@ public class GameScreen extends ScreenAdapter{
 
         statBarTable.setBackground(backgroundDrawable); // Set as actual table background
 
-
         // Foreground (dynamic portion) of the stat bar
-
         Image barForeground = (getStatBarColor(currentValue));
-
 
         // Calculate the width of the bar foreground based on the current stat value
         float maxBarWidth = (viewport.getWorldHeight() * 0.166f); // Maximum width of the bar
@@ -315,7 +314,6 @@ public class GameScreen extends ScreenAdapter{
         float barWidth = viewport.getWorldHeight() * 0.166f;
         float barHeight= viewport.getWorldHeight() * 0.013f;
 
-
         statBarsTable.add(images.get("fullnessBox")).size(imageWidth, imageHeight).pad(padValue);
 
         statBarsTable.add(images.get("fullnessBar")).size(barWidth, barHeight).pad(padValue).row();
@@ -360,25 +358,55 @@ public class GameScreen extends ScreenAdapter{
         return buttonsTable;
     }
 
-
     public void gameSection() {
-
         Table gameSection = getOrCreateTable("gameSection");
 
-        // Set the background for the game section with padding around it
-        Image background = new Image(new TextureRegionDrawable(new TextureRegion(textures.get("gameBackground"))));
+        // Set the background for the game section
+        TextureRegionDrawable backgroundDrawable = new TextureRegionDrawable(new TextureRegion(textures.get("gameBackground")));
+        gameSection.setBackground(backgroundDrawable);
 
-        // Add the background image to the table
-        gameSection.add(background)
-            .width(viewport.getWorldHeight() * 1.14f) // Smaller than the allocated 2/3 space
-            .height(viewport.getWorldHeight() * 0.95f)
-                    .padLeft(viewport.getWorldHeight() * 0.025f);
+        // Create a container for the head
+        headContainer = new Container<>();
+        headContainer.size(viewport.getWorldHeight() * 0.25f, viewport.getWorldHeight() * 0.22f);
+        headContainer.setActor(session.character.getCurrentHead());
 
+        // Add the head container to the table
+        gameSection.add(headContainer)
+                .padTop(viewport.getWorldHeight() * 0.35f)
+                .row(); // Move to the next row
+
+        // Create a container for the body
+        bodyContainer = new Container<>();
+        bodyContainer.size(viewport.getWorldHeight() * 0.36f, viewport.getWorldHeight() * 0.20f);
+        bodyContainer.setActor(session.character.getCurrentBody());
+
+        // Add the body container to the table
+        gameSection.add(bodyContainer);
 
         // Center the gameSection content within itself
         gameSection.center();
     }
 
+
+
+    // ? idk, i think all head and body textures should be stored in character class,
+    // and a call of getHead or getBody will return the image
+
+    public void updateHead(Image newHead) {
+        // Find the head container
+        if (headContainer != null) {
+            headContainer.setActor(newHead); // Update the actor inside the container
+        }
+
+    }
+
+    public void updateBody(Image newBody) {
+        // Find the head container
+        if (bodyContainer != null) {
+            bodyContainer.setActor(newBody); // Update the actor inside the container
+        }
+
+    }
 
     public void loadTextures(){
         textures = new HashMap<>();
@@ -410,9 +438,30 @@ public class GameScreen extends ScreenAdapter{
 
 
     public void loadImageButtons(){
-        images.put("feed", mainGame.createImageButton(textures.get("feed")));
+        ImageButton feed = mainGame.createImageButton(textures.get("feed"));
+        feed.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                session.character.feed();
+
+
+            }
+        });
+        images.put("feed", feed);
+
         images.put("sleep", mainGame.createImageButton(textures.get("sleep")));
-        images.put("exercise", mainGame.createImageButton(textures.get("exercise")));
+
+        ImageButton exercise = mainGame.createImageButton(textures.get("exercise"));
+        exercise.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.log("exercise", "here");
+                session.character.exercise();
+
+            }
+        });
+
+        images.put("exercise", exercise);
         images.put("play", mainGame.createImageButton(textures.get("play")));
         images.put("gift", mainGame.createImageButton(textures.get("gift")));
         images.put("doctor", mainGame.createImageButton(textures.get("doctor")));
@@ -426,7 +475,6 @@ public class GameScreen extends ScreenAdapter{
         images.put("openInventory", mainGame.createImageButton(textures.get("openInventory")));
 
         images.put("purpleLabel", mainGame.createImageButton(textures.get("purpleLabel")));
-//        images.put("purpleBox", mainGame.createImage(textures.get("purpleBox")));
 
         images.put("Name", new Label(session.character.getName(), nameLabelStyle));
         images.put("Score", new Label("Score: " + (session.score), scoreLabelStyle));
@@ -457,9 +505,6 @@ public class GameScreen extends ScreenAdapter{
         Table fullnessBar = createStatBar(session.character.getHunger());
         images.put("fullnessBar", fullnessBar);
 
-
-
-
     }
 
     @Override
@@ -488,9 +533,24 @@ public class GameScreen extends ScreenAdapter{
 
     }
 
-
     public void setStage(){
-        Gdx.input.setInputProcessor(stage);
+        if (multiplexer == null){
+            // Create an InputAdapter for key press handling
+            InputAdapter inputAdapter = new InputAdapter() {
+                @Override
+                public boolean keyDown(int keycode) {
+                    if (keycode == Input.Keys.F) {
+                        session.character.feed();
+                        return true;
+                    }
+                    return true;
+                }
+            };
+            multiplexer = new InputMultiplexer();
+            multiplexer.addProcessor(stage);       // Stage for UI interactions
+            multiplexer.addProcessor(inputAdapter); // InputAdapter for key presses
+        }
+        Gdx.input.setInputProcessor(multiplexer);
     }
 
 }
