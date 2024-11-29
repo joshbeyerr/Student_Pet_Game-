@@ -433,11 +433,6 @@ public class CharacterClass {
 
     }
 
-    public void feedAction() {
-        //code to open inventory and allow only the food items to be used
-
-    }
-
     public void feedVisual() {
 
         if (!isActionBlocked) {
