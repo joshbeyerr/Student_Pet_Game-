@@ -3,6 +3,7 @@ package com.kaobells.group44;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Timer;
 
@@ -12,16 +13,14 @@ import java.util.Objects;
 
 public class CharacterClass {
     private final Main mainGame;
-
-    private final Image characterImage;
     private final String name;
 
     // 0 through to 4
-    private int characterNumber;
+    private final int characterNumber;
     // e.g relaxed, brave
-    private String characterType;
+    private final String characterType;
 
-    private String state;
+    private State state = State.NEUTRAL;
 
     private float health;
     private float sleep;
@@ -42,8 +41,8 @@ public class CharacterClass {
     private Image currentHead;
     private Image currentBody;
 
-    private Map<String, Image> characterHeads;
-    private Map<String, Image> characterBodies;
+    private final Map<String, Image> characterHeads;
+    private final Map<String, Image> characterBodies;
 
     // a button has been clicked, no other animations or buttons are allowed to be clicked during this
     private Timer.Task blinkTask;
@@ -52,16 +51,19 @@ public class CharacterClass {
     //will be used when mini-game is running to halt all changes to scores and stats
     private boolean isGameRunning;
 
+    // Constructor with default state (NEUTRAL)
+    public CharacterClass(Main mainGameSession, String charName, int characterNumber, String characterTypeStr, Item[] inventory) {
+        this(mainGameSession, charName, characterNumber, characterTypeStr, inventory, State.NEUTRAL);
+    }
+
     // Constructor
-    public CharacterClass(Main mainGameSession, String charName, Image charImage, int characterNumber, String characterTypeStr, Item[] inventory, String state) {
+    public CharacterClass(Main mainGameSession, String charName, int characterNumber, String characterTypeStr, Item[] inventory, State state) {
         this.mainGame = mainGameSession;
 
         this.name = charName;
-        this.characterImage = charImage;
         this.inventory = inventory;
         this.characterNumber = characterNumber;
         this.characterType = characterTypeStr.toLowerCase();
-        this.state = state;
 
         characterHeads = new HashMap<>();
         characterBodies = new HashMap<>();
@@ -74,10 +76,6 @@ public class CharacterClass {
         startCharacter();
 
         Gdx.app.log("NAME", "health: " + health + "\nsleep: " + sleep + "\nhappiness: " + happiness + "\nfullness: " + fullness + "\nstress: " + stress);
-    }
-
-    public Image getImage() {
-        return characterImage;
     }
 
     // Getter for name
@@ -215,7 +213,7 @@ public class CharacterClass {
                 break;
 
 
-                // case 3 == brave
+            // case 3 == brave
             case 3:
                 setHealth(60.0f);
                 setSleep(60.0f);
@@ -265,69 +263,63 @@ public class CharacterClass {
         this.currentBody = newBody;
     }
 
-    private Image headDetermine(){
-        stateDetermine();
-        switch (getState()) {
-            case "dead":
-                return characterHeads.get("angry"); //CHANGE TO DEAD IF/WHEN WE HAVE DEAD HEAD SPRITE
 
-            case "sleeping":
-                return characterHeads.get("angry"); //CHANGE TO SLEEPING IF/WHEN WE HAVE SLEEPING HEAD SPRITE
 
-            case "angry":
+    private Image headDetermine() {
+        stateDetermine(); // Update the state before determining the head image
+
+        switch (state) {
+            case DEAD:
+                return characterHeads.get("angry"); // CHANGE TO DEAD IF/WHEN WE HAVE DEAD HEAD SPRITE
+            case SLEEPING:
+                return characterHeads.get("angry"); // CHANGE TO SLEEPING IF/WHEN WE HAVE SLEEPING HEAD SPRITE
+            case ANGRY:
                 return characterHeads.get("angry");
-
-            case "hungry":
-                return characterHeads.get("angry"); //CHANGE TO HUNGRY IF/WHEN WE HAVE HUNGRY HEAD SPRITE
-
+            case HUNGRY:
+                return characterHeads.get("angry"); // CHANGE TO HUNGRY IF/WHEN WE HAVE HUNGRY HEAD SPRITE
             default:
                 return characterHeads.get("head");
         }
     }
 
-    private Image bodyDetermine(){
-        stateDetermine();
-        switch (getState()) {
-            case "dead":
-                return characterBodies.get("hungry1"); //CHANGE TO DEAD IF/WHEN WE HAVE BODY HEAD SPRITE
+    private Image bodyDetermine() {
+        stateDetermine(); // Update the state before determining the body image
 
-            case "sleeping":
-                return characterBodies.get("hungry1"); //CHANGE TO SLEEPING IF/WHEN WE HAVE SLEEPING BODY SPRITE
-
-            case "angry":
-                return characterBodies.get("hungry1"); //CHANGE TO ANGRY IF/WHEN WE HAVE ANGRY BODY SPRITE
-
-            case "hungry":
+        switch (state) {
+            case DEAD:
+                return characterBodies.get("hungry1"); // CHANGE TO DEAD IF/WHEN WE HAVE DEAD BODY SPRITE
+            case SLEEPING:
+                return characterBodies.get("hungry1"); // CHANGE TO SLEEPING IF/WHEN WE HAVE SLEEPING BODY SPRITE
+            case ANGRY:
+                return characterBodies.get("hungry1"); // CHANGE TO ANGRY IF/WHEN WE HAVE ANGRY BODY SPRITE
+            case HUNGRY:
                 return characterBodies.get("hungry1");
-
             default:
                 return characterBodies.get("neutral");
         }
     }
 
-    public String getState(){
+
+    public State getState(){
         return state;
     }
 
-    public void stateDetermine(){
-        if (getHealth() < 1){
-            this.state = "dead";
+    public void stateDetermine() {
+        if (getHealth() < 1) {
+            this.state = State.DEAD;
             crashedOut();
-        }
-        else if (getSleep() < 1){
-            this.state = "sleeping";
+        } else if (getSleep() < 1) {
+            this.state = State.SLEEPING;
             sleepyMode();
-        }
-        else if (getHappiness() < 1){
-            this.state = "angry";
-        }
-        else if (getHunger() < 1){
-            this.state = "hungry";
-        }
-        else{
-            this.state = "head";
+        } else if (getHappiness() < 1) {
+            this.state = State.ANGRY;
+        } else if (getHunger() < 1) {
+            this.state = State.HUNGRY;
+        } else {
+            this.state = State.NEUTRAL;
         }
     }
+
 
     //placeholder function see comment
     public void sleepyMode(){
@@ -366,9 +358,10 @@ public class CharacterClass {
             public void run() {
                 if (!isActionBlocked) {
 
-                    setBody(bodyDetermine());
+                    stateDetermine();
 
-                    if (Objects.equals(getState(), "hungry")){
+                    if (getState() == State.HUNGRY){
+
                         Timer.schedule(new Timer.Task() {
                             @Override
                             public void run() {
@@ -421,7 +414,7 @@ public class CharacterClass {
         }, duration); // Reset after the 5-second exercise duration
     }
 
-    public void feedTriggered(Item selectedItem) {
+    public void feed(Item selectedItem) {
         if (selectedItem.getItemCount() > 0){
             selectedItem.reduceCount();
             this.fullness = fullness + (selectedItem.getItemStatValue()*fullnessChange);
@@ -483,6 +476,16 @@ public class CharacterClass {
 
     }
 
+    // returns true to tell game screen that it can go ahead with the animation
+    public boolean doctor(){
+        if (!isActionBlocked){
+            blockActions(5f);
+            return true;
+        }
+        return false;
+
+    }
+
 
     public void loadImages(){
 
@@ -498,5 +501,9 @@ public class CharacterClass {
         characterHeads.put("happy", mainGame.createImage(new Texture(Gdx.files.internal("game/character/" + characterType + "-happy.png"))));
         characterHeads.put("angry", mainGame.createImage(new Texture(Gdx.files.internal("game/character/" + characterType + "-angry.png"))));
 
+    }
+
+    public enum State {
+        DEAD, SLEEPING, ANGRY, HUNGRY, NEUTRAL
     }
 }

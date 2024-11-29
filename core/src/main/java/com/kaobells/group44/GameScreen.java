@@ -6,9 +6,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -33,12 +35,9 @@ public class GameScreen extends ScreenAdapter{
     Label.LabelStyle nameLabelStyle;
     Label.LabelStyle scoreLabelStyle;
 
-
     private Map<String, Texture> textures;
     private final Map<String, Table> tables;
     private Map<String, TextureRegionDrawable> drawables;
-
-
 
 
     // stores in images and image buttons
@@ -47,15 +46,8 @@ public class GameScreen extends ScreenAdapter{
     Container<Image> headContainer;
     Container<Image> bodyContainer;
 
-
     // Root table for storing the sidebar section, and the game section
     Table rootTable;
-
-    // test vars
-    // delete later
-    private Actor test;
-    boolean blink = false;
-
     InputMultiplexer multiplexer;
 
 
@@ -156,9 +148,9 @@ public class GameScreen extends ScreenAdapter{
 
 
         rootTable.add(tables.get("gameSection"))
-                .width(viewport.getWorldHeight() * 1.13f) // This will control the table size and hence the background size
-                .height(viewport.getWorldHeight() * 0.95f)
-                .padLeft(viewport.getWorldHeight() * 0.04f)
+            .width(viewport.getWorldHeight() * 1.13f) // This will control the table size and hence the background size
+            .height(viewport.getWorldHeight() * 0.95f)
+            .padLeft(viewport.getWorldHeight() * 0.04f)
             .align(Align.right);
     }
 
@@ -366,17 +358,17 @@ public class GameScreen extends ScreenAdapter{
 
         // Create a container for the head
         headContainer = new Container<>();
-        headContainer.size(viewport.getWorldHeight() * 0.25f, viewport.getWorldHeight() * 0.22f);
+        headContainer.size(viewport.getWorldHeight() * 0.375f, viewport.getWorldHeight() * 0.33f);
         headContainer.setActor(session.character.getHead());
 
         // Add the head container to the table
         gameSection.add(headContainer)
-                .padTop(viewport.getWorldHeight() * 0.35f)
-                .row(); // Move to the next row
+            .padTop(viewport.getWorldHeight() * 0.22f)
+            .row(); // Move to the next row
 
         // Create a container for the body
         bodyContainer = new Container<>();
-        bodyContainer.size(viewport.getWorldHeight() * 0.36f, viewport.getWorldHeight() * 0.20f);
+        bodyContainer.size(viewport.getWorldHeight() * 0.375f, viewport.getWorldHeight() * 0.23f);
         bodyContainer.setActor(session.character.getBody());
 
         // Add the body container to the table
@@ -385,6 +377,47 @@ public class GameScreen extends ScreenAdapter{
         // Center the gameSection content within itself
         gameSection.center();
     }
+
+    public void walkOffScreenAndReturn() {
+
+        // Check if headContainer and bodyContainer are not null
+        if (headContainer == null || bodyContainer == null) {
+            throw new IllegalStateException("Head and Body containers must be initialized before calling this method.");
+        }
+
+        Table gameSec = tables.get("gameSection");
+
+        // Calculate the positions for the animation
+        float offScreenRightX = gameSec.getWidth() + gameSec.getX(); // Position off-screen to the right
+        float originalX = headContainer.getX(); // Starting X position
+        float originalYHead = headContainer.getY(); // Starting Y position for the head
+        float originalYBody = bodyContainer.getY(); // Starting Y position for the body
+
+        // Create an action sequence for the head
+        Action headAction = Actions.sequence(
+            Actions.moveTo(offScreenRightX, originalYHead, 1f), // Move to the right off the screen
+            Actions.run(() -> headContainer.setVisible(false)), // Hide after moving out
+            Actions.delay(0.5f), // Wait for 1 second
+            Actions.run(() -> headContainer.setVisible(true)), // Show again
+            Actions.moveTo(originalX, originalYHead, 1f) // Move back to the original position from the right
+        );
+
+        // Create an action sequence for the body
+        Action bodyAction = Actions.sequence(
+            Actions.moveTo(offScreenRightX, originalYBody, 1f), // Move to the right off the screen
+            Actions.run(() -> bodyContainer.setVisible(false)), // Hide after moving out
+            Actions.delay(0.5f), // Wait for 1 second
+            Actions.run(() -> bodyContainer.setVisible(true)), // Show again
+            Actions.moveTo(originalX, originalYBody, 1f) // Move back to the original position from the right
+        );
+
+        // Apply the actions to the containers
+        headContainer.addAction(headAction);
+        bodyContainer.addAction(bodyAction);
+    }
+
+
+
 
 
 
@@ -468,7 +501,20 @@ public class GameScreen extends ScreenAdapter{
         images.put("exercise", exercise);
         images.put("play", mainGame.createImageButton(textures.get("play")));
         images.put("gift", mainGame.createImageButton(textures.get("gift")));
-        images.put("doctor", mainGame.createImageButton(textures.get("doctor")));
+
+        ImageButton doctor = mainGame.createImageButton(textures.get("doctor"));
+        doctor.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.log("walking", "2");
+                if (session.character.doctor()){
+                    walkOffScreenAndReturn();
+                }
+
+
+            }
+        });
+        images.put("doctor", doctor);
 
         images.put("fullnessBox", mainGame.createImage(textures.get("fullnessBox")));
         images.put("sleepBox", mainGame.createImage(textures.get("sleepBox")));
