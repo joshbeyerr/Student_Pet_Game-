@@ -49,6 +49,8 @@ public class CharacterClass {
     private Timer.Task blinkTask;
     private boolean isActionBlocked = false; // Blocks other actions
 
+    //will be used when mini-game is running to halt all changes to scores and stats
+    private boolean isGameRunning;
 
     // Constructor
     public CharacterClass(Main mainGameSession, String charName, Image charImage, int characterNumber, String characterTypeStr, Item[] inventory, String state) {
@@ -266,24 +268,89 @@ public class CharacterClass {
     }
 
     private Image headDetermine(){
-        if (getHunger() < 20 || getHappiness() < 20 || getHealth() < 20 || getSleep() < 20 || getStress() < 20){
-            return characterHeads.get("angry");
-        }
-        else{
-            return characterHeads.get("head");
+        System.out.println(getState());
+        stateDetermine();
+        switch (getState()) {
+            case "dead":
+                return characterHeads.get("angry"); //CHANGE TO DEAD IF/WHEN WE HAVE DEAD HEAD SPRITE
+
+            case "sleeping":
+                return characterHeads.get("angry"); //CHANGE TO SLEEPING IF/WHEN WE HAVE SLEEPING HEAD SPRITE
+
+            case "angry":
+                return characterHeads.get("angry");
+
+            case "hungry":
+                return characterHeads.get("angry"); //CHANGE TO HUNGRY IF/WHEN WE HAVE HUNGRY HEAD SPRITE
+
+            default:
+                return characterHeads.get("head");
         }
     }
+
     private Image bodyDetermine(){
-        if (getHunger() < 20){
-            return characterBodies.get("hungry1");
-        }
-        else{
-            return characterBodies.get("neutral");
+        stateDetermine();
+        switch (getState()) {
+            case "dead":
+                return characterBodies.get("hungry1"); //CHANGE TO DEAD IF/WHEN WE HAVE BODY HEAD SPRITE
+
+            case "sleeping":
+                return characterBodies.get("hungry1"); //CHANGE TO SLEEPING IF/WHEN WE HAVE SLEEPING BODY SPRITE
+
+            case "angry":
+                return characterBodies.get("hungry1"); //CHANGE TO ANGRY IF/WHEN WE HAVE ANGRY BODY SPRITE
+
+            case "hungry":
+                return characterBodies.get("hungry1");
+
+            default:
+                return characterBodies.get("neutral");
         }
     }
 
     public String getState(){
         return state;
+    }
+
+    public void stateDetermine(){
+        if (getHealth() < 1){
+            this.state = "dead";
+            crashedOut();
+        }
+        else if (getSleep() < 1){
+            this.state = "sleeping";
+            sleepyMode();
+        }
+        else if (getHappiness() < 1){
+            this.state = "angry";
+        }
+        else if (getHunger() < 1){
+            this.state = "hungry";
+        }
+        else{
+            this.state = "head";
+        }
+    }
+
+    //placeholder function see comment
+    public void sleepyMode(){
+        /*
+        placeholder for eventual sleep state function. Guideline for this is: "a health penalty is applied
+        (a set number of health points are removed), and the pet will fall asleep and can no longer be interacted with.
+        In the sleeping state the sleep value will slowly increases until it hits the maximum value. Once
+        the max is reached, the pet wakes and returns to its normal state. During the sleeping state the other statistics still decline normally."
+         */
+        setHealth(getHealth()-10.0f);
+        System.out.println("he just like me fr");
+    }
+
+    //palceholder function see comment
+    public void crashedOut(){
+        /*
+        placeholder for eventual dead pet function. Will need to:
+         1- change pet head/body to dead (or replace with a tombstone sprite)
+         2- inform user their pet is dead and that they should now start a new game or load another save file
+         */
     }
 
 
@@ -304,7 +371,7 @@ public class CharacterClass {
 
                     setBody(bodyDetermine());
 
-                    if (getHunger() < 20){
+                    if (Objects.equals(getState(), "hungry")){
                         Timer.schedule(new Timer.Task() {
                             @Override
                             public void run() {
@@ -346,7 +413,7 @@ public class CharacterClass {
         }, duration);
     }
 
-    public void returnCharacterState(float duration){
+    public void resumeDefaultCharacterState(float duration){
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
@@ -365,7 +432,7 @@ public class CharacterClass {
 
             setHead(characterHeads.get("happy"));;
             blockActions(actionLength);
-            returnCharacterState(actionLength);
+            resumeDefaultCharacterState(actionLength);
         }
     }
 
@@ -402,7 +469,7 @@ public class CharacterClass {
             }, 0, 0.5f); // Start immediately, repeat every 0.5 seconds
 
             // important
-            returnCharacterState(actionLength);
+            resumeDefaultCharacterState(actionLength);
         }
 
     }
