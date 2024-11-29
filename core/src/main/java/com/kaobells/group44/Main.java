@@ -40,8 +40,11 @@ public class Main extends Game {
 
         screenStack = new Stack<>();
 
-        int baseWidth = Gdx.graphics.getDisplayMode().width;  // Fullscreen width
-        int baseHeight = Gdx.graphics.getDisplayMode().height; // Fullscreen height
+//        int baseWidth = Gdx.graphics.getDisplayMode().width;  // Fullscreen width
+//        int baseHeight = Gdx.graphics.getDisplayMode().height; // Fullscreen height
+
+        int baseWidth = 1920;
+        int baseHeight = 1080;
 
         sharedBatch = new SpriteBatch();
         resourceManager = new ResourceManager();

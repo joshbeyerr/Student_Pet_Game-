@@ -141,17 +141,19 @@ public class GameScreen extends ScreenAdapter{
         sideBar(); // Add sidebar
         gameSection(); // Add game section
 
-        // Add the tables to the rootTable
+        float height = viewport.getWorldHeight();
+        float width = viewport.getWorldWidth();
+
         rootTable.add(tables.get("sidebar"))
-            .width(viewport.getWorldHeight() * 0.4f)
+            .width(width * 0.25f) // Adjust width proportionally
             .align(Align.left);
 
-
         rootTable.add(tables.get("gameSection"))
-            .width(viewport.getWorldHeight() * 1.13f) // This will control the table size and hence the background size
-            .height(viewport.getWorldHeight() * 0.95f)
-            .padLeft(viewport.getWorldHeight() * 0.04f)
+            .width(width * 0.7f) // Take remaining space dynamically
+            .height(height * 0.95f)
+            .padLeft(width * 0.02f) // Proportional left padding
             .align(Align.right);
+
     }
 
     private Table getOrCreateTable(String key) {
