@@ -86,7 +86,7 @@ public class GameScreen extends ScreenAdapter{
                 updateStatBar("happinessBar", session.character.getHappiness());
                 updateStatBar("healthBar", session.character.getHealth());
                 updateStatBar("sleepBar", session.character.getSleep());
-                updateStatBar("stressBar", session.character.getSleep());
+                updateStatBar("stressBar", session.character.getStress());
 
 
 
@@ -507,7 +507,7 @@ public class GameScreen extends ScreenAdapter{
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("walking", "2");
-                if (session.character.doctor()){
+                if (session.character.takeToVet()){
                     walkOffScreenAndReturn();
                 }
 

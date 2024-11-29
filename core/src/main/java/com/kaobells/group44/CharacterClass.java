@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.Timer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 public class CharacterClass {
     private final Main mainGame;
@@ -30,7 +31,7 @@ public class CharacterClass {
 
     // JUST FOR NOW - making all characters health change by 1
     // In the future this will be unique to each characterType and will be set when character is created.
-    private float healthChange = 0.0f;
+    private float healthChange = 1.0f;
     private float sleepChange = 1.0f;
     private float happinessChange = 1.0f;
     private float fullnessChange = 1.0f;
@@ -50,6 +51,10 @@ public class CharacterClass {
 
     //will be used when mini-game is running to halt all changes to scores and stats
     private boolean isGameRunning;
+
+    private boolean playCooldown = false;
+    private boolean vetCooldown = false;
+
 
     // Constructor with default state (NEUTRAL)
     public CharacterClass(Main mainGameSession, String charName, int characterNumber, String characterTypeStr, Item[] inventory) {
@@ -169,7 +174,6 @@ public class CharacterClass {
     }
 
     public void statBarTick(){
-        setHealth(this.getHealth() - healthChange);
         setHappiness(this.getHappiness() - happinessChange);
         setSleep(this.getSleep() - sleepChange);
         setHunger(this.getHunger() - fullnessChange);
@@ -305,15 +309,15 @@ public class CharacterClass {
     }
 
     public void stateDetermine() {
-        if (getHealth() < 1) {
+        if (getHealth() < 1.0f) {
             this.state = State.DEAD;
             crashedOut();
-        } else if (getSleep() < 1) {
+        } else if (getSleep() < 1.0f) {
             this.state = State.SLEEPING;
             sleepyMode();
-        } else if (getHappiness() < 1) {
+        } else if (getHappiness() < 1.0f) {
             this.state = State.ANGRY;
-        } else if (getHunger() < 1) {
+        } else if (getHunger() < 1.0f) {
             this.state = State.HUNGRY;
         } else {
             this.state = State.NEUTRAL;
@@ -414,20 +418,24 @@ public class CharacterClass {
         }, duration); // Reset after the 5-second exercise duration
     }
 
-    public void feed(Item selectedItem) {
-        if (selectedItem.getItemCount() > 0){
-            selectedItem.reduceCount();
-            this.fullness = fullness + (selectedItem.getItemStatValue()*fullnessChange);
-            feedVisual();
+
+    public void feedTriggered(Item selectedItem) {
+        if(!isActionBlocked && (getState() != State.ANGRY)) {
+            if (selectedItem.getItemCount() > 0){
+                selectedItem.reduceCount();
+                this.fullness = Math.max(100.0f,getHunger() + (selectedItem.getItemStatValue()*fullnessChange));
+                feedVisual();
+            }
+            else{
+                //Code to display that you do not have any of that item
+            }
         }
         else{
-            //Code to display that you do not have any of that item
+            //Code to say that you cannot feed pet while in the state they are in
         }
-
     }
 
     public void feedVisual() {
-
         if (!isActionBlocked) {
 
             float actionLength = 5.0f;
@@ -438,54 +446,112 @@ public class CharacterClass {
         }
     }
 
+
     public void exercise(){
+        if(!isActionBlocked && (getState() != State.ANGRY)) {
+            //Update Stats
+            this.fullness = Math.max(0.0f, getHunger() - 10.0f);
+            this.sleep = Math.max(0.0f, getSleep() - 10.0f);
+            this.health = Math.min(100.0f, getHealth() + 20.0f);
 
-        if (!isActionBlocked){
-            // Set the "feed" head
-            setHead(characterHeads.get("exercise"));
-            setBody(characterBodies.get("workout1"));
+            if (!isActionBlocked) {
+                // Set the "feed" head
+                setHead(characterHeads.get("exercise"));
+                setBody(characterBodies.get("workout1"));
 
-            float actionLength = 5.0f;
+                float actionLength = 5.0f;
 
-            blockActions(actionLength);
+                blockActions(actionLength);
 
-            Timer.schedule(new Timer.Task() {
-                boolean toggle = true; // Track which body to show
+                Timer.schedule(new Timer.Task() {
+                    boolean toggle = true; // Track which body to show
 
-                @Override
-                public void run() {
-                    if (!isActionBlocked) {
-                        // Stop the task when actions are unblocked (after 5 seconds)
-                        this.cancel();
-                        return;
+                    @Override
+                    public void run() {
+                        if (!isActionBlocked) {
+                            // Stop the task when actions are unblocked (after 5 seconds)
+                            this.cancel();
+                            return;
+                        }
+
+                        // Toggle between workout1 and workout2
+                        if (toggle) {
+                            setBody(characterBodies.get("workout1"), true);
+                        } else {
+                            setBody(characterBodies.get("workout2"), true);
+                        }
+                        toggle = !toggle; // Switch the toggle state
                     }
+                }, 0, 0.5f); // Start immediately, repeat every 0.5 seconds
 
-                    // Toggle between workout1 and workout2
-                    if (toggle) {
-                        setBody(characterBodies.get("workout1"), true);
-                    } else {
-                        setBody(characterBodies.get("workout2"), true);
-                    }
-                    toggle = !toggle; // Switch the toggle state
-                }
-            }, 0, 0.5f); // Start immediately, repeat every 0.5 seconds
-
-            // important
-            resumeDefaultCharacterState(actionLength);
+                // important
+                resumeDefaultCharacterState(actionLength);
+            }
         }
-
+        else{
+            //Code to say that you cannot exercise pet while in the state they are in
+        }
     }
 
-    // returns true to tell game screen that it can go ahead with the animation
-    public boolean doctor(){
-        if (!isActionBlocked){
-            blockActions(5f);
-            return true;
-        }
-        return false;
-
+    public void playVisual(){
+        //tbd
     }
 
+    public void play(){
+        if(!isActionBlocked){
+            if(!playCooldown){
+                this.playCooldown = true;
+                this.happiness = Math.min(100.0f, getHappiness() + 20.0f);
+                playVisual();
+
+                Timer.schedule(new Timer.Task() {
+                    @Override
+                    public void run() {
+                        // Reset to the normal head and body
+                        setHead(headDetermine()); // Set normal head
+                        setBody(bodyDetermine()); // Set normal body
+                    }
+                }, 30.0f);
+
+                blockActions(5f);
+            }
+            else{
+                //code to tell player that play is on cooldown
+            }
+        }
+        else{
+            //Code to say that you cannot play with pet while in the state they are in
+        }
+    }
+
+    public boolean takeToVet(){
+        if(!isActionBlocked && (getState() != State.ANGRY)){
+            if(!vetCooldown){
+                this.vetCooldown = true;
+                this.health = Math.min(100.0f, getHealth() + 20.0f);
+
+                Timer.schedule(new Timer.Task() {
+                    @Override
+                    public void run() {
+                        // Reset to the normal head and body
+                        setHead(headDetermine()); // Set normal head
+                        setBody(bodyDetermine()); // Set normal body
+                    }
+                }, 30.0f);
+
+                blockActions(5f);
+                return true;
+            }
+            else{
+                return false;
+                //code to tell player that take to vet is on cooldown
+            }
+        }
+        else{
+            return false;
+            //Code to say that you cannot take pet to vet while in the state they are in
+        }
+    }
 
     public void loadImages(){
 
