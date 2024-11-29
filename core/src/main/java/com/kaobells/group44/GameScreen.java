@@ -437,12 +437,17 @@ public class GameScreen extends ScreenAdapter{
 
 
     public void loadImageButtons(){
+        //When Open Inventory is called should display all items but only as viewable not as usable
+        //When Feed is called only the food items should trigger an action
+        //When Gift is called only the gift items should trigger an action
+
         ImageButton feed = mainGame.createImageButton(textures.get("feed"));
         feed.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                session.character.feed();
-
+                session.character.feedVisual(); //placeholder not final
+                //This will need to be updated to open inventory where all the food items are buttons
+                //Those item buttons should trigger the feed action's
 
             }
         });
@@ -539,7 +544,9 @@ public class GameScreen extends ScreenAdapter{
                 @Override
                 public boolean keyDown(int keycode) {
                     if (keycode == Input.Keys.F) {
-                        session.character.feed();
+                        session.character.feedVisual(); //placeholder not final
+                        //This will need to be updated to open inventory where all the food items are buttons
+                        //Those item buttons should trigger the feed action's
                         return true;
                     }
                     return true;

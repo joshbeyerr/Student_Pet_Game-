@@ -80,4 +80,6 @@ public class Item {
     public void increaseCount(){
         this.itemCount++;
     }
+
+    public int getItemCount(){ return this.itemCount; }
 }

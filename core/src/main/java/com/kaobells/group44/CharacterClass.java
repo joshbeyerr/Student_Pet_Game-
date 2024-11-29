@@ -31,7 +31,7 @@ public class CharacterClass {
 
     // JUST FOR NOW - making all characters health change by 1
     // In the future this will be unique to each characterType and will be set when character is created.
-    private float healthChange = 1.0f;
+    private float healthChange = 0.0f;
     private float sleepChange = 1.0f;
     private float happinessChange = 1.0f;
     private float fullnessChange = 1.0f;
@@ -189,13 +189,11 @@ public class CharacterClass {
 
             // case 0 = relaxed
             case 0:
-
                 setHealth(100.0f);
                 setSleep(100.0f);
                 setHappiness(100.0f);
                 setHunger(100.0f);
                 setStress(100.0f);
-
                 break;
 
             // case 1 = quirky
@@ -268,7 +266,6 @@ public class CharacterClass {
     }
 
     private Image headDetermine(){
-        System.out.println(getState());
         stateDetermine();
         switch (getState()) {
             case "dead":
@@ -424,7 +421,24 @@ public class CharacterClass {
         }, duration); // Reset after the 5-second exercise duration
     }
 
-    public void feed() {
+    public void feedTriggered(Item selectedItem) {
+        if (selectedItem.getItemCount() > 0){
+            selectedItem.reduceCount();
+            this.fullness = fullness + (selectedItem.getItemStatValue()*fullnessChange);
+            feedVisual();
+        }
+        else{
+            //Code to display that you do not have any of that item
+        }
+
+    }
+
+    public void feedAction() {
+        //code to open inventory and allow only the food items to be used
+
+    }
+
+    public void feedVisual() {
 
         if (!isActionBlocked) {
 
