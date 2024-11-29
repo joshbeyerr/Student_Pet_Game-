@@ -145,13 +145,13 @@ public class GameScreen extends ScreenAdapter{
         float width = viewport.getWorldWidth();
 
         rootTable.add(tables.get("sidebar"))
-            .width(width * 0.25f) // Adjust width proportionally
+            .width(width * 0.20f) // Adjust width proportionally
             .align(Align.left);
 
         rootTable.add(tables.get("gameSection"))
-            .width(width * 0.7f) // Take remaining space dynamically
+            .width(width * 0.74f) // Take remaining space dynamically
             .height(height * 0.95f)
-            .padLeft(width * 0.02f) // Proportional left padding
+            .padLeft(width * 0.04f) // Proportional left padding
             .align(Align.right);
 
     }
@@ -178,7 +178,7 @@ public class GameScreen extends ScreenAdapter{
 
         nameScoreTable.add(createStatBarTable()).size(height * 0.34f, height * 0.23f);
 
-        float leftPad = (height * 0.025f);
+        float leftPad = (height * 0.045f);
 
         // Add the nested tables to the sidebar
         sidebar.add(nameScoreTable).size(height * 0.42f, height * 0.45f).padTop((height * 0.018f)).padLeft(leftPad).row();
