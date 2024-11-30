@@ -29,12 +29,57 @@ public class GameSession {
         this.character = charc;
         this.startTime = LocalTime.now();
         this.currentDay = LocalDate.now().getDayOfWeek();
+        //load in all the parental blocks from JSON here
+        //Temporarily autosetting to false
+        morningParentBlock = false;
+        afternoonParentBlock = false;
+        eveningParentBlock = false;
+        weekdayParentBlock = false;
+        weekendParentBlock = false;
     }
 
 
     public void saveState(){
 
     }
+
+    public boolean blockedPlayTimeCheck(){
+        //Returns true if player is playing in a blocked time
+        //Call on launch game and maybe every 10 min
+
+        if(morningParentBlock){
+            if(LocalTime.now().isAfter(LocalTime.of(6,0)) && LocalTime.now().isBefore(LocalTime.of(12,0))){
+                return true;
+            }
+        }
+
+        if(afternoonParentBlock){
+            if(LocalTime.now().isAfter(LocalTime.of(12,0)) && LocalTime.now().isBefore(LocalTime.of(18,0))){
+                return true;
+            }
+        }
+
+        if(eveningParentBlock){
+            if(LocalTime.now().isAfter(LocalTime.of(18,0)) && LocalTime.now().isBefore(LocalTime.of(23,59))){
+                return true;
+            }
+        }
+
+        if(weekdayParentBlock){
+            if(currentDay == DayOfWeek.FRIDAY || currentDay == DayOfWeek.SATURDAY || currentDay == DayOfWeek.SUNDAY){
+                return true;
+            }
+        }
+
+        if(weekendParentBlock){
+            if(currentDay != DayOfWeek.FRIDAY && currentDay != DayOfWeek.SATURDAY && currentDay != DayOfWeek.SUNDAY){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 
     public void updateParentalStats(){
         //to be called on save
