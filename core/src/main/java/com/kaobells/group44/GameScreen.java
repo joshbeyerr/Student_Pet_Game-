@@ -482,7 +482,9 @@ public class GameScreen extends ScreenAdapter{
         feed.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                session.character.feedVisual(); //placeholder not final
+                if(!session.character.isSleeping()) {
+                    session.character.feedVisual();//placeholder not final
+                }
                 //This will need to be updated to open inventory where all the food items are buttons
                 //Those item buttons should trigger the feed action's
 
@@ -497,7 +499,9 @@ public class GameScreen extends ScreenAdapter{
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("exercise", "here");
-                session.character.exercise();
+                if(!session.character.isSleeping()) {
+                    session.character.exercise();
+                }
 
             }
         });
@@ -511,7 +515,7 @@ public class GameScreen extends ScreenAdapter{
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("walking", "2");
-                if (session.character.takeToDoctor()){
+                if (!session.character.isSleeping() && session.character.takeToDoctor()){
                     walkOffScreenAndReturn();
                 }
 

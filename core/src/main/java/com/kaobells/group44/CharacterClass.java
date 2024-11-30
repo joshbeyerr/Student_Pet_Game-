@@ -459,7 +459,7 @@ public class CharacterClass {
 
 
     public void exercise(){
-        if(!actionBlocked() && (getState() != State.ANGRY)) {
+        if(!actionBlocked() && (!compoundingStates[1])) {
             //Update Stats
             this.fullness = Math.max(0.0f, getHunger() - 10.0f);
             this.sleep = Math.max(0.0f, getSleep() - 10.0f);
@@ -524,7 +524,7 @@ public class CharacterClass {
     }
 
     public boolean takeToDoctor(){
-        if(!actionBlocked() && (getState() != State.ANGRY)){
+        if(!actionBlocked() && (!compoundingStates[1])){
             if(!(doctorCooldownRemaining > 0)){
                 float actionLength = 3.0f;
 
@@ -560,7 +560,7 @@ public class CharacterClass {
     }
 
     public void feed(int inventoryIndex){
-        if(inventory[inventoryIndex].reduceCount()){
+        if(!actionBlocked() && (!compoundingStates[1]) && inventory[inventoryIndex].reduceCount()){
             this.fullness = Math.min(100.0f, getHunger() + (inventory[inventoryIndex].getItemStatValue()*fullnessChange));
         }
         else{
@@ -569,7 +569,7 @@ public class CharacterClass {
     }
 
     public void giveGift(int inventoryIndex){
-        if(inventory[inventoryIndex].reduceCount()){
+        if(!actionBlocked() && inventory[inventoryIndex].reduceCount()){
             this.fullness = Math.min(100.0f, getHappiness() + (inventory[inventoryIndex].getItemStatValue()*happinessChange));
         }
         else{
@@ -579,6 +579,10 @@ public class CharacterClass {
 
     public void gainItem(int index) {
         inventory[index].increaseCount();
+    }
+
+    public boolean isSleeping() {
+        return compoundingStates[0];
     }
 
     public void loadImages(){
