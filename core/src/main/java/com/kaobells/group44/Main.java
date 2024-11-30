@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -28,6 +29,8 @@ public class Main extends Game {
 
 
     private ImageButton backButton;
+    private Sound clickSound;
+    private Sound backButtonSound;
     private SpriteBatch sharedBatch;
 
     // global resource manager GOING TO ERASE THIS
@@ -111,6 +114,8 @@ public class Main extends Game {
 
         resourceManager.add("mainBackground", new Texture(Gdx.files.internal("globalAssets/menu-bg.png")));
         resourceManager.add("storyBackground", new Texture(Gdx.files.internal("globalAssets/story-bg.png")));
+        clickSound = Gdx.audio.newSound(Gdx.files.internal("music/btn-click.mp3"));
+        backButtonSound = Gdx.audio.newSound(Gdx.files.internal("music/back-click.mp3"));
     }
 
     @Override
@@ -139,14 +144,34 @@ public class Main extends Game {
         button.addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                ((ImageButton) event.getListenerActor()).getImage().setScale(0.95f);
+
+                clickSound.play();
+
+                // Cast the event actor to ImageButton
+                Image image = ((ImageButton) event.getListenerActor()).getImage();
+
+                // Set the origin to the center of the image
+                image.setOrigin(image.getWidth() / 2, image.getHeight() / 2);
+
+                // Scale down the image relative to its center
+                image.setScale(0.95f);
+
                 return true;
             }
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                ((ImageButton) event.getListenerActor()).getImage().setScale(1f);
+
+                // Cast the event actor to ImageButton
+                Image image = ((ImageButton) event.getListenerActor()).getImage();
+
+                // Reset the origin to the center of the image
+                image.setOrigin(image.getWidth() / 2, image.getHeight() / 2);
+
+                // Reset the scale to normal
+                image.setScale(1f);
             }
+
         });
 
         return button;
@@ -174,6 +199,7 @@ public class Main extends Game {
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                backButtonSound.play();
                 popScreen();
             }
         });
