@@ -54,6 +54,8 @@ public class CharacterClass {
     private float playCooldownRemaining = 0; // Remaining cooldown time in seconds
     private float actionBlockCooldownRemaining  = 0;
 
+    //Array holding booleans representing the states that can have compounding effects with other states (sleeping,angry,hungry).
+    private boolean[] compoundingStates;
 
     // Add default constructor for LibGDX Json Loader
     public CharacterClass() {
@@ -73,12 +75,12 @@ public class CharacterClass {
 
 
     // Constructor with default state (NEUTRAL)
-    public CharacterClass(Main mainGameSession, String charName, int characterNumber, String characterTypeStr, Item[] inventory) {
-        this(mainGameSession, charName, characterNumber, characterTypeStr, inventory, State.NEUTRAL);
+    public CharacterClass(Main mainGameSession, String charName, int characterNumber, String characterTypeStr, Item[] inventory, boolean[] compoundingStates) {
+        this(mainGameSession, charName, characterNumber, characterTypeStr, inventory, State.NEUTRAL, compoundingStates);
     }
 
     // Constructor
-    public CharacterClass(Main mainGameSession, String charName, int characterNumber, String characterTypeStr, Item[] inventory, State state) {
+    public CharacterClass(Main mainGameSession, String charName, int characterNumber, String characterTypeStr, Item[] inventory, State state, boolean[] compoundingStates) {
         this.mainGame = mainGameSession;
 
         this.name = charName;
@@ -86,6 +88,7 @@ public class CharacterClass {
         this.characterNumber = characterNumber;
         this.characterType = characterTypeStr.toLowerCase();
         this.state = state;
+        this.compoundingStates = compoundingStates;
 
         characterHeads = new HashMap<>();
         characterBodies = new HashMap<>();
@@ -166,6 +169,7 @@ public class CharacterClass {
         for (int i = 0; i < 6; i++) {
             this.inventory[i] = new Item(i,0);
         }
+
 
         switch (characterNumber) {
 
@@ -291,15 +295,50 @@ public class CharacterClass {
 
 
     public void stateDetermine() {
+
+        //Checks if dead, if not dead then move further in if not end here
         if (getHealth() < 1.0f) {
             this.state = State.DEAD;
             crashedOut();
-        } else if (getSleep() < 1.0f) {
+        } else {
+            //check if sleeping should be triggered
+            if (getSleep() < 1.0f) {
+                this.compoundingStates[0] = true;
+                setHealth(Math.min(0.0f, (getHealth()-10.0f)));
+                System.out.println("he just like me fr");
+            }
+            //check if angry should be triggered
+            if(getHappiness() < 1.0f) {
+                this.compoundingStates[1] = true;
+            }
+            //check if hungry should be triggered
+            if(getHunger() < 1.0f) {
+                this.compoundingStates[2] = true;
+            }
+            //check if sleeping should be stopped
+            if(compoundingStates[0] && getSleep() > 95.0f){
+                this.compoundingStates[0] = false;
+            }
+            //check if angry should be stopped
+            if(compoundingStates[1] && getHappiness() > 45.0f){
+                this.compoundingStates[1] = false;
+            }
+            //check if hungry should be resolved
+            if(compoundingStates[2] && getHunger() > 30.0f){
+                this.compoundingStates[2] = false;
+            }
+            stateEvaluate();
+        }
+    }
+
+    //after setDetermine has updated the compounding states array state evaluate sets state variable to highest state in hierarchy
+    public void stateEvaluate(){
+        if (compoundingStates[0]){
             this.state = State.SLEEPING;
-            goToSleep();
-        } else if (getHappiness() < 1.0f) {
+            System.out.println("he just like me fr");
+        } else if (compoundingStates[1]){
             this.state = State.ANGRY;
-        } else if (getHunger() < 1.0f) {
+        } else if (compoundingStates[2]) {
             this.state = State.HUNGRY;
         } else {
             this.state = State.NEUTRAL;
@@ -308,28 +347,6 @@ public class CharacterClass {
 
     //State Getter
     public State getState(){ return state;}
-
-    public void goToSleep(){
-        /*
-        placeholder for eventual sleep state function. Guideline for this is: "if triggered by Sleep hitting zero a health penalty is applied
-        (as opposed to the goToSleep action the player can use), and the pet will fall asleep and can no longer be interacted with.
-        In the sleeping state the sleep value will slowly increases until it hits the maximum value. Once
-        the max is reached, the pet wakes and returns to its normal state. During the sleeping state the other statistics still decline normally."
-         */
-        if(getSleep() < 1.0f){
-            setHealth(Math.min(0.0f, (getHealth()-10.0f)));
-        }
-        System.out.println("he just like me fr");
-    }
-
-    //palceholder function see comment
-    public void crashedOut(){
-        /*
-        placeholder for eventual dead pet function. Will need to:
-         1- change pet head/body to dead (or replace with a tombstone sprite)
-         2- inform user their pet is dead and that they should now start a new game or load another save file
-         */
-    }
 
 
     public void startCharacter() {
@@ -402,6 +419,14 @@ public class CharacterClass {
         }, duration); // Reset after the 5-second exercise duration
     }
 
+    //palceholder function see comment
+    public void crashedOut(){
+        /*
+        placeholder for eventual dead pet function. Will need to:
+         1- change pet head/body to dead (or replace with a tombstone sprite)
+         2- inform user their pet is dead and that they should now start a new game or load another save file
+         */
+    }
 
     public void feedTriggered(Item selectedItem) {
         if(!actionBlocked() && (getState() != State.ANGRY)) {

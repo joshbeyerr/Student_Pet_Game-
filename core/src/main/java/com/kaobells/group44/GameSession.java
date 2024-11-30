@@ -36,6 +36,8 @@ public class GameSession {
         eveningParentBlock = false;
         weekdayParentBlock = false;
         weekendParentBlock = false;
+
+        //code to load number of game sessions created from JSON and increment by one (then write that updated count back to JSON)
     }
 
 
@@ -86,12 +88,11 @@ public class GameSession {
 
         //get old stats
         long oldTotalSecondsPlayed = 0; //to be replaced by call to JSON
-        long oldTotalSessionsPlayed = 0; //to be replaced by call to JSON
+        long TotalSessionsPlayed = 0; //to be replaced by call to JSON
 
         //update stats with new session's data
-        long newTotalSessionsPlayed = oldTotalSessionsPlayed+1;
         long newTotalSecondsPlayed = oldTotalSecondsPlayed+getSecondsPlayed();
-        long newAverageSecondsPlayed = newTotalSecondsPlayed/newTotalSessionsPlayed;
+        long newAverageSecondsPlayed = newTotalSecondsPlayed/TotalSessionsPlayed;
 
         /*
         Code needs to be put here to write these new values into JSON.
