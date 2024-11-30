@@ -3,6 +3,7 @@ package com.kaobells.group44;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
@@ -27,10 +28,12 @@ public class Main extends Game {
 
 
     private ImageButton backButton;
-
     private SpriteBatch sharedBatch;
 
-    // global resource manager
+    // global resource manager GOING TO ERASE THIS
+
+    private AssetManager assetManager;
+
     public ResourceManager resourceManager;
 
     private Stack<Screen> screenStack;
@@ -38,10 +41,8 @@ public class Main extends Game {
     @Override
     public void create() {
 
+//        assetManager = new AssetManager();
         screenStack = new Stack<>();
-
-//        int baseWidth = Gdx.graphics.getDisplayMode().width;  // Fullscreen width
-//        int baseHeight = Gdx.graphics.getDisplayMode().height; // Fullscreen height
 
         int baseWidth = 1920;
         int baseHeight = 1080;
@@ -101,7 +102,6 @@ public class Main extends Game {
         }
         // Leave the main menu (first screen) in the stack
     }
-
 
 
     private void loadTextures(){
@@ -194,15 +194,8 @@ public class Main extends Game {
 
         // Calculate text position to center it in the viewport
         float textX = (viewport.getWorldWidth() - layout.width) / 2f;
+        float textY = (float) ((viewport.getWorldHeight() + layout.height) / 2f + (viewport.getWorldHeight() * 0.32)); // Center vertically
 
-        float textY; // Declare textY outside the conditional
-
-        // title should be a bit higher on the new game screens for formatting
-        if (title.equals("New Game")) {
-            textY = (float) ((viewport.getWorldHeight() + layout.height) / 2f + (viewport.getWorldHeight() * 0.32)); // Center vertically
-        } else {
-            textY = (float) ((viewport.getWorldHeight() + layout.height) / 2f + (viewport.getWorldHeight() * 0.25)); // Center vertically
-        }
 
         // Draw the text
         font.draw(batch, title, textX, textY);

@@ -2,6 +2,8 @@ package com.kaobells.group44;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -15,34 +17,17 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import java.util.HashMap;
-import java.util.Map;
-
 
 public class StartScreen extends ScreenAdapter {
 
-    private Main mainGame;  // Main game class for shared resources transitioning screens
+    private final Main mainGame;  // Main game class for shared resources transitioning screens
+    private final SpriteBatch spriteBatch;
+    private final Viewport viewport;
+    private final Stage stage;
 
-    private SpriteBatch spriteBatch;
-    private Viewport viewport;
+    private AssetManager assetManager;
 
-    private Stage stage;
-
-    private Table table;
-
-    private Map<String, Texture> textures; // Store textures locally
-    private UIState currentState = UIState.MAIN_MENU;
-
-    private ImageButton startButton;
-    private ImageButton loadButton;
-    private ImageButton creditsButton;
-    private ImageButton parentalButton;
-    private ImageButton yesProceed;
-    private ImageButton noBack;
-    private Image parentQuestion;
-    private ImageButton exitButton;
-
-    private BitmapFont font;
+    private final BitmapFont font;
 
 
     public StartScreen(Main game) {
@@ -58,191 +43,157 @@ public class StartScreen extends ScreenAdapter {
         font = mainGame.resourceManager.getTitleFont();
 
         loadTextures();
-        loadActors();
-
         // Create UI components
         initializeUI();
-
-        setStage();
 
     }
 
     private void initializeUI() {
+        // Create a unified parent table for all elements
+        Table parentTable = new Table();
+        parentTable.setFillParent(true); // Makes the table fill the screen
+        parentTable.center(); // Centers everything
 
-        // Add table to the stage
-        stage.clear(); // Clear existing actors (if any)
+        // Create the heads table and center it
+        Table headsTable = createHeads();
+        headsTable.center();
 
-        currentState = UIState.MAIN_MENU; // Update state
+        // Create the buttons table and center it
+        Table buttonsTable = new Table();
+        buttonsTable.center();
 
-        if (table != null){
-            table.clear();
-        }
-        else{
-            table = createTable();
-        }
-
-        addActorToTable(table, startButton, false);
-        addActorToTable(table, loadButton, true);
-        addActorToTable(table, creditsButton, false);
-        addActorToTable(table, parentalButton, false);
-
-        exitButton = formatExitButton();
-
-        stage.addActor(exitButton); // Add the exitButton to the stage
-
-        stage.addActor(table);
-    }
-
-    private Table createTable() {
-        Table newTable = new Table();
-        newTable.setFillParent(true);
-        newTable.center();
-        newTable.padTop(viewport.getWorldHeight() * 0.1f);
-        return newTable;
-    }
-
-    private void parentsButton(){
-
-        currentState = UIState.PARENTAL_CONTROLS; // Update state
-
-        table.clear();
-
-        addCenteredActorToTable(table, parentQuestion, true);
-
-        addActorToTable(table, noBack, false);
-        addActorToTable(table, yesProceed, false);
-
-        // Add table to the stage
-        stage.clear(); // Clear existing actors (if any)
-        stage.addActor(table);
-
-    }
-
-    private ImageButton formatExitButton(){
-        // Set the size and position of the exitButton
-        float buttonWidth = viewport.getWorldWidth() * 0.08f; // 8% of viewport width
-        float buttonHeight = viewport.getWorldHeight() * 0.08f; // 8% of viewport height
-        float padding = 100; // Padding from edges
-        exitButton.setSize(buttonWidth, buttonHeight); // Set button size
-        exitButton.setPosition(padding, viewport.getWorldHeight() - buttonHeight - padding); // Position button
-        return exitButton;
-    }
-
-    private void addActorToTable(Table table, Actor actor, boolean newRow) {
-        float actorWidth = getButtonWidth(); // For consistency, you can reuse button width/height for both
-        float actorHeight = getButtonHeight();
-        float actorPadding = getDynamicPadding();
-        table.add(actor).size(actorWidth, actorHeight).pad(actorPadding);
-
-        if (newRow) {
-            table.row();
-        }
-    }
-
-    private void addCenteredActorToTable(Table table, Actor actor, boolean newRow) {
-        float actorWidth = getButtonWidth();
-        float actorHeight = getButtonHeight();
-        float actorPadding = getDynamicPadding();
-
-        // Make the cell span the entire row and center the actor
-        table.add(actor)
-            .size(actorWidth, actorHeight) // Constrain size
-            .pad(actorPadding)            // Add padding
-            .colspan(2)                   // Span two columns to center in a wider area
-            .center();                    // Align the actor to the center of its cell
-
-        if (newRow) {
-            table.row();
-        }
-    }
-
-    private float getButtonWidth() {
-        return viewport.getWorldWidth() * 0.375f; // 25% of viewport width
-    }
-
-    private float getButtonHeight() {
-        return viewport.getWorldHeight() * 0.15f; // 10% of viewport height
-    }
-
-    private float getDynamicPadding() {
-        return viewport.getWorldHeight() * 0.02f; // Padding as 2% of viewport height
-    }
-
-    private void loadTextures() {
-        textures = new HashMap<>();
-
-        // all textures that are native to StartScreen.java page
-        textures.put("start", new Texture(Gdx.files.internal("startScreen/start-game-btn.png")));
-        textures.put("load", new Texture(Gdx.files.internal("startScreen/load-game-btn.png")));
-        textures.put("credits", new Texture(Gdx.files.internal("startScreen/credits-btn.png")));
-        textures.put("parent", new Texture(Gdx.files.internal("startScreen/parental-controls-btn.png")));
-        textures.put("confirm", new Texture(Gdx.files.internal("startScreen/parent-textbox.png")));
-        textures.put("yes", new Texture(Gdx.files.internal("startScreen/proceed-parent-btn.png")));
-        textures.put("no", new Texture(Gdx.files.internal("startScreen/back-parent-btn.png")));
-        textures.put("exit", new Texture(Gdx.files.internal("startScreen/exit-btn.png")));
-    }
-
-    private void loadActors() {
-        startButton = mainGame.createImageButton(textures.get("start"));
-        loadButton = mainGame.createImageButton(textures.get("load"));
-        creditsButton = mainGame.createImageButton(textures.get("credits"));
-        parentalButton = mainGame.createImageButton(textures.get("parent"));
-        yesProceed = mainGame.createImageButton(textures.get("yes"));
-        noBack = mainGame.createImageButton(textures.get("no"));
-        parentQuestion = mainGame.createImage(textures.get("confirm"));
-        exitButton = mainGame.createImageButton(textures.get("exit"));
-
-
+        // creating start button
+        ImageButton startButton = mainGame.createImageButton(assetManager.get("startScreen/start-game-btn.png"));
         startButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("StartButton", "Start Game button clicked!");
                 mainGame.pushScreen(new StoryScreen(mainGame));
-
             }
         });
 
+        ImageButton loadButton = mainGame.createImageButton(assetManager.get("startScreen/load-game-btn.png"));
+
+        ImageButton instructionsButton = mainGame.createImageButton(assetManager.get("startScreen/instructions-btn.png"));
+
+        ImageButton creditsButton = mainGame.createImageButton(assetManager.get("startScreen/credits-btn.png"));
         creditsButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.log("CreditButton", "Credits button clicked!");
+                Gdx.app.log("Credits Button", "Credits Button button clicked!");
                 mainGame.pushScreen(new CreditScreen(mainGame));
-
             }
         });
 
-        // Add action listener to the parental button
-        parentalButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                // Perform an action, for example, print a message or switch screens
-                Gdx.app.log("ParentalButton", "Parental Controls button clicked!");
-                parentsButton();
 
-            }
-        });
+        // Add buttons to the buttons table
+        addActorToTable(buttonsTable, startButton, false); // Start Game button
+        addActorToTable(buttonsTable, loadButton, true); // Load Game button
+        addActorToTable(buttonsTable, instructionsButton, false); // Instructions button
+        addActorToTable(buttonsTable, creditsButton, false); // Credits button
 
-        noBack.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                // Perform an action, for example, print a message or switch screens
-                Gdx.app.log("noBack", "noBack clicked!");
-                initializeUI();
+        // Add heads and buttons to the parent table
+        parentTable.add(headsTable).size(viewport.getWorldWidth() * 0.38f, viewport.getWorldHeight() * 0.12f).padTop(viewport.getWorldHeight() * 0.15f).row();
+        parentTable.add(buttonsTable).size(viewport.getWorldWidth() * 0.8f, viewport.getWorldHeight() * 0.5f);
 
-            }
-        });
+        // Add the parent table to the stage
+        stage.addActor(parentTable);
 
-        // Add action listener to the exit button
+        // Add additional independent actors (exit and parental buttons)
+        ImageButton exitButton = startScreenButton("startScreen/exit-btn.png", 0.1f, 0.1f, 0.05f, 0.8f);
         exitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // Perform an action, for example, print a message or switch screens
                 Gdx.app.log("exitButton", "Exiting game...");
                 Gdx.app.exit();
-
             }
         });
 
+        ImageButton parentalButton = startScreenButton("startScreen/parental-controls-btn.png", 0.2f, 0.2f, 0.77f, 0.75f);
+        parentalButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                // Perform an action, for example, print a message or switch screens
+                Gdx.app.log("ParentalButton", "Parental Controls button clicked!");
+                // DO PARENT SHIT
+            }
+        });
+
+        stage.addActor(exitButton);
+        stage.addActor(parentalButton);
+
+
+        // MUSIC SECTION
+        Music backgroundMusic = assetManager.get("music/jb-sample-lowqual.mp3", Music.class);
+        backgroundMusic.setLooping(true); // Loop the music
+        backgroundMusic.setVolume(0.5f); // Set volume (range: 0.0 to 1.0)
+        backgroundMusic.play(); // Play the music
+
+    }
+
+    private Table createHeads() {
+        Table newTable = new Table();
+//        newTable.setFillParent(true);
+//        newTable.center();
+
+        // Create Images for each Head
+        Image braveHead = mainGame.createImage(assetManager.get("characters/brave-head.png"));
+        Image hastyHead = mainGame.createImage(assetManager.get("characters/hasty-head.png"));
+        Image quirkyHead = mainGame.createImage(assetManager.get("characters/quirky-head.png"));
+        Image relaxedHead = mainGame.createImage(assetManager.get("characters/relaxed-head.png"));
+        Image seriousHead = mainGame.createImage(assetManager.get("characters/serious-head.png"));
+
+        float padVal = viewport.getWorldWidth() * 0.002f;
+        newTable.add(braveHead).padLeft(padVal).padRight(padVal);
+        newTable.add(hastyHead).padLeft(padVal).padRight(padVal);
+        newTable.add(quirkyHead).padLeft(padVal).padRight(padVal);
+        newTable.add(relaxedHead).padLeft(padVal).padRight(padVal);
+        newTable.add(seriousHead).padLeft(padVal).padRight(padVal);
+
+        return newTable;
+    }
+
+    private ImageButton startScreenButton(String texturePath, float widthRatio, float heightRatio, float xOffsetRatio, float yOffsetRatio) {
+        ImageButton button = mainGame.createImageButton(assetManager.get(texturePath));
+        float buttonWidth = viewport.getWorldWidth() * widthRatio;
+        float buttonHeight = viewport.getWorldHeight() * heightRatio;
+        button.setSize(buttonWidth, buttonHeight);
+        button.setPosition(viewport.getWorldWidth() * xOffsetRatio, viewport.getWorldHeight() * yOffsetRatio);
+        return button;
+    }
+
+    private void addActorToTable(Table table, Actor actor, boolean newRow) {
+        table.add(actor).size(viewport.getWorldWidth() * 0.3f, viewport.getWorldWidth() * 0.11f).pad(viewport.getWorldWidth() * 0.01f);
+
+        if (newRow) {
+            table.row();
+        }
+    }
+
+    private void loadTextures() {
+        assetManager = new AssetManager();
+
+        // Queue textures for loading
+        assetManager.load("startScreen/start-game-btn.png", Texture.class);
+        assetManager.load("startScreen/load-game-btn.png", Texture.class);
+        assetManager.load("startScreen/credits-btn.png", Texture.class);
+        assetManager.load("startScreen/instructions-btn.png", Texture.class);
+
+        assetManager.load("startScreen/parental-controls-btn.png", Texture.class);
+        assetManager.load("startScreen/exit-btn.png", Texture.class);
+
+        assetManager.load("characters/brave-head.png", Texture.class);
+        assetManager.load("characters/hasty-head.png", Texture.class);
+        assetManager.load("characters/quirky-head.png", Texture.class);
+        assetManager.load("characters/relaxed-head.png", Texture.class);
+        assetManager.load("characters/serious-head.png", Texture.class);
+
+        assetManager.load("music/jb-sample-lowqual.mp3", Music.class);
+
+
+        // Load assets synchronously
+        assetManager.finishLoading();
     }
 
     @Override
@@ -266,27 +217,18 @@ public class StartScreen extends ScreenAdapter {
     public void resize(int width, int height) {
         if (width != 0 && height != 0) {
             viewport.update(width, height, true);
-            stage.getViewport().update(width, height, true);
 
-            // Reinitialize UI based on current state
-            if (currentState == UIState.MAIN_MENU) {
-                initializeUI();
-            } else if (currentState == UIState.PARENTAL_CONTROLS) {
-                parentsButton();
-            }
         }
 
     }
 
     public void dispose() {
-        // Dispose of all textures
-        for (Texture texture : textures.values()) {
-            texture.dispose();
+        if (stage != null) {
+            stage.dispose();
         }
-        textures.clear();
-
-        // Dispose of the stage (clears all actors)
-        stage.dispose();
+        if (assetManager != null) {
+            assetManager.dispose();
+        }
     }
 
     public void setStage(){
@@ -295,16 +237,8 @@ public class StartScreen extends ScreenAdapter {
 
     }
 
-    private enum UIState {
-        MAIN_MENU,
-        PARENTAL_CONTROLS
-    }
-
     @Override
     public void show() {
-        loadTextures();
-        loadActors();
-        initializeUI();
         setStage();
     }
 
