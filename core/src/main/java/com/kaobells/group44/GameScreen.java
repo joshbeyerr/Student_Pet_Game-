@@ -80,6 +80,12 @@ public class GameScreen extends ScreenAdapter{
                 session.score += 1;
                 scoreLabel.setText("Score: " + (session.score));
 
+                //every 50 score character gains a random item
+                if((session.score % 50) == 0){
+                    session.character.gainItem((int)(Math.random() * 6));
+                    //code to show player item they gained
+                }
+
                 session.character.statBarTick();
 
                 updateStatBar("fullnessBar", session.character.getHunger());
