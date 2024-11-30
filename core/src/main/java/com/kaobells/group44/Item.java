@@ -6,9 +6,9 @@ public class Item {
     public float itemStatValue; //Float for calculating how much item will change stat
     public int itemCount;
 
-    public Item(int ItemValID){ //Constructor
+    public Item(int ItemValID, int itemTotal){ //Constructor
     this.itemID = ItemValID;
-    this.itemCount = 0;
+    this.itemCount = itemTotal;
     setItemValues(itemID);
     }
 
@@ -80,6 +80,8 @@ public class Item {
     public void increaseCount(){
         this.itemCount++;
     }
+
+    public void setItemCount(int setCount){ this.itemCount = setCount; }
 
     public int getItemCount(){ return this.itemCount; }
 }

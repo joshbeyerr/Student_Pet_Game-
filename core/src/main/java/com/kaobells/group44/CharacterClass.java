@@ -161,7 +161,7 @@ public class CharacterClass {
     private void setUpCharacter(){
         //filling inventory with all the items with the count set to zero
         for (int i = 0; i < 6; i++) {
-            this.inventory[i] = new Item(i);
+            this.inventory[i] = new Item(i,0);
         }
 
         switch (characterNumber) {
