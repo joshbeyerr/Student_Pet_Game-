@@ -440,39 +440,35 @@ public class CharacterClass {
             this.sleep = Math.max(0.0f, getSleep() - 10.0f);
             this.health = Math.min(100.0f, getHealth() + 20.0f);
 
-            if (!actionBlocked()) {
-                // Set the "feed" head
-                setHead(characterHeads.get("exercise"));
-                setBody(characterBodies.get("workout1"));
+            float actionLength = 5.0f;
+            actionBlockCooldownRemaining = (actionLength + 1);
 
-                float actionLength = 5.0f;
+            setHead(characterHeads.get("exercise"));
+            setBody(characterBodies.get("workout1"));
 
-                actionBlockCooldownRemaining = (actionLength);
+            Timer.schedule(new Timer.Task() {
+                boolean toggle = true; // Track which body to show
 
-                Timer.schedule(new Timer.Task() {
-                    boolean toggle = true; // Track which body to show
-
-                    @Override
-                    public void run() {
-                        if (!actionBlocked()) {
-                            // Stop the task when actions are unblocked (after 5 seconds)
-                            this.cancel();
-                            return;
-                        }
-
-                        // Toggle between workout1 and workout2
-                        if (toggle) {
-                            setBody(characterBodies.get("workout1"), true);
-                        } else {
-                            setBody(characterBodies.get("workout2"), true);
-                        }
-                        toggle = !toggle; // Switch the toggle state
+                @Override
+                public void run() {
+                    if (actionBlockCooldownRemaining < 1) {
+                        // Stop the task when actions are unblocked (after 5 seconds)
+                        this.cancel();
+                        return;
                     }
-                }, 0, 0.5f); // Start immediately, repeat every 0.5 seconds
 
-                // important
-                resumeDefaultCharacterState(actionLength);
-            }
+                    // Toggle between workout1 and workout2
+                    if (toggle) {
+                        setBody(characterBodies.get("workout1"), true);
+                    } else {
+                        setBody(characterBodies.get("workout2"), true);
+                    }
+                    toggle = !toggle; // Switch the toggle state
+                }
+            }, 0, 0.5f); // Start immediately, repeat every 0.5 seconds
+
+            // important
+            resumeDefaultCharacterState(actionLength);
         }
         else{
             //Code to say that you cannot exercise pet while in the state they are in
