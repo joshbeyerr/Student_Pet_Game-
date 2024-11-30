@@ -72,6 +72,16 @@ public class JsonHandler {
         System.out.println("Database saved successfully in proper JSON format.");
     }
 
+    public boolean anySaves() {
+        // Iterate over all game slots
+        for (Map.Entry<String, HashMap<String, Object>> entry : database.games.entrySet()) {
+            // Check if the slot contains any data
+            if (!entry.getValue().isEmpty()) {
+                return true; // Found a slot with saved data
+            }
+        }
+        return false; // No saves found
+    }
 
 
     // Method to save a CharacterClass to a specific game slot
