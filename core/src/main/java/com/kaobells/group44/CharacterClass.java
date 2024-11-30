@@ -524,22 +524,26 @@ public class CharacterClass {
         }
     }
 
-    public boolean takeToVet(){
+    public boolean takeToDoctor(){
         if(!isActionBlocked && (getState() != State.ANGRY)){
             if(!vetCooldown){
-                this.vetCooldown = true;
+                float actionLength = 3.0f;
+
+                setHead(headDetermine()); // Set normal head
+                setBody(bodyDetermine()); // Set normal body
+
+                vetCooldown = true;
                 this.health = Math.min(100.0f, getHealth() + 20.0f);
 
                 Timer.schedule(new Timer.Task() {
                     @Override
                     public void run() {
-                        // Reset to the normal head and body
-                        setHead(headDetermine()); // Set normal head
-                        setBody(bodyDetermine()); // Set normal body
+                        vetCooldown = false;
                     }
                 }, 30.0f);
 
-                blockActions(5f);
+                blockActions(actionLength);
+                resumeDefaultCharacterState(actionLength + 0.5f);
                 return true;
             }
             else{

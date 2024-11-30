@@ -509,7 +509,7 @@ public class GameScreen extends ScreenAdapter{
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("walking", "2");
-                if (session.character.takeToVet()){
+                if (session.character.takeToDoctor()){
                     walkOffScreenAndReturn();
                 }
 
