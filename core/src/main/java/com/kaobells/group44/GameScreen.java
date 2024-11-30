@@ -50,8 +50,15 @@ public class GameScreen extends ScreenAdapter{
     Table rootTable;
     InputMultiplexer multiplexer;
 
+    private float headBodyUpdateTimer = 0f;
+    private final float headBodyUpdateInterval = 0.1f;
 
-    public GameScreen(Main game, GameSession gameSession){
+
+    private float scoreUpdateTimer = 0f;
+    private final float scoreUpdateInterval = 1f;
+
+
+    public GameScreen(Main game, GameSession gameSession) {
 
         this.mainGame = game;
         this.session = gameSession;
@@ -71,42 +78,6 @@ public class GameScreen extends ScreenAdapter{
         loadImageButtons();
         createUI();
 
-
-        // TESTING A TIMER WITH TEST SHIT
-        Timer.schedule(new Timer.Task() {
-            @Override
-            public void run() {
-                Label scoreLabel = (Label) images.get("Score");
-                session.score += 1;
-                scoreLabel.setText("Score: " + (session.score));
-
-                //every 50 score character gains a random item
-                if((session.score % 50) == 0){
-                    session.character.gainItem((int)(Math.random() * 6));
-                    //code to show player item they gained
-                }
-
-                session.character.statBarTick();
-
-                updateStatBar("fullnessBar", session.character.getHunger());
-                updateStatBar("happinessBar", session.character.getHappiness());
-                updateStatBar("healthBar", session.character.getHealth());
-                updateStatBar("sleepBar", session.character.getSleep());
-                updateStatBar("stressBar", session.character.getStress());
-
-
-
-            }
-        }, 1, 1f); // Update every 5 seconds
-
-
-        Timer.schedule(new Timer.Task() {
-            @Override
-            public void run() {
-                updateHead(gameSession.character.getHead());
-                updateBody(gameSession.character.getBody());
-            }
-        }, 1, 0.1f);
     }
 
     @Override
@@ -180,16 +151,38 @@ public class GameScreen extends ScreenAdapter{
 
         Table sidebar = getOrCreateTable("sidebar");
 
+        Table topBar = createTopBar();
         Table nameScoreTable = createNameScoreTable();
 
         nameScoreTable.add(createStatBarTable()).size(height * 0.34f, height * 0.23f);
 
         float leftPad = (height * 0.045f);
 
-        // Add the nested tables to the sidebar
-        sidebar.add(nameScoreTable).size(height * 0.42f, height * 0.45f).padTop((height * 0.018f)).padLeft(leftPad).row();
+        sidebar.add(topBar).size(height * 0.42f, height * 0.04f).padTop((height * 0.0025f)).padLeft(leftPad).row();
 
-        sidebar.add(createButtonsTable()).size(height * 0.42f, height * 0.48f).padTop((height * 0.025f)).padLeft(leftPad);
+        // Add the nested tables to the sidebar
+        sidebar.add(nameScoreTable).size(height * 0.42f, height * 0.38f).padTop((height * 0.025f)).padLeft(leftPad).row();
+
+        sidebar.add(createButtonsTable()).size(height * 0.42f, height * 0.45f).padTop((height * 0.04f)).padLeft(leftPad);
+    }
+
+    // clean method generates the table for name, score and table button
+    public Table createTopBar(){
+
+        // screen height for dynamics
+        float height = viewport.getWorldHeight();
+
+        Table topBar = getOrCreateTable("createTopBar");
+
+        float padding = height * 0.02f;
+        float sizes = height * 0.075f;
+
+        topBar.add(images.get("exitButton")).size(sizes, sizes).padLeft(padding).padRight(padding);
+
+        topBar.add(images.get("saveButton")).size(sizes, sizes).padLeft(padding).padRight(padding);
+        topBar.add(images.get("openInventory")).size(sizes, sizes).padLeft(padding).padRight(padding);
+
+        return topBar;
     }
 
 
@@ -217,7 +210,7 @@ public class GameScreen extends ScreenAdapter{
         nameScoreTable.add(nameLabel).size((height* 0.11f), (height * 0.045f)).pad((height * 0.012f)).row(); // Add nameLabel and move to next row
         nameScoreTable.add(scoreLabel).size((height * 0.15f), (height * 0.022f)).pad((height * 0.012f)).row();
 
-        nameScoreTable.add(images.get("openInventory")).size((height * 0.35f), (height * 0.045f)).padTop((height * 0.006f)).row();
+//        nameScoreTable.add(images.get("openInventory")).size((height * 0.35f), (height * 0.045f)).padTop((height * 0.006f)).row();
 
         return nameScoreTable;
     }
@@ -468,7 +461,10 @@ public class GameScreen extends ScreenAdapter{
         textures.put("gift", new Texture(Gdx.files.internal("game/" + sideBar + "/gift-btn.png")));
         textures.put("doctor", new Texture(Gdx.files.internal("game/" + sideBar + "/doctor-btn.png")));
 
-        textures.put("openInventory", new Texture(Gdx.files.internal("game/" + sideBar + "/open-inventory-btn.png")));
+        textures.put("openInventory", new Texture(Gdx.files.internal("game/" + sideBar + "/inventory-btn.png")));
+        textures.put("saveButton", new Texture(Gdx.files.internal("game/" + sideBar + "/save-btn.png")));
+        textures.put("exitButton", new Texture(Gdx.files.internal("globalAssets/exit-btn.png")));
+
         textures.put("purpleBox", new Texture(Gdx.files.internal("game/" + sideBar + "/purple-box.png")));
         textures.put("purpleLabel", new Texture(Gdx.files.internal("game/" + sideBar + "/purple-label.png")));
 
@@ -532,6 +528,29 @@ public class GameScreen extends ScreenAdapter{
 
         images.put("openInventory", mainGame.createImageButton(textures.get("openInventory")));
 
+        ImageButton saveButton = mainGame.createImageButton(textures.get("saveButton"));
+        saveButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                mainGame.jsonHandler.saveCharacterToGameSlot("1", session.character);
+
+
+            }
+        });
+
+        images.put("saveButton", saveButton);
+
+        ImageButton exitButton = mainGame.createImageButton(textures.get("exitButton"));
+        exitButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                // Perform an action, for example, print a message or switch screens
+                Gdx.app.log("exitButton", "Exiting game...");
+                Gdx.app.exit();
+            }
+        });
+        images.put("exitButton", exitButton);
+
         images.put("purpleLabel", mainGame.createImageButton(textures.get("purpleLabel")));
 
         images.put("Name", new Label(session.character.getName(), nameLabelStyle));
@@ -565,21 +584,63 @@ public class GameScreen extends ScreenAdapter{
 
     }
 
+    private void handleScoreAndStatUpdates(float deltaTime) {
+        scoreUpdateTimer += deltaTime;
+
+        if (scoreUpdateTimer >= scoreUpdateInterval) {
+            scoreUpdateTimer = 0; // Reset timer
+
+            // Update score
+            Label scoreLabel = (Label) images.get("Score");
+            session.score += 1;
+            scoreLabel.setText("Score: " + session.score);
+
+            // Gain item every 50 points
+            if (session.score % 50 == 0) {
+                session.character.gainItem((int) (Math.random() * 6));
+            }
+
+            // Update stat bars
+            session.character.statBarTick();
+            updateStatBar("fullnessBar", session.character.getHunger());
+            updateStatBar("happinessBar", session.character.getHappiness());
+            updateStatBar("healthBar", session.character.getHealth());
+            updateStatBar("sleepBar", session.character.getSleep());
+            updateStatBar("stressBar", session.character.getStress());
+        }
+    }
+
+    private void handleHeadAndBodyUpdates(float deltaTime) {
+        headBodyUpdateTimer += deltaTime;
+
+        if (headBodyUpdateTimer >= headBodyUpdateInterval) {
+            headBodyUpdateTimer = 0; // Reset timer
+
+            updateHead(session.character.getHead());
+            updateBody(session.character.getBody());
+        }
+    }
+
     @Override
     public void render(float delta) {
+        float deltaTime = Gdx.graphics.getDeltaTime();
+
+        // Call separate functions for periodic updates
+        handleScoreAndStatUpdates(deltaTime);
+        handleHeadAndBodyUpdates(deltaTime);
+
         // Clear the screen
         ScreenUtils.clear(0, 0, 0, 1);
 
         spriteBatch.begin();
-        // Draw the current background
-        spriteBatch.draw(textures.get("background"), 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());;
-
+        spriteBatch.draw(textures.get("background"), 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
         spriteBatch.end();
 
-        // Render the stage (actors like buttons, character sprites, etc.)
+        // Render the stage (buttons, sprites, etc.)
         stage.act(delta);
         stage.draw();
     }
+
 
     public void resize(int width, int height) {
         viewport.update(width, height, true);

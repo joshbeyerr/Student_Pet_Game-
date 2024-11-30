@@ -16,7 +16,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.badlogic.gdx.files.FileHandle;
 
 import java.util.Stack;
 
@@ -25,6 +24,7 @@ import java.util.Stack;
 public class Main extends Game {
 
     private Viewport viewport;
+    public JsonHandler jsonHandler;
 
 
     private ImageButton backButton;
@@ -41,8 +41,11 @@ public class Main extends Game {
     @Override
     public void create() {
 
+
 //        assetManager = new AssetManager();
         screenStack = new Stack<>();
+
+        jsonHandler = new JsonHandler();
 
         int baseWidth = 1920;
         int baseHeight = 1080;
@@ -57,7 +60,7 @@ public class Main extends Game {
 
         viewport = new FitViewport(baseWidth, baseHeight);
         viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
-        initializeLocalFile();
+
 
         this.pushScreen(new StartScreen(this));
 
@@ -180,7 +183,6 @@ public class Main extends Game {
     }
 
 
-
     public void drawBackground(SpriteBatch batch, Texture backgroundTexture, BitmapFont font, String title) {
         // Draw the background texture
         batch.draw(backgroundTexture, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
@@ -211,21 +213,5 @@ public class Main extends Game {
         viewport.update(width, height, true);
     }
 
-    //Internal JSON cannot be written too, only local ones
-    //So we must create a local version of database on first launch
-    private void initializeLocalFile(){
-        // Get file handles for the assets and local directories
-        FileHandle internalFile = Gdx.files.internal("database.json");
-        FileHandle localFile = Gdx.files.local("database.json");
 
-        // Check if the local file already exists
-        if (!localFile.exists()) {
-            // Copy the file from assets to local storage
-            internalFile.copyTo(localFile);
-            System.out.println("Database JSON created in local storage");
-        }
-        else {
-            System.out.println("Local Database JSON Previously Created");
-        }
-    }
 }

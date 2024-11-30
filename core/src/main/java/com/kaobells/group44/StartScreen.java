@@ -100,7 +100,7 @@ public class StartScreen extends ScreenAdapter {
         stage.addActor(parentTable);
 
         // Add additional independent actors (exit and parental buttons)
-        ImageButton exitButton = startScreenButton("startScreen/exit-btn.png", 0.1f, 0.1f, 0.05f, 0.8f);
+        ImageButton exitButton = startScreenButton("globalAssets/exit-btn.png", 0.1f, 0.1f, 0.05f, 0.8f);
         exitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -181,7 +181,7 @@ public class StartScreen extends ScreenAdapter {
         assetManager.load("startScreen/instructions-btn.png", Texture.class);
 
         assetManager.load("startScreen/parental-controls-btn.png", Texture.class);
-        assetManager.load("startScreen/exit-btn.png", Texture.class);
+        assetManager.load("globalAssets/exit-btn.png", Texture.class);
 
         assetManager.load("characters/brave-head.png", Texture.class);
         assetManager.load("characters/hasty-head.png", Texture.class);

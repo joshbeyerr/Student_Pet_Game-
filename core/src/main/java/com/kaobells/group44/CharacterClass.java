@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CharacterClass {
-    private final Main mainGame;
+    private transient final Main mainGame;
     private final String name;
 
     // 0 through to 4
@@ -34,23 +34,43 @@ public class CharacterClass {
     private float fullnessChange = 1.0f;
     private float stressChange = 1.0f;
 
-    private Item[] inventory;
+    private transient Item[] inventory;
 
-    private Image currentHead;
-    private Image currentBody;
+    private transient Image currentHead;
+    private transient Image currentBody;
 
-    private final Map<String, Image> characterHeads;
-    private final Map<String, Image> characterBodies;
+    private transient final Map<String, Image> characterHeads;
+    private transient final Map<String, Image> characterBodies;
 
     // a button has been clicked, no other animations or buttons are allowed to be clicked during this
-    private Timer.Task blinkTask;
-    private boolean isActionBlocked = false; // Blocks other actions
+    private transient Timer.Task blinkTask;
+    private transient boolean isActionBlocked = false; // Blocks other actions
 
     //will be used when mini-game is running to halt all changes to scores and stats
     private boolean isGameRunning;
 
     private boolean playCooldown = false;
     private boolean vetCooldown = false;
+
+    // instead of vetCoolDown
+    private float doctorCooldownRemaining = 0; // Remaining cooldown time in seconds
+
+
+    // Add default constructor for LibGDX Json Loader
+    public CharacterClass() {
+        this.name = "DefaultName";
+        this.state = null;
+        this.health = 100.0f;
+        this.sleep = 100.0f;
+        this.happiness = 100.0f;
+        this.fullness = 100.0f;
+        this.stress = 0.0f;
+        this.mainGame = null;
+        characterHeads = null;
+        characterBodies = null;
+        characterNumber = 100;
+        characterType = "default";
+    }
 
 
     // Constructor with default state (NEUTRAL)
@@ -229,6 +249,11 @@ public class CharacterClass {
         }
     }
 
+    // Overriding set head if action block flag is set
+    public void setHead(Image newHead, boolean Override) {
+        this.currentHead = newHead;
+    }
+
     public Image getBody() {
         return currentBody;
     }
@@ -364,7 +389,8 @@ public class CharacterClass {
                         @Override
                         public void run() {
                             if (!isActionBlocked) {
-                                setHead(headDetermine()); // Revert to normal head
+                                setHead(headDetermine());
+                                setBody(bodyDetermine()); // Revert to normal head
                             }
                         }
                     }, blinkDuration); // Blink lasts for blinkDuration seconds
@@ -390,8 +416,8 @@ public class CharacterClass {
             @Override
             public void run() {
                 // Reset to the normal head and body
-                setHead(headDetermine()); // Set normal head
-                setBody(bodyDetermine()); // Set normal body
+                setHead(headDetermine(), true); // Set normal head
+                setBody(bodyDetermine(), true); // Set normal body
             }
         }, duration); // Reset after the 5-second exercise duration
     }
@@ -504,24 +530,18 @@ public class CharacterClass {
 
     public boolean takeToDoctor(){
         if(!isActionBlocked && (getState() != State.ANGRY)){
-            if(!vetCooldown){
+            if(!(doctorCooldownRemaining > 0)){
                 float actionLength = 3.0f;
 
                 setHead(headDetermine()); // Set normal head
                 setBody(bodyDetermine()); // Set normal body
 
-                vetCooldown = true;
+                doctorCooldownRemaining = 30.0f; // Reset cooldown
                 this.health = Math.min(100.0f, getHealth() + 20.0f);
 
-                Timer.schedule(new Timer.Task() {
-                    @Override
-                    public void run() {
-                        vetCooldown = false;
-                    }
-                }, 30.0f);
-
                 blockActions(actionLength);
-                resumeDefaultCharacterState(actionLength + 0.5f);
+
+                resumeDefaultCharacterState(actionLength);
                 return true;
             }
             else{
@@ -532,6 +552,12 @@ public class CharacterClass {
         else{
             return false;
             //Code to say that you cannot take pet to vet while in the state they are in
+        }
+    }
+
+    public void updateCooldowns(float deltaTime) {
+        if (doctorCooldownRemaining > 0) {
+            doctorCooldownRemaining = Math.max(0, doctorCooldownRemaining - deltaTime);
         }
     }
 
