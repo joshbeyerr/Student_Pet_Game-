@@ -1,0 +1,97 @@
+package com.kaobells.group44;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonWriter;
+
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.badlogic.gdx.utils.Json.*;
+
+class Database {
+    public HashMap<String, HashMap<String, Object>> games;
+    public HashMap<String, CharacterClass> characters;
+    public HashMap<String, Object> parentalControls; // Field for "Parental Controls"
+
+    // Constructor for initializing fields if null
+    public Database() {
+        games = new HashMap<>();
+        characters = new HashMap<>();
+        parentalControls = new HashMap<>();
+    }
+}
+
+
+
+public class JsonHandler {
+    private FileHandle localFile;
+    private Database database;
+    private final Json json = new Json(); // LibGDX JSON utility
+
+    public JsonHandler() {
+
+        initializeLocalFile();
+        loadDatabase();
+    }
+
+
+    private void initializeLocalFile() {
+        FileHandle internalFile = Gdx.files.internal("database.json");
+        localFile = Gdx.files.local("database.json");
+
+        if (!localFile.exists()) {
+            internalFile.copyTo(localFile);
+            System.out.println("Database JSON created in local storage");
+        } else {
+            System.out.println("Local Database JSON Previously Created");
+        }
+    }
+
+    private void loadDatabase() {
+        if (localFile.exists()) {
+            String jsonString = localFile.readString();
+            json.setIgnoreUnknownFields(true); // Ignore fields not present in the Database class
+            database = json.fromJson(Database.class, jsonString);
+        } else {
+            database = new Database();
+        }
+    }
+
+    private void saveDatabase() {
+        // Serialize the database object to a string
+        json.setOutputType(JsonWriter.OutputType.json);
+
+        String jsonString = json.prettyPrint(database);
+
+        // Write the properly formatted JSON to the file
+        localFile.writeString(jsonString, false);
+
+        System.out.println("Database saved successfully in proper JSON format.");
+    }
+
+
+
+    // Method to save a CharacterClass to a specific game slot
+    public void saveCharacterToGameSlot(String slotId, CharacterClass character) {
+        if (database.games.containsKey(slotId)) {
+            // Update the game slot with new data
+            database.games.get(slotId).put("character", character);
+            saveDatabase(); // Save the updated database to file
+            System.out.println("Character saved to game slot: " + slotId);
+        } else {
+            System.out.println("Invalid game slot ID: " + slotId);
+        }
+    }
+
+    // Optional: Retrieve a character from a specific game slot
+    public CharacterClass getCharacterFromGameSlot(String slotId) {
+        if (database.games.containsKey(slotId) && database.games.get(slotId).containsKey("character")) {
+            return (CharacterClass) database.games.get(slotId).get("character");
+        }
+        return null; // Return null if no character is found
+    }
+
+}
