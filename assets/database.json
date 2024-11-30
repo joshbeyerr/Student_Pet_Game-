@@ -3,15 +3,14 @@
 	"1": {
 		"character": {
 			"class": "com.kaobells.group44.CharacterClass",
-			"name": "Joshua",
-			"characterNumber": 1,
-			"characterType": "quirky",
+			"name": "gaga",
+			"characterNumber": 0,
+			"characterType": "relaxed",
 			"state": "NEUTRAL",
-			"health": 90,
-			"sleep": 77,
-			"happiness": 97,
-			"fullness": 97,
-			"stress": 77
+			"sleep": 85,
+			"happiness": 85,
+			"fullness": 85,
+			"stress": 85
 		}
 	},
 	"2": {},
