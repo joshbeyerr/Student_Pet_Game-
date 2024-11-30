@@ -44,7 +44,6 @@ public class CharacterClass {
 
     // a button has been clicked, no other animations or buttons are allowed to be clicked during this
     private transient Timer.Task blinkTask;
-    private transient boolean isActionBlocked = false; // Blocks other actions
 
     //will be used when mini-game is running to halt all changes to scores and stats
     private boolean isGameRunning;
@@ -53,6 +52,7 @@ public class CharacterClass {
     // instead of vetCoolDown
     private float doctorCooldownRemaining = 0; // Remaining cooldown time in seconds
     private float playCooldownRemaining = 0; // Remaining cooldown time in seconds
+    private float actionBlockCooldownRemaining  = 0;
 
 
     // Add default constructor for LibGDX Json Loader
@@ -85,6 +85,7 @@ public class CharacterClass {
         this.inventory = inventory;
         this.characterNumber = characterNumber;
         this.characterType = characterTypeStr.toLowerCase();
+        this.state = state;
 
         characterHeads = new HashMap<>();
         characterBodies = new HashMap<>();
@@ -226,7 +227,7 @@ public class CharacterClass {
 
     //Head Setter
     public void setHead(Image newHead) {
-        if (!isActionBlocked) { // Only allow setting the head if actions aren't blocked
+        if (!actionBlocked()) { // Only allow setting the head if actions aren't blocked
             this.currentHead = newHead;
         }
     }
@@ -241,7 +242,7 @@ public class CharacterClass {
 
     //Body Setter
     public void setBody(Image newBody) {
-        if (!isActionBlocked) { // Only allow setting the body if actions aren't blocked
+        if (!actionBlocked()) { // Only allow setting the body if actions aren't blocked
             this.currentBody = newBody;
         }
     }
@@ -344,7 +345,7 @@ public class CharacterClass {
         blinkTask = Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
-                if (!isActionBlocked) {
+                if (!actionBlocked()) {
 
                     stateDetermine();
 
@@ -353,7 +354,7 @@ public class CharacterClass {
                         Timer.schedule(new Timer.Task() {
                             @Override
                             public void run() {
-                                if (!isActionBlocked) {
+                                if (!actionBlocked()) {
                                     setBody(characterBodies.get("hungry2")); // Revert to normal head
                                     setHead(headDetermine());
                                 }
@@ -369,7 +370,7 @@ public class CharacterClass {
                     Timer.schedule(new Timer.Task() {
                         @Override
                         public void run() {
-                            if (!isActionBlocked) {
+                            if (!actionBlocked()) {
                                 setHead(headDetermine());
                                 setBody(bodyDetermine()); // Revert to normal head
                             }
@@ -380,16 +381,14 @@ public class CharacterClass {
         }, blinkInterval, blinkInterval); // Repeat every blinkInterval seconds
     }
 
-    public void blockActions(float duration) {
-        isActionBlocked = true; // Block actions
+    public boolean actionBlocked(){
+        return actionBlockCooldownRemaining != 0;
+    }
 
-        // Schedule unblock after the specified duration
-        Timer.schedule(new Timer.Task() {
-            @Override
-            public void run() {
-                isActionBlocked = false; // Unblock actions
-            }
-        }, duration);
+    public void updateActionBlock(float deltaTime) {
+        if (actionBlockCooldownRemaining > 0) {
+            actionBlockCooldownRemaining = Math.max(0, actionBlockCooldownRemaining - deltaTime);
+        }
     }
 
     public void resumeDefaultCharacterState(float duration){
@@ -405,7 +404,7 @@ public class CharacterClass {
 
 
     public void feedTriggered(Item selectedItem) {
-        if(!isActionBlocked && (getState() != State.ANGRY)) {
+        if(!actionBlocked() && (getState() != State.ANGRY)) {
             if (selectedItem.getItemCount() > 0){
                 selectedItem.reduceCount();
                 this.fullness = Math.max(100.0f,getHunger() + (selectedItem.getItemStatValue()*fullnessChange));
@@ -421,39 +420,41 @@ public class CharacterClass {
     }
 
     public void feedVisual() {
-        if (!isActionBlocked) {
+        if (!actionBlocked()) {
 
             float actionLength = 5.0f;
 
             setHead(characterHeads.get("happy"));;
-            blockActions(actionLength);
+
+            actionBlockCooldownRemaining = (actionLength);
+
             resumeDefaultCharacterState(actionLength);
         }
     }
 
 
     public void exercise(){
-        if(!isActionBlocked && (getState() != State.ANGRY)) {
+        if(!actionBlocked() && (getState() != State.ANGRY)) {
             //Update Stats
             this.fullness = Math.max(0.0f, getHunger() - 10.0f);
             this.sleep = Math.max(0.0f, getSleep() - 10.0f);
             this.health = Math.min(100.0f, getHealth() + 20.0f);
 
-            if (!isActionBlocked) {
+            if (!actionBlocked()) {
                 // Set the "feed" head
                 setHead(characterHeads.get("exercise"));
                 setBody(characterBodies.get("workout1"));
 
                 float actionLength = 5.0f;
 
-                blockActions(actionLength);
+                actionBlockCooldownRemaining = (actionLength);
 
                 Timer.schedule(new Timer.Task() {
                     boolean toggle = true; // Track which body to show
 
                     @Override
                     public void run() {
-                        if (!isActionBlocked) {
+                        if (!actionBlocked()) {
                             // Stop the task when actions are unblocked (after 5 seconds)
                             this.cancel();
                             return;
@@ -483,14 +484,14 @@ public class CharacterClass {
     }
 
     public void play(){
-        if(!isActionBlocked){
+        if(!actionBlocked()){
             if(!(playCooldownRemaining > 0)){
                 this.happiness = Math.min(100.0f, getHappiness() + 20.0f);
                 playVisual();
 
                 playCooldownRemaining = 30.0f;
 
-                blockActions(5f);
+                actionBlockCooldownRemaining = (5f);
             }
             else{
                 //code to tell player that play is on cooldown
@@ -502,7 +503,7 @@ public class CharacterClass {
     }
 
     public boolean takeToDoctor(){
-        if(!isActionBlocked && (getState() != State.ANGRY)){
+        if(!actionBlocked() && (getState() != State.ANGRY)){
             if(!(doctorCooldownRemaining > 0)){
                 float actionLength = 3.0f;
 
@@ -512,7 +513,7 @@ public class CharacterClass {
                 doctorCooldownRemaining = 30.0f; // Reset cooldown
                 this.health = Math.min(100.0f, getHealth() + 20.0f);
 
-                blockActions(actionLength);
+                actionBlockCooldownRemaining = (actionLength);
 
                 resumeDefaultCharacterState(actionLength);
                 return true;

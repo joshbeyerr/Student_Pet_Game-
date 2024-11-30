@@ -627,6 +627,7 @@ public class GameScreen extends ScreenAdapter{
 
         // Update cooldowns
         session.character.updateCooldowns(deltaTime);
+        session.character.updateActionBlock(deltaTime);
 
         // Call separate functions for periodic updates
         handleScoreAndStatUpdates(deltaTime);
