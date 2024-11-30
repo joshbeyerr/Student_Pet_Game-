@@ -100,73 +100,56 @@ public class CharacterClass {
     }
 
     // Getter for name
-    public String getName() {
-        return name;
-    }
+    public String getName() { return name;}
 
     // Getter and Setter for health
-    public float getHealth() {
-        return health;
-    }
-
+    public float getHealth() { return health;}
+    //Setter for health
     public void setHealth(float health) {
         if (health >= 0.0f && health <= 100.0f) {
             this.health = health;
-        }
-        else {
+        } else {
             System.out.println("Health value must be between 0 and 100.");
-        }
-    }
+        } }
 
-    // Getter and Setter for happiness
-    public float getHappiness() {
-        return happiness;
-    }
-
+    // Getter for happiness
+    public float getHappiness() { return happiness;}
+    //Setter for happiness
     public void setHappiness(float happiness) {
         if (happiness >= 0.0f && happiness <= 100.0f) {
             this.happiness = happiness;
         } else {
             System.out.println("Happiness value must be between 0 and 100.");
-        }
-    }
+        } }
 
-    // Getter and Setter for hunger
-    public float getHunger() {
-        return fullness;
-    }
-
+    // Getter for hunger
+    public float getHunger() { return fullness; }
+    // Setter for hunger
     public void setHunger(float hunger) {
         if (hunger >= 0.0f && hunger <= 100.0f) {
             this.fullness = hunger;
         } else {
             System.out.println("fullness value must be between 0 and 100.");
-        }
-    }
-
-    public float getSleep() {
-        return sleep;
-    }
-
+        } }
+    // Getter for sleep
+    public float getSleep() { return sleep; }
+    // Setter for sleep
     public void setSleep(float sleep) {
         if (sleep >= 0.0f && sleep <= 100.0f) {
             this.sleep = sleep;
         } else {
             System.out.println("sleep value must be between 0 and 100.");
-        }
-    }
+        } }
 
-    public float getStress() {
-        return stress;
-    }
-
+    // Getter for stress
+    public float getStress() { return stress; }
+    // Setter for stress
     public void setStress(float stress) {
         if (stress >= 0.0f && stress <= 100.0f) {
             this.stress = stress;
         } else {
             System.out.println("stress value must be between 0 and 100.");
-        }
-    }
+        } }
 
 
     public void statBarTick(){
@@ -238,10 +221,10 @@ public class CharacterClass {
         setBody(bodyDetermine());
     }
 
-    public Image getHead() {
-        return currentHead;
-    }
+    //Head Getter
+    public Image getHead() { return currentHead; }
 
+    //Head Setter
     public void setHead(Image newHead) {
         if (!isActionBlocked) { // Only allow setting the head if actions aren't blocked
             this.currentHead = newHead;
@@ -253,10 +236,10 @@ public class CharacterClass {
         this.currentHead = newHead;
     }
 
-    public Image getBody() {
-        return currentBody;
-    }
+    //Body Getter
+    public Image getBody() { return currentBody; }
 
+    //Body Setter
     public void setBody(Image newBody) {
         if (!isActionBlocked) { // Only allow setting the body if actions aren't blocked
             this.currentBody = newBody;
@@ -305,9 +288,6 @@ public class CharacterClass {
     }
 
 
-    public State getState(){
-        return state;
-    }
 
     public void stateDetermine() {
         if (getHealth() < 1.0f) {
@@ -325,6 +305,8 @@ public class CharacterClass {
         }
     }
 
+    //State Getter
+    public State getState(){ return state;}
 
     public void goToSleep(){
         /*
