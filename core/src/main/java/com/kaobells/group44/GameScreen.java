@@ -545,8 +545,8 @@ public class GameScreen extends ScreenAdapter{
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // Perform an action, for example, print a message or switch screens
-                Gdx.app.log("exitButton", "Exiting game...");
-                Gdx.app.exit();
+                Gdx.app.log("exitButton", "Exiting game to main menu...");
+                mainGame.popScreen();
             }
         });
         images.put("exitButton", exitButton);
@@ -625,6 +625,9 @@ public class GameScreen extends ScreenAdapter{
     public void render(float delta) {
         float deltaTime = Gdx.graphics.getDeltaTime();
 
+        // Update cooldowns
+        session.character.updateCooldowns(deltaTime);
+
         // Call separate functions for periodic updates
         handleScoreAndStatUpdates(deltaTime);
         handleHeadAndBodyUpdates(deltaTime);
@@ -649,7 +652,11 @@ public class GameScreen extends ScreenAdapter{
 
     @Override
     public void dispose() {
+        for (Texture texture : textures.values()) {
+            texture.dispose();
+        }
 
+        stage.dispose();
     }
 
     public void setStage(){

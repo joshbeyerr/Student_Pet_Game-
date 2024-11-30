@@ -49,11 +49,10 @@ public class CharacterClass {
     //will be used when mini-game is running to halt all changes to scores and stats
     private boolean isGameRunning;
 
-    private boolean playCooldown = false;
-    private boolean vetCooldown = false;
 
     // instead of vetCoolDown
     private float doctorCooldownRemaining = 0; // Remaining cooldown time in seconds
+    private float playCooldownRemaining = 0; // Remaining cooldown time in seconds
 
 
     // Add default constructor for LibGDX Json Loader
@@ -503,19 +502,11 @@ public class CharacterClass {
 
     public void play(){
         if(!isActionBlocked){
-            if(!playCooldown){
-                this.playCooldown = true;
+            if(!(playCooldownRemaining > 0)){
                 this.happiness = Math.min(100.0f, getHappiness() + 20.0f);
                 playVisual();
 
-                Timer.schedule(new Timer.Task() {
-                    @Override
-                    public void run() {
-                        // Reset to the normal head and body
-                        setHead(headDetermine()); // Set normal head
-                        setBody(bodyDetermine()); // Set normal body
-                    }
-                }, 30.0f);
+                playCooldownRemaining = 30.0f;
 
                 blockActions(5f);
             }
@@ -558,6 +549,9 @@ public class CharacterClass {
     public void updateCooldowns(float deltaTime) {
         if (doctorCooldownRemaining > 0) {
             doctorCooldownRemaining = Math.max(0, doctorCooldownRemaining - deltaTime);
+        }
+        if (playCooldownRemaining > 0){
+            playCooldownRemaining = Math.max(0, playCooldownRemaining - deltaTime);
         }
     }
 
