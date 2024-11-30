@@ -152,26 +152,6 @@ public class CharacterClass {
         }
     }
 
-    //method tries to use an item
-    public void useItem(int index) {
-        // if the player has the item in the inventory it gets the item values and reduces the count in inventory by 1 then updates the relivent stat
-        if (inventory[index].reduceCount()){
-            Item usedItem = inventory[index];
-            if (Objects.equals(usedItem.itemStat, "fullness")){
-                fullness = fullness+(usedItem.itemStatValue*fullnessChange);
-            }
-            else{
-                happiness = happiness+(usedItem.itemStatValue*happinessChange);
-            }
-        }
-        //need to throw an error for a player trying to use an item they don't have here
-        else {
-        }
-    }
-
-    public void gainItem(int index) {
-        inventory[index].increaseCount();
-    }
 
     public void statBarTick(){
         setHappiness(this.getHappiness() - happinessChange);
@@ -555,6 +535,28 @@ public class CharacterClass {
             return false;
             //Code to say that you cannot take pet to vet while in the state they are in
         }
+    }
+
+    public void feed(int inventoryIndex){
+        if(inventory[inventoryIndex].reduceCount()){
+            this.fullness = Math.min(100.0f, getHunger() + (inventory[inventoryIndex].getItemStatValue()*fullnessChange));
+        }
+        else{
+            //need to throw an error for a player trying to use an item they don't have here
+        }
+    }
+
+    public void giveGift(int inventoryIndex){
+        if(inventory[inventoryIndex].reduceCount()){
+            this.fullness = Math.min(100.0f, getHappiness() + (inventory[inventoryIndex].getItemStatValue()*happinessChange));
+        }
+        else{
+            //need to throw an error for a player trying to use an item they don't have here
+        }
+    }
+
+    public void gainItem(int index) {
+        inventory[index].increaseCount();
     }
 
     public void loadImages(){
