@@ -3,14 +3,11 @@ package com.kaobells.group44;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Timer;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 public class CharacterClass {
     private final Main mainGame;
@@ -294,7 +291,7 @@ public class CharacterClass {
             crashedOut();
         } else if (getSleep() < 1.0f) {
             this.state = State.SLEEPING;
-            sleepyMode();
+            goToSleep();
         } else if (getHappiness() < 1.0f) {
             this.state = State.ANGRY;
         } else if (getHunger() < 1.0f) {
@@ -305,15 +302,16 @@ public class CharacterClass {
     }
 
 
-    //placeholder function see comment
-    public void sleepyMode(){
+    public void goToSleep(){
         /*
-        placeholder for eventual sleep state function. Guideline for this is: "a health penalty is applied
-        (a set number of health points are removed), and the pet will fall asleep and can no longer be interacted with.
+        placeholder for eventual sleep state function. Guideline for this is: "if triggered by Sleep hitting zero a health penalty is applied
+        (as opposed to the goToSleep action the player can use), and the pet will fall asleep and can no longer be interacted with.
         In the sleeping state the sleep value will slowly increases until it hits the maximum value. Once
         the max is reached, the pet wakes and returns to its normal state. During the sleeping state the other statistics still decline normally."
          */
-        setHealth(getHealth()-10.0f);
+        if(getSleep() < 1.0f){
+            setHealth(Math.min(0.0f, (getHealth()-10.0f)));
+        }
         System.out.println("he just like me fr");
     }
 
@@ -332,7 +330,7 @@ public class CharacterClass {
             blinkTask.cancel(); // Cancel existing task if it's running
         }
 
-        float blinkInterval = 3f; // Blink every 3 seconds
+        float blinkInterval = 3.0f; // Blink every 3 seconds
         float blinkDuration = 0.5f; // Blink lasts for 0.5 seconds
 
         float hungerDuration = 1.5f;
