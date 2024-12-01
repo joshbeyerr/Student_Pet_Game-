@@ -56,9 +56,10 @@ public class CharacterClass {
     private float doctorCooldownRemaining = 0; // Remaining cooldown time in seconds
     private float playCooldownRemaining = 0; // Remaining cooldown time in seconds
     private float actionBlockCooldownRemaining  = 0;
+    private float saveTimer = 30f; // starts off at 30 so that game saves right when character is created
 
     //Array holding booleans representing the states that can have compounding effects with other states (sleeping,angry,hungry).
-    private transient boolean[] compoundingStates;
+    private boolean[] compoundingStates;
 
     // Add default constructor for LibGDX Json Loader
     public CharacterClass() {
@@ -628,6 +629,20 @@ public class CharacterClass {
         if (playCooldownRemaining > 0){
             playCooldownRemaining = Math.max(0, playCooldownRemaining - deltaTime);
         }
+
+
+        if (saveTimer < 30) {
+            saveTimer = Math.min(30, saveTimer + deltaTime);
+        }
+        // every 30 seconds, save game
+        else{
+            mainGame.jsonHandler.saveCharacterToGameSlot(getSlotNumber(), this);
+            saveTimer = 0;
+
+        }
+
+
+
     }
 
     public void feed(int inventoryIndex){

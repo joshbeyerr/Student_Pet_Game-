@@ -418,9 +418,6 @@ public class GameScreen extends ScreenAdapter{
 
 
 
-
-
-
     // ? idk, i think all head and body textures should be stored in character class,
     // and a call of getHead or getBody will return the image
 

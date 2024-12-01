@@ -27,6 +27,7 @@ import java.util.Map;
 
 public class GameSlots  extends ScreenAdapter {
     private final Main mainGame;
+    private final Screen screen;
 
     private final SpriteBatch spriteBatch;
     private final Stage stage;
@@ -36,9 +37,17 @@ public class GameSlots  extends ScreenAdapter {
     private final Map<String, Texture> textures;
     Label.LabelStyle nameLabelStyle;
 
-    public GameSlots(Main game) {
+    public GameSlots(Main game, String screenType) {
         mainGame = game;
         textures = new HashMap<>();
+
+        if (screenType.equals("load")){
+            screen = Screen.LOAD;
+        }
+        else {
+            screen = Screen.NEW;
+        }
+
 
         spriteBatch = mainGame.getSharedBatch();
         viewport = mainGame.getViewport();
@@ -73,25 +82,24 @@ public class GameSlots  extends ScreenAdapter {
 
         loadTextures();
 
-        stage.addActor(backButton);
-
         Table table = createTable();
 
         Table textTable = textTable();
         textTable.center();
+        table.add(textTable).row();
 
         Table slotTable = slotTable();
         slotTable.center();
-
-        Table warningTable = warningTable();
-        warningTable.center();
-
-        table.add(textTable).row();
-
         table.add(slotTable).padTop(viewport.getWorldHeight() * 0.05f).padBottom(viewport.getWorldHeight() * 0.04f).row();
-        table.add(warningTable).row();
+
+        if (screen == Screen.NEW){
+            Table warningTable = warningTable();
+            warningTable.center();
+            table.add(warningTable).row();
+        }
 
 
+        stage.addActor(backButton);
         stage.addActor(table);
     }
 
@@ -106,7 +114,15 @@ public class GameSlots  extends ScreenAdapter {
 
     public Table textTable(){
         Table newTable = new Table();
-        Image loadGameTextbox = mainGame.createImage(textures.get("loadGameText"));
+        Image loadGameTextbox;
+
+        if (screen == Screen.LOAD){
+            loadGameTextbox = mainGame.createImage(textures.get("loadGameText"));
+        }
+        else{
+            loadGameTextbox = mainGame.createImage(textures.get("newGameText"));
+        }
+
         newTable.add(loadGameTextbox);
         return newTable;
     }
@@ -191,15 +207,33 @@ public class GameSlots  extends ScreenAdapter {
             }
         });
 
+        if (screen == Screen.LOAD){
+            slot.addListener(new ClickListener(){
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    System.out.println("Table clicked new!!");
 
-        slot.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Table clickewadd!");
-                // just for this state right now, passing through to story screen
-                mainGame.pushScreen(new StoryScreen(mainGame, slotNumber));
-            }
-        });
+                    // Clear all screens except the main menu, memory saver
+                    mainGame.clearStackExceptMain();
+
+                    // just for this state right now, passing through to story screen
+
+                    GameSession newGame = new GameSession(character);
+                    mainGame.pushScreen(new GameScreen(mainGame, newGame));
+                }
+            });
+        }
+
+        else{
+            slot.addListener(new ClickListener(){
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    System.out.println("Table clickewadd!");
+                    // just for this state right now, passing through to story screen
+                    mainGame.pushScreen(new StoryScreen(mainGame, slotNumber));
+                }
+            });
+        }
 
         return slot;
     }
@@ -251,6 +285,7 @@ public class GameSlots  extends ScreenAdapter {
         textures.put("deadSlot", new Texture(Gdx.files.internal("gameSlot/dead-slot-btn.png")));
         textures.put("emptySlot", new Texture(Gdx.files.internal("gameSlot/empty-slot-btn.png")));
         textures.put("loadGameText", new Texture(Gdx.files.internal("gameSlot/load-game-textbox.png")));
+        textures.put("newGameText", new Texture(Gdx.files.internal("gameSlot/new-game-textbox.png")));
         textures.put("mysteryHead", new Texture(Gdx.files.internal("gameSlot/mysterious-head.png")));
         textures.put("warningText", new Texture(Gdx.files.internal("gameSlot/load-warning-txt.png")));
 
@@ -268,6 +303,10 @@ public class GameSlots  extends ScreenAdapter {
             texture.dispose();
         }
         stage.dispose();
+    }
+
+    public enum Screen{
+        NEW, LOAD
     }
 }
 

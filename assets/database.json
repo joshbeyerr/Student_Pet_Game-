@@ -3,29 +3,37 @@
 	"1": {
 		"character": {
 			"class": "com.kaobells.group44.CharacterClass",
-			"name": "Joshua",
-			"characterNumber": 1,
-			"characterType": "quirky",
-			"state": "NEUTRAL",
-			"health": 90,
-			"sleep": 77,
-			"happiness": 97,
-			"fullness": 97,
-			"stress": 77
+			"name": "wadaw",
+			"characterNumber": 4,
+			"characterType": "serious",
+			"state": "DEAD",
+			"health": 0,
+			"sleep": 90,
+			"happiness": 0,
+			"fullness": 0,
+			"healthChange": 0.5,
+			"sleepChange": 0.75,
+			"happinessChange": 0.75,
+			"fullnessChange": 0.75,
+			"saveTimer": 3.3390794
 		}
 	},
 	"2": {
 		"character": {
 			"class": "com.kaobells.group44.CharacterClass",
-			"name": "JIB",
-			"characterNumber": 3,
-			"characterType": "brave",
+			"name": "awdaw",
+			"characterNumber": 0,
+			"characterType": "relaxed",
 			"state": "NEUTRAL",
 			"health": 80,
-			"sleep": 41,
-			"happiness": 61,
-			"fullness": 51,
+			"sleep": 36.5,
+			"happiness": 58.25,
+			"fullness": 59.70006,
 			"stress": 51,
+			"healthChange": 1.5,
+			"sleepChange": 1.5,
+			"happinessChange": 0.75,
+			"fullnessChange": 0.7,
 			"compoundingStates": [
 				false,
 				false,
@@ -44,12 +52,7 @@
 			"sleep": 48,
 			"happiness": 48,
 			"fullness": 23,
-			"stress": 48,
-			"compoundingStates": [
-				false,
-				false,
-				false
-			]
+			"stress": 48
 		}
 	}
 }

@@ -101,7 +101,6 @@ public class NameInput extends ScreenAdapter {
                 CharacterClass newCharacter = new CharacterClass(mainGame, nameInputField.getText(), previousScreenVar.getCharacterIndex(), previousScreenVar.getCharacterType(previousScreenVar.getCharacterIndex()),inventory, compoundingStates, slot);
 
                 GameSession newGame = new GameSession(newCharacter);
-
                 mainGame.pushScreen(new GameScreen(mainGame, newGame));
 
             }

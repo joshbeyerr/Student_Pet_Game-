@@ -68,13 +68,26 @@ public class StartScreen extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("StartButton", "Start Game button clicked!");
-//                mainGame.pushScreen(new StoryScreen(mainGame));
+                if (mainGame.jsonHandler.isSavedFiles()){
+                    mainGame.pushScreen(new GameSlots(mainGame, "new"));
+                }
+                else{
+                    // if no games exist, using slot 1
+                    mainGame.pushScreen(new StoryScreen(mainGame, "1"));
+                }
 
-                mainGame.pushScreen(new GameSlots(mainGame));
+
             }
         });
 
         ImageButton loadButton = mainGame.createImageButton(assetManager.get("startScreen/load-game-btn.png"));
+        loadButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.log("loadButton", "loadButton clicked!");
+                mainGame.pushScreen(new GameSlots(mainGame, "load"));
+            }
+        });
 
         ImageButton instructionsButton = mainGame.createImageButton(assetManager.get("startScreen/instructions-btn.png"));
 
@@ -117,13 +130,7 @@ public class StartScreen extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("ParentalButton", "Parental Controls button clicked!");
-                if (mainGame.jsonHandler.isSavedFiles()){
-                    mainGame.pushScreen(new ParentalControlsScreen(mainGame)); // Transition to ParentalControlsScreen
-                }
-                else{
-                    // if there are 0 saved screens than slot 1 is automatically used
-                    mainGame.pushScreen(new StoryScreen(mainGame, "1"));
-                }
+                mainGame.pushScreen(new ParentalControlsScreen(mainGame)); // Transition to ParentalControlsScreen
             }
         });
 
