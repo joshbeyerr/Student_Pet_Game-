@@ -98,7 +98,7 @@ public class NameInput extends ScreenAdapter {
 
                 Item[] inventory = new Item[6];
                 boolean[] compoundingStates= new boolean[3];
-                CharacterClass newCharacter = new CharacterClass(mainGame, nameInputField.getText(), previousScreenVar.getCharacterIndex(), previousScreenVar.getCharacterType(previousScreenVar.getCharacterIndex()),inventory, compoundingStates, slot);
+                CharacterClass newCharacter = new CharacterClass(mainGame, nameInputField.getText(), previousScreenVar.getCharacterIndex(), previousScreenVar.getCharacterType(previousScreenVar.getCharacterIndex()),inventory, compoundingStates, slot,0);
                 //SASHA
 
                 GameSession newGame = new GameSession(newCharacter,mainGame);

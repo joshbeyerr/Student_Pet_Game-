@@ -10,7 +10,6 @@ import java.time.DayOfWeek;
 public class GameSession {
 
     CharacterClass character;
-    int score;
     private LocalTime startTime;
     private long secondsPlayed;
     private DayOfWeek currentDay;

@@ -52,6 +52,8 @@ public class CharacterClass {
     //will be used when mini-game is running to halt all changes to scores and stats
     private boolean isGameRunning;
 
+    private int score;
+
 
     // instead of vetCoolDown
     private float doctorCooldownRemaining = 0; // Remaining cooldown time in seconds
@@ -98,12 +100,12 @@ public class CharacterClass {
 
 
     // Constructor with default state (NEUTRAL)
-    public CharacterClass(Main mainGameSession, String charName, int characterNumber, String characterTypeStr, Item[] inventory, boolean[] compoundingStates, String slotNumber) {
-        this(mainGameSession, charName, characterNumber, characterTypeStr, inventory, State.NEUTRAL, compoundingStates, slotNumber);
+    public CharacterClass(Main mainGameSession, String charName, int characterNumber, String characterTypeStr, Item[] inventory, boolean[] compoundingStates, String slotNumber, int characterScore) {
+        this(mainGameSession, charName, characterNumber, characterTypeStr, inventory, State.NEUTRAL, compoundingStates, slotNumber, characterScore);
     }
 
     // Constructor
-    public CharacterClass(Main mainGameSession, String charName, int characterNumber, String characterTypeStr, Item[] inventory, State state, boolean[] compoundingStates, String slotNumber) {
+    public CharacterClass(Main mainGameSession, String charName, int characterNumber, String characterTypeStr, Item[] inventory, State state, boolean[] compoundingStates, String slotNumber, int characterScore) {
         this.mainGame = mainGameSession;
         this.name = charName;
         this.inventory = inventory;
@@ -112,6 +114,7 @@ public class CharacterClass {
         this.state = state;
         this.compoundingStates = compoundingStates;
         this.slot = slotNumber;
+        this.score = characterScore;
 
         characterHeads = new HashMap<>();
         characterBodies = new HashMap<>();
@@ -135,6 +138,10 @@ public class CharacterClass {
     public String getSlotNumber(){
         return slot;
     }
+
+    public int getScore() { return score;}
+
+    public void incrementScore() { this.score = score+1;}
 
     // Getter and Setter for health
     public float getHealth() { return health;}

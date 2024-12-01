@@ -586,7 +586,7 @@ public class GameScreen extends ScreenAdapter{
         images.put("purpleLabel", mainGame.createImageButton(textures.get("purpleLabel")));
 
         images.put("Name", new Label(session.character.getName(), nameLabelStyle));
-        images.put("Score", new Label("Score: " + (session.score), scoreLabelStyle));
+        images.put("Score", new Label("Score: " + (session.character.getScore()), scoreLabelStyle));
 
         // star bar colors
         drawables = new HashMap<>();
@@ -624,11 +624,11 @@ public class GameScreen extends ScreenAdapter{
 
             // Update score
             Label scoreLabel = (Label) images.get("Score");
-            session.score += 1;
-            scoreLabel.setText("Score: " + session.score);
+            session.character.incrementScore();
+            scoreLabel.setText("Score: " + session.character.getScore());
 
             // Gain item every 50 points
-            if (session.score % 50 == 0) {
+            if (session.character.getScore() % 50 == 0) {
                 session.character.gainItem((int) (Math.random() * 6));
             }
 
