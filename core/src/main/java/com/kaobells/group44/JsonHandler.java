@@ -126,6 +126,7 @@ public class JsonHandler {
         return null; // Return null if no character is found
     }
 
+
     // Method to get a human-readable representation of a game slot
     public String gameToString(String slotId) {
         if (database.games.containsKey(slotId)) {
