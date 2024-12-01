@@ -168,7 +168,7 @@ public class GameSlots  extends ScreenAdapter {
             Label nameLabel = new Label(character.getName(), nameLabelStyle);
             slot.add(nameLabel).center().padBottom(textPad).row();
 
-            Image characterImg = mainGame.createImage(new Texture(Gdx.files.internal(getCharacterType(character.getcharacterType()))));
+            Image characterImg = mainGame.createImage(new Texture(Gdx.files.internal(getCharacterType(character.getCharacterType()))));
 
             slot.add(characterImg).size(headWidth, headHeight).padBottom(headPad);
         }

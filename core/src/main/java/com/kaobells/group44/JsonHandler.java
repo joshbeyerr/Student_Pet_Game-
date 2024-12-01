@@ -3,6 +3,7 @@ package com.kaobells.group44;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
 
 import java.util.HashMap;
@@ -12,6 +13,7 @@ class Database {
     public HashMap<String, HashMap<String, Object>> games;
     public HashMap<String, CharacterClass> characters;
     public HashMap<String, Object> parentalControls; // Field for "Parental Controls"
+    private boolean isPasswordSet;
 
     // Constructor for initializing fields if null
     public Database() {
@@ -20,20 +22,7 @@ class Database {
         parentalControls = new HashMap<>();
     }
 
-    // Initialize parentalControls with default values
-    public void initializeParentalControls() {
-        if (parentalControls == null || parentalControls.isEmpty()) {
-            parentalControls.put("Password", "");
-            parentalControls.put("morningParentBlock", false);
-            parentalControls.put("afternoonParentBlock", false);
-            parentalControls.put("eveningParentBlock", false);
-            parentalControls.put("weekdayParentBlock", false);
-            parentalControls.put("weekendParentBlock", false);
-            parentalControls.put("totalSecondsPlayed", 0);
-            parentalControls.put("totalSessionsPlayed", 0);
-            parentalControls.put("averagePlaytimePerSession", 0);
-        }
-    }
+
 }
 
 public class JsonHandler {
@@ -65,7 +54,7 @@ public class JsonHandler {
             database = json.fromJson(Database.class, jsonString);
         } else {
             database = new Database();
-            database.initializeParentalControls(); // Ensure parentalControls is initialized
+            initializeParentalControls(); // Ensure parentalControls is initialized
             saveDatabase();
         }
     }
@@ -122,7 +111,6 @@ public class JsonHandler {
         return null; // Return null if no character is found
     }
 
-
     // Method to get a human-readable representation of a game slot
     public String gameToString(String slotId) {
         if (database.games.containsKey(slotId)) {
@@ -141,37 +129,28 @@ public class JsonHandler {
     }
 
     public void initializeParentalControls() {
-        // fill parentalControls with default values
-        database.parentalControls.put("Password", "");
+        String password = (String) database.parentalControls.get("Password");
+
+        if (password == null || password.isEmpty()) {
+            database.parentalControls.put("Password", "");
+        }
         database.parentalControls.put("morningParentBlock", false);
         database.parentalControls.put("afternoonParentBlock", false);
         database.parentalControls.put("eveningParentBlock", false);
         database.parentalControls.put("weekdayParentBlock", false);
         database.parentalControls.put("weekendParentBlock", false);
         database.parentalControls.put("totalSecondsPlayed", 0);
-        database.parentalControls.put("totalSessionsPlayed ", 0);
+        database.parentalControls.put("totalSessionsPlayed", 0);
         database.parentalControls.put("averagePlaytimePerSession", 0);
         saveDatabase();
         System.out.println("Parental controls initialized with default values.");
     }
 
+
     public boolean getParentalControlBoolean(String key) {
         return (boolean) database.parentalControls.getOrDefault(key, false);
     }
 
-    public void setParentalControlBoolean(String key, boolean value) {
-        database.parentalControls.put(key, value);
-        saveDatabase();
-    }
-
-    public String getParentalControlString(String key) {
-        return (String) database.parentalControls.getOrDefault(key, "");
-    }
-
-    public void setParentalControlString(String key, String value) {
-        database.parentalControls.put(key, value);
-        saveDatabase();
-    }
 
     public int getParentalControlInt(String key) {
         return (int) database.parentalControls.getOrDefault(key, 0);
