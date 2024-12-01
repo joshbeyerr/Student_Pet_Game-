@@ -202,15 +202,22 @@ public class GameSlots  extends ScreenAdapter {
             }
         });
 
+        mainGame.jsonHandler.printStuff();
+
         if (screen == Screen.LOAD){
             if (character != null){
                 slot.addListener(new ClickListener(){
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
+                        mainGame.jsonHandler.printStuff();
+
+
                         character.startLoadCharacter(mainGame);
                         // Clear all screens except the main menu, memory saver
                         mainGame.clearStackExceptMain();
                         // just for this state right now, passing through to story screen
+
+
 
                         GameSession newGame = new GameSession(character, mainGame);
                         if(!(newGame.blockedPlayTimeCheck())){  //checks for playing during active parental block
@@ -218,6 +225,7 @@ public class GameSlots  extends ScreenAdapter {
                         } else {
                             //blocked playtime error
                         }
+
                     }
                 });
             }

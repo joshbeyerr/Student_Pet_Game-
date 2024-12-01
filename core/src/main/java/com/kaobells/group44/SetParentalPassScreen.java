@@ -24,7 +24,6 @@ public class SetParentalPassScreen extends ScreenAdapter {
     private final Stage stage;
     private final Viewport viewport;
     private final ImageButton backButton;
-    private final JsonHandler jsonHandler;
 
     private Map<String, Texture> textures;
     private final Table parentTable;
@@ -43,7 +42,6 @@ public class SetParentalPassScreen extends ScreenAdapter {
         this.viewport = mainGame.getViewport();
         this.stage = new Stage(viewport, spriteBatch);
         this.backButton = mainGame.getBackButton();
-        this.jsonHandler = new JsonHandler();
 
         this.parentTable = new Table();
         this.parentTable.setFillParent(true);
@@ -69,7 +67,7 @@ public class SetParentalPassScreen extends ScreenAdapter {
     }
 
     private void initializeState() {
-        String password = jsonHandler.getParentalControlPassword();
+        String password = mainGame.jsonHandler.getParentalPassword();
         isPasswordSet = password != null && !password.isEmpty();
         currentIndex = 0; // Start at the first pin box
         enteredPassword = ""; // Initialize empty password
@@ -137,7 +135,8 @@ public class SetParentalPassScreen extends ScreenAdapter {
     private void handleSubmit() {
         if (enteredPassword.length() == 4) { // Ensure all 4 digits are entered
             if (isPasswordSet) {
-                String storedPassword = jsonHandler.getParentalControlPassword();
+                String storedPassword = mainGame.jsonHandler.getParentalPassword();
+
                 if (enteredPassword.equals(storedPassword)) {
                     Gdx.app.log("ParentalControls", "Password Correct!");
                     mainGame.popScreen();
@@ -146,7 +145,9 @@ public class SetParentalPassScreen extends ScreenAdapter {
                     Gdx.app.log("ParentalControls", "Incorrect Password!");
                 }
             } else {
-                jsonHandler.setParentalControlPassword(enteredPassword);
+
+                mainGame.jsonHandler.setParentalPassword(enteredPassword);
+
                 Gdx.app.log("ParentalControls", "Password Set: " + enteredPassword);
                 mainGame.popScreen();
                 mainGame.pushScreen(new SetParentalPassScreen(mainGame));

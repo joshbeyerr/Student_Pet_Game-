@@ -268,6 +268,10 @@ public class StartScreen extends ScreenAdapter {
 
     @Override
     public void show() {
+        mainGame.jsonHandler.printStuff();
+        System.out.println("hereeee2222e");
+
+
         setStage();
     }
 

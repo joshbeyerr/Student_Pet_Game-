@@ -43,9 +43,9 @@
 				false,
 				false
 			],
-			"playCooldownRemaining": 20.100918,
-			"blinkTimer": 0.0666517,
-			"blinkDurationTimer": 0.0820877,
+			"playCooldownRemaining": 19.77062,
+			"blinkTimer": 0.3969494,
+			"blinkDurationTimer": 0.4123854,
 			"isBlinking": true
 		}
 	},
@@ -80,7 +80,7 @@
 	},
 	"totalSessionsPlayed": {
 		"class": "java.lang.Integer",
-		"value": 80
+		"value": 75
 	},
 	"averagePlaytimePerSession": {
 		"class": "java.lang.Integer",
