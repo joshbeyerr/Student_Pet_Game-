@@ -64,6 +64,7 @@ public class GameSlots  extends ScreenAdapter {
 
         super.show();
         setStage(); // Reset input processor
+        stage.addActor(backButton);
     }
 
     public void setLabels(){
@@ -98,8 +99,6 @@ public class GameSlots  extends ScreenAdapter {
             table.add(warningTable).row();
         }
 
-
-        stage.addActor(backButton);
         stage.addActor(table);
     }
 
@@ -168,7 +167,7 @@ public class GameSlots  extends ScreenAdapter {
             Label nameLabel = new Label(character.getName(), nameLabelStyle);
             slot.add(nameLabel).center().padBottom(textPad).row();
 
-            Image characterImg = mainGame.createImage(new Texture(Gdx.files.internal(getCharacterType(character.getcharacterType()))));
+            Image characterImg = mainGame.createImage(new Texture(Gdx.files.internal(getCharacterType(character.getCharacterType()))));
 
             slot.add(characterImg).size(headWidth, headHeight).padBottom(headPad);
         }
@@ -208,20 +207,23 @@ public class GameSlots  extends ScreenAdapter {
         });
 
         if (screen == Screen.LOAD){
-            slot.addListener(new ClickListener(){
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    System.out.println("Table clicked new!!");
+            if (character != null){
+                slot.addListener(new ClickListener(){
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        System.out.println("Table clicked new!!");
 
-                    // Clear all screens except the main menu, memory saver
-                    mainGame.clearStackExceptMain();
+                        // Clear all screens except the main menu, memory saver
+                        mainGame.clearStackExceptMain();
 
-                    // just for this state right now, passing through to story screen
+                        // just for this state right now, passing through to story screen
 
-                    GameSession newGame = new GameSession(character,mainGame);
-                    mainGame.pushScreen(new GameScreen(mainGame, newGame));
-                }
-            });
+                        GameSession newGame = new GameSession(character, mainGame);
+                        mainGame.pushScreen(new GameScreen(mainGame, newGame));
+                    }
+                });
+            }
+
         }
 
         else{
@@ -241,9 +243,12 @@ public class GameSlots  extends ScreenAdapter {
     public Table slotTable(){
         Table newTable = new Table();
 
+        System.out.println("HERE1");
+
         CharacterClass character1 = (mainGame.jsonHandler.getCharacterFromGameSlot("1"));
         CharacterClass character2 = (mainGame.jsonHandler.getCharacterFromGameSlot("2"));
         CharacterClass character3 = (mainGame.jsonHandler.getCharacterFromGameSlot("3"));
+
 
         // slot1
         Table slot1 = createSlot(character1, "1");

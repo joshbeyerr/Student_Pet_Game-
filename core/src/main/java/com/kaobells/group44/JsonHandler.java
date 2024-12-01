@@ -5,7 +5,6 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter;
 
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,9 +19,22 @@ class Database {
         characters = new HashMap<>();
         parentalControls = new HashMap<>();
     }
+
+    // Initialize parentalControls with default values
+    public void initializeParentalControls() {
+        if (parentalControls == null || parentalControls.isEmpty()) {
+            parentalControls.put("Password", "");
+            parentalControls.put("morningParentBlock", false);
+            parentalControls.put("afternoonParentBlock", false);
+            parentalControls.put("eveningParentBlock", false);
+            parentalControls.put("weekdayParentBlock", false);
+            parentalControls.put("weekendParentBlock", false);
+            parentalControls.put("totalSecondsPlayed", 0);
+            parentalControls.put("totalSessionsPlayed", 0);
+            parentalControls.put("averagePlaytimePerSession", 0);
+        }
+    }
 }
-
-
 
 public class JsonHandler {
     private FileHandle localFile;
@@ -30,11 +42,9 @@ public class JsonHandler {
     private final Json json = new Json(); // LibGDX JSON utility
 
     public JsonHandler() {
-
         initializeLocalFile();
         loadDatabase();
     }
-
 
     private void initializeLocalFile() {
         FileHandle internalFile = Gdx.files.internal("database.json");
@@ -44,7 +54,7 @@ public class JsonHandler {
             internalFile.copyTo(localFile);
             System.out.println("Database JSON created in local storage");
         } else {
-            System.out.println("Local Database JSON Previously Created");
+            System.out.println("Local Database JSON previously created.");
         }
     }
 
@@ -55,10 +65,12 @@ public class JsonHandler {
             database = json.fromJson(Database.class, jsonString);
         } else {
             database = new Database();
+            database.initializeParentalControls(); // Ensure parentalControls is initialized
+            saveDatabase();
         }
     }
 
-    private void saveDatabase() {
+    public void saveDatabase() {
         // Serialize the database object to a string
         json.setOutputType(JsonWriter.OutputType.json);
 
@@ -68,6 +80,10 @@ public class JsonHandler {
         localFile.writeString(jsonString, false);
 
         System.out.println("Database saved successfully in proper JSON format.");
+    }
+
+    public Database getDatabase() {
+        return database;
     }
 
     public boolean isSavedFiles() {
@@ -82,9 +98,8 @@ public class JsonHandler {
     }
 
     public boolean isEmptyParentalControls() {
-        return database.parentalControls.isEmpty();
+        return database.parentalControls == null || database.parentalControls.isEmpty();
     }
-
 
 
     // Method to save a CharacterClass to a specific game slot
@@ -125,8 +140,6 @@ public class JsonHandler {
         }
     }
 
-
-
     public void initializeParentalControls() {
         // fill parentalControls with default values
         database.parentalControls.put("Password", "");
@@ -142,34 +155,28 @@ public class JsonHandler {
         System.out.println("Parental controls initialized with default values.");
     }
 
-    // Getter for boolean values
     public boolean getParentalControlBoolean(String key) {
         return (boolean) database.parentalControls.getOrDefault(key, false);
     }
 
-    // Setter for boolean values
     public void setParentalControlBoolean(String key, boolean value) {
         database.parentalControls.put(key, value);
         saveDatabase();
     }
 
-    // Getter for String values
     public String getParentalControlString(String key) {
         return (String) database.parentalControls.getOrDefault(key, "");
     }
 
-    // Setter for String values
     public void setParentalControlString(String key, String value) {
         database.parentalControls.put(key, value);
         saveDatabase();
     }
 
-    // Getter for int values
     public int getParentalControlInt(String key) {
         return (int) database.parentalControls.getOrDefault(key, 0);
     }
 
-    // Setter for int values
     public void setParentalControlInt(String key, int value) {
         database.parentalControls.put(key, value);
         saveDatabase();

@@ -10,11 +10,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CharacterClass {
-    private transient final Main mainGame;
+    private transient Main mainGame;
     private final String name;
 
     // slot 1 through 3;
-    private transient final String slot;
+    private final String slot;
 
     // 0 through to 4
     private final int characterNumber;
@@ -61,23 +61,6 @@ public class CharacterClass {
     //Array holding booleans representing the states that can have compounding effects with other states (sleeping,angry,hungry).
     private boolean[] compoundingStates;
 
-    // Add default constructor for LibGDX Json Loader
-    public CharacterClass() {
-        this.name = "DefaultName";
-        this.state = null;
-        this.health = 100.0f;
-        this.sleep = 100.0f;
-        this.happiness = 100.0f;
-        this.fullness = 100.0f;
-        this.stress = 0.0f;
-        this.mainGame = null;
-        characterHeads = null;
-        characterBodies = null;
-        characterNumber = 100;
-        characterType = "default";
-        slot = "0";
-    }
-
 
     // Constructor with default state (NEUTRAL)
     public CharacterClass(Main mainGameSession, String charName, int characterNumber, String characterTypeStr, Item[] inventory, boolean[] compoundingStates, String slotNumber) {
@@ -111,7 +94,19 @@ public class CharacterClass {
     // Getter for name
     public String getName() { return name;}
 
-    public String getcharacterType(){
+
+    // ONLY TO BE USED FROM LOAD GAME BECAUSE MAIN GAME IS THE ONLY CONSTRUCTOR PARAMETER NOT STORED IN JSON
+    public void setMainGame(Main mainG){
+        if (mainGame == null){
+            mainGame = mainG;
+        }
+    }
+
+    public float getCharacterNumber(){
+        return characterNumber;
+    }
+
+    public String getCharacterType(){
         return characterType;
     }
     public String getSlotNumber(){
@@ -176,6 +171,53 @@ public class CharacterClass {
         } else {
             this.stress = 100.0f;
     }}
+
+    // Getter and Setter for doctorCooldownRemaining
+    public float getDoctorCooldownRemaining() {
+        return doctorCooldownRemaining;
+    }
+
+    public void setDoctorCooldownRemaining(float doctorCooldownRemaining) {
+        this.doctorCooldownRemaining = doctorCooldownRemaining;
+    }
+
+    // Getter and Setter for playCooldownRemaining
+    public float getPlayCooldownRemaining() {
+        return playCooldownRemaining;
+    }
+
+    public void setPlayCooldownRemaining(float playCooldownRemaining) {
+        this.playCooldownRemaining = playCooldownRemaining;
+    }
+
+    // Getter and Setter for actionBlockCooldownRemaining
+    public float getActionBlockCooldownRemaining() {
+        return actionBlockCooldownRemaining;
+    }
+
+    public void setActionBlockCooldownRemaining(float actionBlockCooldownRemaining) {
+        this.actionBlockCooldownRemaining = actionBlockCooldownRemaining;
+    }
+
+    // Getter and Setter for saveTimer
+    public float getSaveTimer() {
+        return saveTimer;
+    }
+
+    public void setSaveTimer(float saveTimer) {
+        this.saveTimer = saveTimer;
+    }
+
+    public boolean[] getCompoundingStates() {
+        return compoundingStates;
+    }
+
+
+    public void setCompoundingStates(boolean[] compoundingStates) {
+        this.compoundingStates = compoundingStates;
+    }
+
+
 
 
     public void statBarTick(){
@@ -242,8 +284,11 @@ public class CharacterClass {
     // initialize character stats based on character type selected
     private void setUpCharacter(){
         //filling inventory with all the items with the count set to zero
-        for (int i = 0; i < 6; i++) {
-            this.inventory[i] = new Item(i,0);
+        if (this.inventory != null){
+            for (int i = 0; i < 6; i++) {
+                this.inventory[i] = new Item(i,0);
+            }
+
         }
 
 
