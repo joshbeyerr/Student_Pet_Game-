@@ -71,6 +71,7 @@ public class ParentalControlsScreen extends ScreenAdapter {
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("ParentalControls", "Playtime Stats clicked");
                 // Logic for playtime stats
+                mainGame.pushScreen(new ParentalPlaytimeStatsScreen(mainGame));
             }
         });
 
@@ -80,6 +81,7 @@ public class ParentalControlsScreen extends ScreenAdapter {
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("ParentalControls", "Playtime Controls clicked");
                 // Logic for playtime controls
+
             }
         });
 
@@ -129,6 +131,9 @@ public class ParentalControlsScreen extends ScreenAdapter {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
+
+        // idk rn, this just works
+        stage.addActor(backButton);
     }
 
     @Override

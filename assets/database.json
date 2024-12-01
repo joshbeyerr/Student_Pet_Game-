@@ -5,20 +5,23 @@
 			"class": "com.kaobells.group44.CharacterClass",
 			"name": "",
 			"slot": "1",
-			"characterNumber": 0,
-			"characterType": "relaxed",
+			"score": 5,
+			"characterNumber": 1,
+			"characterType": "quirky",
 			"state": "NEUTRAL",
-			"health": 1,
-			"sleep": 80,
-			"happiness": 1,
-			"fullness": 1,
-			"stress": 80,
+			"health": 90,
+			"sleep": 82.5,
+			"happiness": 86.500015,
+			"fullness": 85.999985,
+			"stress": 85,
 			"compoundingStates": [
 				false,
 				false,
 				false
 			],
-			"blinkTimer": 0.42236
+			"saveTimer": 5.4405494,
+			"blinkTimer": 2.5986195,
+			"blinkDurationTimer": 0.51677316
 		}
 	},
 	"2": {
@@ -77,11 +80,11 @@
 	},
 	"totalSessionsPlayed": {
 		"class": "java.lang.Integer",
-		"value": 74
+		"value": 80
 	},
 	"averagePlaytimePerSession": {
 		"class": "java.lang.Integer",
-		"value": 1
+		"value": 0
 	},
 	"weekendParentBlock": {
 		"class": "java.lang.Boolean",
@@ -97,7 +100,7 @@
 	},
 	"totalSecondsPlayed": {
 		"class": "java.lang.Integer",
-		"value": 63
+		"value": 65
 	},
 	"totalSessionsPlayed ": {
 		"class": "java.lang.Integer",
