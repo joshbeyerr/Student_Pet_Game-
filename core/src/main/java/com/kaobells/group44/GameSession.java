@@ -104,7 +104,7 @@ public class GameSession {
 
     //helper method to return the seconds since the GameSession was created as an Int
     public int getSecondsPlayedThisSession(){
-        this.secondsPlayed = Duration.between(this.startTime, Instant.now()).toSeconds();
+        this.secondsPlayed = Duration.between(this.startTime, LocalTime.now()).toSeconds();
         return (int) secondsPlayed;
     }
 

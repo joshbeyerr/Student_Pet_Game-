@@ -32,15 +32,15 @@
 			"characterType": "relaxed",
 			"state": "NEUTRAL",
 			"health": 80,
-			"sleep": 80,
-			"happiness": 16.400057,
-			"fullness": 4.0000114,
-			"stress": 4,
+			"sleep": 77,
+			"happiness": 13.100056,
+			"fullness": 1.0000114,
+			"stress": 1,
 			"healthChange": 1.1,
 			"sleepChange": 1,
 			"happinessChange": 1.1,
 			"fullnessChange": 1,
-			"saveTimer": 22.985813,
+			"saveTimer": 26.093796,
 			"compoundingStates": [
 				false,
 				false,
@@ -51,19 +51,21 @@
 	"3": {
 		"character": {
 			"class": "com.kaobells.group44.CharacterClass",
-			"name": "te",
+			"name": "AWD",
+			"slot": "3",
 			"characterNumber": 0,
 			"characterType": "relaxed",
 			"state": "NEUTRAL",
 			"health": 80,
-			"sleep": 21,
-			"happiness": 15.1000595,
-			"fullness": 21,
-			"stress": 21,
+			"sleep": 79,
+			"happiness": 78.9,
+			"fullness": 79,
+			"stress": 79,
 			"healthChange": 1.1,
 			"sleepChange": 1,
 			"happinessChange": 1.1,
 			"fullnessChange": 1,
+			"saveTimer": 0.9690486,
 			"compoundingStates": [
 				false,
 				false,
@@ -79,7 +81,7 @@
 	},
 	"totalSessionsPlayed": {
 		"class": "java.lang.Integer",
-		"value": 43
+		"value": 47
 	},
 	"averagePlaytimePerSession": {
 		"class": "java.lang.Integer",
@@ -99,7 +101,7 @@
 	},
 	"totalSecondsPlayed": {
 		"class": "java.lang.Integer",
-		"value": 0
+		"value": 1
 	},
 	"totalSessionsPlayed ": {
 		"class": "java.lang.Integer",
