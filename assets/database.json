@@ -3,66 +3,71 @@
 	"1": {
 		"character": {
 			"class": "com.kaobells.group44.CharacterClass",
-			"name": "",
+			"name": "awdawd",
 			"slot": "1",
-			"score": 6,
+			"score": 31,
 			"characterNumber": 0,
 			"characterType": "relaxed",
 			"state": "NEUTRAL",
 			"health": 80,
-			"sleep": 74,
-			"happiness": 73.40001,
-			"fullness": 74,
-			"stress": 74,
+			"sleep": 49,
+			"happiness": 45.900047,
+			"fullness": 49,
+			"stress": 49,
 			"compoundingStates": [
 				false,
 				false,
 				false
 			],
-			"saveTimer": 5.9912305
+			"saveTimer": 2.8863962
 		}
 	},
 	"2": {
 		"character": {
 			"class": "com.kaobells.group44.CharacterClass",
-			"name": "d",
+			"name": "awwda",
 			"slot": "2",
-			"score": 13,
-			"characterNumber": 0,
-			"characterType": "relaxed",
+			"score": 28,
+			"characterNumber": 3,
+			"characterType": "brave",
 			"state": "NEUTRAL",
-			"health": 80,
-			"sleep": 67,
-			"happiness": 65.70002,
-			"fullness": 67,
-			"stress": 67,
+			"health": 20,
+			"sleep": 56.200043,
+			"happiness": 92.35001,
+			"fullness": 66.20004,
+			"stress": 72,
 			"compoundingStates": [
 				false,
 				false,
 				false
 			],
-			"saveTimer": 13.699312
+			"playCooldownRemaining": 20.100918,
+			"blinkTimer": 0.0666517,
+			"blinkDurationTimer": 0.0820877,
+			"isBlinking": true
 		}
 	},
 	"3": {
 		"character": {
 			"class": "com.kaobells.group44.CharacterClass",
-			"name": "",
+			"name": "AWDAWDWA",
 			"slot": "3",
-			"score": 30,
+			"score": 208,
 			"characterNumber": 0,
 			"characterType": "relaxed",
-			"state": "NEUTRAL",
-			"health": 80,
-			"sleep": 50,
-			"happiness": 47.000046,
-			"fullness": 50,
-			"stress": 50,
+			"state": "DEAD",
+			"health": 0,
+			"sleep": 0,
+			"happiness": 0,
+			"fullness": 0,
 			"compoundingStates": [
 				false,
-				false,
-				false
-			]
+				true,
+				true
+			],
+			"blinkTimer": 0.2775396,
+			"blinkDurationTimer": 0.54011977,
+			"sleepTimer": 0.36595562
 		}
 	}
 },
@@ -73,11 +78,11 @@
 	},
 	"totalSessionsPlayed": {
 		"class": "java.lang.Integer",
-		"value": 2
+		"value": 69
 	},
 	"averagePlaytimePerSession": {
 		"class": "java.lang.Integer",
-		"value": 43
+		"value": 1
 	},
 	"weekendParentBlock": {
 		"class": "java.lang.Boolean",
@@ -93,7 +98,11 @@
 	},
 	"totalSecondsPlayed": {
 		"class": "java.lang.Integer",
-		"value": 86
+		"value": 63
+	},
+	"totalSessionsPlayed ": {
+		"class": "java.lang.Integer",
+		"value": 0
 	},
 	"weekdayParentBlock": {
 		"class": "java.lang.Boolean",

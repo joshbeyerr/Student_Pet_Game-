@@ -676,6 +676,8 @@ public class GameScreen extends ScreenAdapter{
     public void render(float delta) {
         float deltaTime = Gdx.graphics.getDeltaTime();
 
+        session.character.updateCharacter(deltaTime);
+
         // Update cooldowns
         session.character.updateCooldowns(deltaTime);
         session.character.updateActionBlock(deltaTime);
