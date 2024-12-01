@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Timer;
 
+import java.beans.Transient;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,6 +16,7 @@ public class CharacterClass {
 
     // slot 1 through 3;
     private String slot;
+    private int score;
 
     // 0 through to 4
     private final int characterNumber;
@@ -31,11 +33,11 @@ public class CharacterClass {
 
     // JUST FOR NOW - making all characters health change by 1
     // In the future this will be unique to each characterType and will be set when character is created.
-    private float healthChange;
-    private float sleepChange;
-    private float happinessChange;
-    private float fullnessChange;
-    private float stressChange = 1.0f;
+    private transient float healthChange;
+    private transient float sleepChange;
+    private transient float happinessChange;
+    private transient float fullnessChange;
+    private transient float stressChange = 1.0f;
 
     private transient Item[] inventory;
 
@@ -51,8 +53,8 @@ public class CharacterClass {
 
     //will be used when mini-game is running to halt all changes to scores and stats
     private boolean isGameRunning;
-
-    private int score;
+    //Array holding booleans representing the states that can have compounding effects with other states (sleeping,angry,hungry).
+    private boolean[] compoundingStates;
 
 
     // instead of vetCoolDown
@@ -60,9 +62,6 @@ public class CharacterClass {
     private float playCooldownRemaining = 0; // Remaining cooldown time in seconds
     private float actionBlockCooldownRemaining  = 0;
     private float saveTimer = 30f; // starts off at 30 so that game saves right when character is created
-
-    //Array holding booleans representing the states that can have compounding effects with other states (sleeping,angry,hungry).
-    private boolean[] compoundingStates;
 
     // Add default constructor for LibGDX Json Loader
     public CharacterClass() {
