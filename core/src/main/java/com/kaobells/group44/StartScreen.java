@@ -118,7 +118,7 @@ public class StartScreen extends ScreenAdapter {
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("ParentalButton", "Parental Controls button clicked!");
                 if (mainGame.jsonHandler.isSavedFiles()){
-                    mainGame.pushScreen(new ParentalControlsScreen(mainGame)); // Transition to ParentalControlsScreen
+                    mainGame.pushScreen(new SetParentalPassScreen(mainGame)); // Transition to ParentalControlsScreen
                 }
                 else{
                     // if there are 0 saved screens than slot 1 is automatically used
