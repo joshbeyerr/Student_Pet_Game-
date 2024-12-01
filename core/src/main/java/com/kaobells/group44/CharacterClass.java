@@ -90,7 +90,7 @@ public class CharacterClass {
         setHead(headDetermine());
         setBody(bodyDetermine());
 
-        modifyModifers(characterNumber);
+        modifyModifiers(characterNumber);
         startCharacter();
 
         Gdx.app.log("NAME", "health: " + health + "\nsleep: " + sleep + "\nhappiness: " + happiness + "\nfullness: " + fullness + "\nstress: " + stress);
@@ -120,7 +120,7 @@ public class CharacterClass {
         loadImages();
 
         setUpCharacter();
-        modifyModifers(characterNumber);
+        modifyModifiers(characterNumber);
         startCharacter();
 
         Gdx.app.log("NAME", "health: " + health + "\nsleep: " + sleep + "\nhappiness: " + happiness + "\nfullness: " + fullness + "\nstress: " + stress);
@@ -214,13 +214,14 @@ public class CharacterClass {
         }
     }
 
-    public void modifyModifers(int characterTypeNumber){
+    public void modifyModifiers(int characterTypeNumber){
         switch (characterTypeNumber){
             case 0:
-                this.healthChange = 1.0f;
+                this.healthChange = 1.10f;
                 this.sleepChange = 1.0f;
                 this.happinessChange = 1.1f;
                 this.fullnessChange = 1.0f;
+                break;
 
 
             case 1:
