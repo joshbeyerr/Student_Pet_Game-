@@ -209,8 +209,8 @@ public class CharacterClass {
                 //health and sleep go down faster but happiness and hunger go down slower
                 this.healthChange = 1.5f;
                 this.sleepChange = 1.5f;
-                this.happinessChange = 0.75f;
-                this.fullnessChange = 0.7f;
+                this.happinessChange = 0.7f;
+                this.fullnessChange = 0.8f;
                 break;
 
             case 2:
@@ -534,7 +534,7 @@ public class CharacterClass {
         if(!actionBlocked() && (!compoundingStates[1])) {
             //Update Stats
             this.fullness = Math.max(0.0f, getHunger() - 10.0f);
-            this.sleep = Math.max(0.0f, getSleep() - 10.0f);
+            this.sleep = Math.max(0.0f, getSleep() - 20.0f);
             this.health = Math.min(100.0f, getHealth() + 10.0f);
 
             setHead(characterHeads.get("exercise"));

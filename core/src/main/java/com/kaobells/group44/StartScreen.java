@@ -42,11 +42,17 @@ public class StartScreen extends ScreenAdapter {
         // load and set font color
         font = mainGame.resourceManager.getTitleFont();
 
+        if(game.jsonHandler.isEmptyParentalControls()){
+            game.jsonHandler.initializeParentalControls();
+        }
+
         loadTextures();
         // Create UI components
         initializeUI();
 
     }
+
+
 
     private void initializeUI() {
         // Create a unified parent table for all elements

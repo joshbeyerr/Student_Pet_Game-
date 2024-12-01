@@ -9,8 +9,6 @@ import com.badlogic.gdx.utils.JsonWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.badlogic.gdx.utils.Json.*;
-
 class Database {
     public HashMap<String, HashMap<String, Object>> games;
     public HashMap<String, CharacterClass> characters;
@@ -83,6 +81,11 @@ public class JsonHandler {
         return false; // No saves found
     }
 
+    public boolean isEmptyParentalControls() {
+        return database.parentalControls.isEmpty();
+    }
+
+
 
     // Method to save a CharacterClass to a specific game slot
     public void saveCharacterToGameSlot(String slotId, CharacterClass character) {
@@ -103,6 +106,21 @@ public class JsonHandler {
         }
         return null; // Return null if no character is found
     }
+
+    public void initializeParentalControls() {
+            // fill parentalControls with default values
+            database.parentalControls.put("Password", "");
+            database.parentalControls.put("morningParentBlock", false);
+            database.parentalControls.put("afternoonParentBlock", false);
+            database.parentalControls.put("eveningParentBlock", false);
+            database.parentalControls.put("weekdayParentBlock", false);
+            database.parentalControls.put("weekendParentBlock", false);
+            database.parentalControls.put("totalSecondsPlayed", 0);
+            database.parentalControls.put("totalSessionsPlayed ", 0);
+            database.parentalControls.put("averagePlaytimePerSession", 0);
+            saveDatabase();
+            System.out.println("Parental controls initialized with default values.");
+        }
 
 
     // Method to get a human-readable representation of a game slot
