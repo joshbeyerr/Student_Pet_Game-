@@ -3,23 +3,22 @@
 	"1": {
 		"character": {
 			"class": "com.kaobells.group44.CharacterClass",
-			"name": "awdawd",
+			"name": "",
 			"slot": "1",
-			"score": 31,
 			"characterNumber": 0,
 			"characterType": "relaxed",
 			"state": "NEUTRAL",
-			"health": 80,
-			"sleep": 49,
-			"happiness": 45.900047,
-			"fullness": 49,
-			"stress": 49,
+			"health": 1,
+			"sleep": 80,
+			"happiness": 1,
+			"fullness": 1,
+			"stress": 80,
 			"compoundingStates": [
 				false,
 				false,
 				false
 			],
-			"saveTimer": 2.8863962
+			"blinkTimer": 0.42236
 		}
 	},
 	"2": {
@@ -78,7 +77,7 @@
 	},
 	"totalSessionsPlayed": {
 		"class": "java.lang.Integer",
-		"value": 69
+		"value": 74
 	},
 	"averagePlaytimePerSession": {
 		"class": "java.lang.Integer",

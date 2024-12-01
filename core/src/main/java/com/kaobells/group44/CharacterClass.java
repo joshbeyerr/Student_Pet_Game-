@@ -71,6 +71,7 @@ public class CharacterClass {
     private final float blinkInterval = 3.0f; // Blink every 3 seconds
     private final float blinkDuration = 0.5f; // Blink lasts for 0.5 seconds
     private final float hungerDuration = 1.5f; // Hunger effect lasts for 1.5 seconds
+    private final float deadDuration = 100.0f;
     private float sleepTimer = 0f; // Tracks time for sleep animation
     private boolean isSleepState1 = true; // Tracks which sleep state is active
 
@@ -127,7 +128,6 @@ public class CharacterClass {
         characterHeads = new HashMap<>();
         characterBodies = new HashMap<>();
 
-        // initialize character stats based on character type selected THIS WILL NEED TO CHANGE WHEN WE START IMPLEMENTING SAVE FILES
         loadImages();
 
         setUpCharacter();
@@ -230,9 +230,9 @@ public class CharacterClass {
     public void modifyModifiers(int characterTypeNumber){
         switch (characterTypeNumber){
             case 0:
-                this.healthChange = 1.10f;
+                this.healthChange = 1.0f;
                 this.sleepChange = 1.0f;
-                this.happinessChange = 1.1f;
+                this.happinessChange = 1.0f;
                 this.fullnessChange = 1.0f;
                 break;
 
@@ -281,10 +281,10 @@ public class CharacterClass {
 
             // case 0 = relaxed
             case 0:
-                setHealth(80.0f);
+                setHealth(1.0f);
                 setSleep(80.0f);
-                setHappiness(80.0f);
-                setHunger(80.0f);
+                setHappiness(1.0f);
+                setHunger(1.0f);
                 setStress(80.0f);
                 break;
 
@@ -349,7 +349,7 @@ public class CharacterClass {
 
         switch (state) {
             case DEAD:
-                return characterHeads.get("angry"); // CHANGE TO DEAD IF/WHEN WE HAVE DEAD HEAD SPRITE
+                return characterHeads.get(""); // CHANGE TO DEAD IF/WHEN WE HAVE DEAD HEAD SPRITE
             case SLEEPING:
                 return characterHeads.get("sleep1"); // CHANGE TO SLEEPING IF/WHEN WE HAVE SLEEPING HEAD SPRITE
             case ANGRY:
@@ -378,7 +378,7 @@ public class CharacterClass {
         stateDetermine(); // Update the state before determining the body image
         switch (state) {
             case DEAD:
-                return characterBodies.get("neutral"); // CHANGE TO DEAD IF/WHEN WE HAVE DEAD BODY SPRITE
+                return characterBodies.get("dead"); // CHANGE TO DEAD IF/WHEN WE HAVE DEAD BODY SPRITE
             case SLEEPING:
                 return characterBodies.get("neutral"); // CHANGE TO SLEEPING IF/WHEN WE HAVE SLEEPING BODY SPRITE
             case ANGRY:
@@ -395,7 +395,6 @@ public class CharacterClass {
     public void stateDetermine() {
         //Checks if dead, if not dead then move further in if not end here
         if (getHealth() < 1.0f) {
-            this.state = State.DEAD;
             crashedOut();
         } else {
             //check if sleeping should be triggered
@@ -427,7 +426,7 @@ public class CharacterClass {
             stateEvaluate();
         }
     }
-    //Sets state variable to highest priority State
+    //Sets state variable to highst priority State
     public void stateEvaluate(){
         if (compoundingStates[0]){
             this.state = State.SLEEPING;
@@ -478,6 +477,12 @@ public class CharacterClass {
                 }
             }
         }
+
+        else if (getState() == State.DEAD){
+            setHead(characterHeads.get(""));
+            setBody(characterBodies.get("dead"));
+        }
+
         else{
             blinkTimer += deltaTime;
             if (blinkTimer >= blinkInterval && !isBlinking) {
@@ -574,11 +579,18 @@ public class CharacterClass {
 
     //placeholder function see comment
     public void crashedOut(){
-        /*
-        placeholder for eventual dead pet function. Will need to:
-         1- change pet head/body to dead (or replace with a tombstone sprite)
-         2- inform user their pet is dead and that they should now start a new game or load another save file
-         */
+        setHealth(0.0f);
+        setSleep(0.0f);
+        setHunger(0.0f);
+        setStress(0.0f);
+        setHappiness(0.0f);
+        this.state = State.DEAD;
+        compoundingStates[0] = false;
+        compoundingStates[1] = false;
+        compoundingStates[2] = false;
+        setHead(characterHeads.get(""));
+        setBody(characterBodies.get("dead"));
+        this.saveTimer = 30.0f;
     }
 
     //exercise action
@@ -760,6 +772,7 @@ public class CharacterClass {
         characterTextures.put("angry", new Texture(Gdx.files.internal("game/character/" + characterType + "-angry.png")));
         characterTextures.put("sleep1", new Texture(Gdx.files.internal("game/character/" + characterType + "-sleep1.png")));
         characterTextures.put("sleep2", new Texture(Gdx.files.internal("game/character/" + characterType + "-sleep2.png")));
+        characterTextures.put("dead", new Texture(Gdx.files.internal("game/character/" + characterType + "-dead.png")));
 
         // Create images from textures
         characterBodies.put("neutral", mainGame.createImage(characterTextures.get("neutralBody")));
@@ -767,6 +780,7 @@ public class CharacterClass {
         characterBodies.put("workout2", mainGame.createImage(characterTextures.get("workout2Body")));
         characterBodies.put("hungry1", mainGame.createImage(characterTextures.get("hungry1Body")));
         characterBodies.put("hungry2", mainGame.createImage(characterTextures.get("hungry2Body")));
+        characterBodies.put("dead", mainGame.createImage(characterTextures.get("dead")));
 
         characterHeads.put("head", mainGame.createImage(characterTextures.get("head")));
         characterHeads.put("blink", mainGame.createImage(characterTextures.get("blink")));

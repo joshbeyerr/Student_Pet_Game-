@@ -83,7 +83,7 @@ public class GameSession {
             }
         }
 
-        return false; //if no blocks found return false
+        return false;
     }
 
 
@@ -99,7 +99,7 @@ public class GameSession {
 
     //helper method to return the seconds since the GameSession was created as an Int
     public int getSecondsPlayedThisSession(){
-        this.secondsPlayed = Duration.between(this.startTime, LocalTime.now()).toSeconds();
+        this.secondsPlayed = Duration.between(this.startTime, Instant.now()).toSeconds();
         return (int) secondsPlayed;
     }
 
