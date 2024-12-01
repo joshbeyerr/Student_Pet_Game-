@@ -91,7 +91,6 @@ public class GameScreen extends ScreenAdapter{
         nameFont.getData().setScale((viewport.getWorldHeight() / 500f)); // Scale by 1.5x
         nameLabelStyle = new Label.LabelStyle();
         nameLabelStyle.font = nameFont; // Set the font for the label
-
         nameLabelStyle.fontColor = new Color(0x66 / 255f, 0x2d / 255f, 0x91 / 255f, 1f);
 
         BitmapFont scoreFont = mainGame.resourceManager.getFont(true);
@@ -536,7 +535,7 @@ public class GameScreen extends ScreenAdapter{
         saveButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                mainGame.jsonHandler.saveCharacterToGameSlot("1", session.character);
+                mainGame.jsonHandler.saveCharacterToGameSlot(session.character.getSlotNumber(), session.character);
 
 
             }

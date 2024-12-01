@@ -13,6 +13,9 @@ public class CharacterClass {
     private transient final Main mainGame;
     private final String name;
 
+    // slot 1 through 3;
+    private transient final String slot;
+
     // 0 through to 4
     private final int characterNumber;
     // e.g relaxed, brave
@@ -71,16 +74,17 @@ public class CharacterClass {
         characterBodies = null;
         characterNumber = 100;
         characterType = "default";
+        slot = "0";
     }
 
 
     // Constructor with default state (NEUTRAL)
-    public CharacterClass(Main mainGameSession, String charName, int characterNumber, String characterTypeStr, Item[] inventory, boolean[] compoundingStates) {
-        this(mainGameSession, charName, characterNumber, characterTypeStr, inventory, State.NEUTRAL, compoundingStates);
+    public CharacterClass(Main mainGameSession, String charName, int characterNumber, String characterTypeStr, Item[] inventory, boolean[] compoundingStates, String slotNumber) {
+        this(mainGameSession, charName, characterNumber, characterTypeStr, inventory, State.NEUTRAL, compoundingStates, slotNumber);
     }
 
     // Constructor
-    public CharacterClass(Main mainGameSession, String charName, int characterNumber, String characterTypeStr, Item[] inventory, State state, boolean[] compoundingStates) {
+    public CharacterClass(Main mainGameSession, String charName, int characterNumber, String characterTypeStr, Item[] inventory, State state, boolean[] compoundingStates, String slotNumber) {
         this.mainGame = mainGameSession;
 
         this.name = charName;
@@ -89,6 +93,7 @@ public class CharacterClass {
         this.characterType = characterTypeStr.toLowerCase();
         this.state = state;
         this.compoundingStates = compoundingStates;
+        this.slot = slotNumber;
 
         characterHeads = new HashMap<>();
         characterBodies = new HashMap<>();
@@ -105,6 +110,13 @@ public class CharacterClass {
 
     // Getter for name
     public String getName() { return name;}
+
+    public String getcharacterType(){
+        return characterType;
+    }
+    public String getSlotNumber(){
+        return slot;
+    }
 
     // Getter and Setter for health
     public float getHealth() { return health;}
@@ -465,11 +477,11 @@ public class CharacterClass {
             this.sleep = Math.max(0.0f, getSleep() - 10.0f);
             this.health = Math.min(100.0f, getHealth() + 20.0f);
 
-            float actionLength = 5.0f;
-            actionBlockCooldownRemaining = (actionLength + 1);
-
             setHead(characterHeads.get("exercise"));
             setBody(characterBodies.get("workout1"));
+
+            float actionLength = 5.0f;
+            actionBlockCooldownRemaining = (actionLength + 0.5f);
 
             Timer.schedule(new Timer.Task() {
                 boolean toggle = true; // Track which body to show
@@ -601,7 +613,4 @@ public class CharacterClass {
 
     }
 
-    public enum State {
-        DEAD, SLEEPING, ANGRY, HUNGRY, NEUTRAL
-    }
 }

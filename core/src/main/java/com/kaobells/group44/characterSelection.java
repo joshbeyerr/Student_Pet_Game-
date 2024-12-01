@@ -23,6 +23,7 @@ import java.util.Map;
 public class characterSelection extends ScreenAdapter {
 
     private final Main mainGame;
+    private final String slot;
 
     private final SpriteBatch spriteBatch;
     private final Stage stage;
@@ -40,8 +41,9 @@ public class characterSelection extends ScreenAdapter {
 
     BitmapFont font;
 
-    public characterSelection(Main game) {
+    public characterSelection(Main game, String slotNumber) {
         mainGame = game;
+        slot = slotNumber;
 
         spriteBatch = mainGame.getSharedBatch();
         viewport = mainGame.getViewport();
@@ -171,7 +173,7 @@ public class characterSelection extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // Switch to the previous character
-                mainGame.pushScreen(new NameInput(mainGame));
+                mainGame.pushScreen(new NameInput(mainGame, slot));
 
             }
         });

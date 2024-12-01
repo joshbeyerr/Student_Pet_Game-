@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 public class StoryScreen extends ScreenAdapter {
 
     private final Main mainGame;
+    private final String slot;
 
     // only need to make this a class variable because of the back button logic custom to this class
 
@@ -34,8 +35,9 @@ public class StoryScreen extends ScreenAdapter {
     InputMultiplexer multiplexer;
 
 
-    public StoryScreen(Main game) {
+    public StoryScreen(Main game, String slotNumber) {
         mainGame = game;
+        slot = slotNumber;
 
         // getting fonts, title font is set in resource manager
         font = mainGame.resourceManager.getTitleFont();
@@ -173,7 +175,7 @@ public class StoryScreen extends ScreenAdapter {
 
     private void handleKeyPress() {
         if (currentTextIndex == 3) {
-            mainGame.pushScreen(new characterSelection(mainGame));
+            mainGame.pushScreen(new characterSelection(mainGame, slot));
         } else if (0 <= currentTextIndex && currentTextIndex < 3) {
             currentTextIndex++;
             createUI();

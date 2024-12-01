@@ -68,7 +68,9 @@ public class StartScreen extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("StartButton", "Start Game button clicked!");
-                mainGame.pushScreen(new StoryScreen(mainGame));
+//                mainGame.pushScreen(new StoryScreen(mainGame));
+
+                mainGame.pushScreen(new GameSlots(mainGame));
             }
         });
 
@@ -145,6 +147,7 @@ public class StartScreen extends ScreenAdapter {
         Image seriousHead = mainGame.createImage(assetManager.get("characters/serious-head.png"));
 
         float padVal = viewport.getWorldWidth() * 0.002f;
+
         newTable.add(braveHead).padLeft(padVal).padRight(padVal);
         newTable.add(hastyHead).padLeft(padVal).padRight(padVal);
         newTable.add(quirkyHead).padLeft(padVal).padRight(padVal);

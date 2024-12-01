@@ -26,6 +26,7 @@ import java.util.Map;
 public class NameInput extends ScreenAdapter {
 
     private final Main mainGame;
+    private final String slot;
     private final characterSelection previousScreenVar;
 
     private final SpriteBatch spriteBatch;
@@ -40,8 +41,9 @@ public class NameInput extends ScreenAdapter {
     BitmapFont font;
     BitmapFont textFont;
 
-    public NameInput(Main game) {
+    public NameInput(Main game, String slotNumber) {
         mainGame = game;
+        slot = slotNumber;
         previousScreenVar = (characterSelection)mainGame.getPreviousScreen();
 
         font = mainGame.resourceManager.getTitleFont();
@@ -96,7 +98,7 @@ public class NameInput extends ScreenAdapter {
 
                 Item[] inventory = new Item[6];
                 boolean[] compoundingStates= new boolean[3];
-                CharacterClass newCharacter = new CharacterClass(mainGame, nameInputField.getText(), previousScreenVar.getCharacterIndex(), previousScreenVar.getCharacterType(previousScreenVar.getCharacterIndex()),inventory, compoundingStates);
+                CharacterClass newCharacter = new CharacterClass(mainGame, nameInputField.getText(), previousScreenVar.getCharacterIndex(), previousScreenVar.getCharacterType(previousScreenVar.getCharacterIndex()),inventory, compoundingStates, slot);
 
                 GameSession newGame = new GameSession(newCharacter);
 

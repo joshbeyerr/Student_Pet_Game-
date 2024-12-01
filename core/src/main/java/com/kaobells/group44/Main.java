@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -132,6 +133,12 @@ public class Main extends Game {
     public Viewport getViewport(){
         return viewport;
     }
+
+    public Sound getClickSound(){
+        return clickSound;
+    }
+
+
 
     // for creating any custom Button !
     public ImageButton createImageButton(Texture upTexture) {

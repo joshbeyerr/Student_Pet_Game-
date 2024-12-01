@@ -104,4 +104,23 @@ public class JsonHandler {
         return null; // Return null if no character is found
     }
 
+
+    // Method to get a human-readable representation of a game slot
+    public String gameToString(String slotId) {
+        if (database.games.containsKey(slotId)) {
+            HashMap<String, Object> gameData = database.games.get(slotId);
+            StringBuilder gameString = new StringBuilder();
+            gameString.append("Game Slot ").append(slotId).append(":\n");
+
+            for (Map.Entry<String, Object> entry : gameData.entrySet()) {
+                gameString.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
+            }
+
+            return gameString.toString();
+        } else {
+            return "Game Slot " + slotId + " does not exist or is empty.";
+        }
+    }
+
+
 }
