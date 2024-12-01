@@ -129,11 +129,7 @@ public class JsonHandler {
     }
 
     public void initializeParentalControls() {
-        String password = (String) database.parentalControls.get("Password");
-
-        if (password == null || password.isEmpty()) {
-            database.parentalControls.put("Password", "");
-        }
+        //database.parentalControls.put("Password", "");
         database.parentalControls.put("morningParentBlock", false);
         database.parentalControls.put("afternoonParentBlock", false);
         database.parentalControls.put("eveningParentBlock", false);
@@ -159,6 +155,26 @@ public class JsonHandler {
     public void setParentalControlInt(String key, int value) {
         database.parentalControls.put(key, value);
         saveDatabase();
+    }
+
+    // Method to get the parental control password
+    public String getParentalControlPassword() {
+        Object passwordObj = database.parentalControls.get("Password");
+        if (passwordObj instanceof String) {
+            return (String) passwordObj;
+        }
+        return ""; // Return an empty string if the password is not set
+    }
+
+    // Method to save the parental control password
+    public void setParentalControlPassword(String password) {
+        if (password != null && !password.isEmpty()) {
+            database.parentalControls.put("Password", password);
+            saveDatabase(); // Save the updated password to the file
+            System.out.println("Password updated successfully.");
+        } else {
+            System.out.println("Password cannot be null.");
+        }
     }
 
 
