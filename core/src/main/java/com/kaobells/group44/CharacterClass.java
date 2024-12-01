@@ -14,7 +14,7 @@ public class CharacterClass {
     private final String name;
 
     // slot 1 through 3;
-    private transient final String slot;
+    private String slot;
 
     // 0 through to 4
     private final int characterNumber;
@@ -78,7 +78,6 @@ public class CharacterClass {
         characterBodies = null;
         characterNumber = 100;
         characterType = "default";
-        slot = "0";
     }
 
     public void startLoadCharacter(Main mainG){
