@@ -72,7 +72,7 @@ public class JsonHandler {
         System.out.println("Database saved successfully in proper JSON format.");
     }
 
-    public boolean anySaves() {
+    public boolean isSavedFiles() {
         // Iterate over all game slots
         for (Map.Entry<String, HashMap<String, Object>> entry : database.games.entrySet()) {
             // Check if the slot contains any data
