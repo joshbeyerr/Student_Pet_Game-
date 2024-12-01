@@ -101,10 +101,6 @@ public class JsonHandler {
         return database.parentalControls == null || database.parentalControls.isEmpty();
     }
 
-    public void initializeParentalControls() {
-        database.initializeParentalControls();
-        saveDatabase();
-    }
 
     // Method to save a CharacterClass to a specific game slot
     public void saveCharacterToGameSlot(String slotId, CharacterClass character) {
@@ -143,4 +139,48 @@ public class JsonHandler {
             return "Game Slot " + slotId + " does not exist or is empty.";
         }
     }
+
+    public void initializeParentalControls() {
+        // fill parentalControls with default values
+        database.parentalControls.put("Password", "");
+        database.parentalControls.put("morningParentBlock", false);
+        database.parentalControls.put("afternoonParentBlock", false);
+        database.parentalControls.put("eveningParentBlock", false);
+        database.parentalControls.put("weekdayParentBlock", false);
+        database.parentalControls.put("weekendParentBlock", false);
+        database.parentalControls.put("totalSecondsPlayed", 0);
+        database.parentalControls.put("totalSessionsPlayed ", 0);
+        database.parentalControls.put("averagePlaytimePerSession", 0);
+        saveDatabase();
+        System.out.println("Parental controls initialized with default values.");
+    }
+
+    public boolean getParentalControlBoolean(String key) {
+        return (boolean) database.parentalControls.getOrDefault(key, false);
+    }
+
+    public void setParentalControlBoolean(String key, boolean value) {
+        database.parentalControls.put(key, value);
+        saveDatabase();
+    }
+
+    public String getParentalControlString(String key) {
+        return (String) database.parentalControls.getOrDefault(key, "");
+    }
+
+    public void setParentalControlString(String key, String value) {
+        database.parentalControls.put(key, value);
+        saveDatabase();
+    }
+
+    public int getParentalControlInt(String key) {
+        return (int) database.parentalControls.getOrDefault(key, 0);
+    }
+
+    public void setParentalControlInt(String key, int value) {
+        database.parentalControls.put(key, value);
+        saveDatabase();
+    }
+
+
 }
