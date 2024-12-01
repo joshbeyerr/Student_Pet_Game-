@@ -62,6 +62,19 @@ public class CharacterClass {
     private float actionBlockCooldownRemaining  = 0;
     private float saveTimer = 30f; // starts off at 30 so that game saves right when character is created
 
+    private float blinkTimer = 0f;
+    private float blinkDurationTimer = 0f;
+    private float hungerDurationTimer = 0f;
+    private boolean isBlinking = false;
+    private boolean isHungry = false;
+
+    private final float blinkInterval = 3.0f; // Blink every 3 seconds
+    private final float blinkDuration = 0.5f; // Blink lasts for 0.5 seconds
+    private final float hungerDuration = 1.5f; // Hunger effect lasts for 1.5 seconds
+    private float sleepTimer = 0f; // Tracks time for sleep animation
+    private boolean isSleepState1 = true; // Tracks which sleep state is active
+
+
     // Add default constructor for LibGDX Json Loader
     public CharacterClass() {
         this.name = "DefaultName";
@@ -89,7 +102,6 @@ public class CharacterClass {
         setBody(bodyDetermine());
 
         modifyModifiers(characterNumber);
-        startCharacter();
 
         Gdx.app.log("NAME", "health: " + health + "\nsleep: " + sleep + "\nhappiness: " + happiness + "\nfullness: " + fullness + "\nstress: " + stress);
     }
@@ -120,7 +132,6 @@ public class CharacterClass {
 
         setUpCharacter();
         modifyModifiers(characterNumber);
-        startCharacter();
 
         Gdx.app.log("NAME", "health: " + health + "\nsleep: " + sleep + "\nhappiness: " + happiness + "\nfullness: " + fullness + "\nstress: " + stress);
     }
@@ -340,7 +351,7 @@ public class CharacterClass {
             case DEAD:
                 return characterHeads.get("angry"); // CHANGE TO DEAD IF/WHEN WE HAVE DEAD HEAD SPRITE
             case SLEEPING:
-                return characterHeads.get("angry"); // CHANGE TO SLEEPING IF/WHEN WE HAVE SLEEPING HEAD SPRITE
+                return characterHeads.get("sleep1"); // CHANGE TO SLEEPING IF/WHEN WE HAVE SLEEPING HEAD SPRITE
             case ANGRY:
                 return characterHeads.get("angry");
             case HUNGRY:
@@ -367,11 +378,11 @@ public class CharacterClass {
         stateDetermine(); // Update the state before determining the body image
         switch (state) {
             case DEAD:
-                return characterBodies.get("hungry1"); // CHANGE TO DEAD IF/WHEN WE HAVE DEAD BODY SPRITE
+                return characterBodies.get("neutral"); // CHANGE TO DEAD IF/WHEN WE HAVE DEAD BODY SPRITE
             case SLEEPING:
-                return characterBodies.get("hungry1"); // CHANGE TO SLEEPING IF/WHEN WE HAVE SLEEPING BODY SPRITE
+                return characterBodies.get("neutral"); // CHANGE TO SLEEPING IF/WHEN WE HAVE SLEEPING BODY SPRITE
             case ANGRY:
-                return characterBodies.get("hungry1"); // CHANGE TO ANGRY IF/WHEN WE HAVE ANGRY BODY SPRITE
+                return characterBodies.get("neutral"); // CHANGE TO ANGRY IF/WHEN WE HAVE ANGRY BODY SPRITE
             case HUNGRY:
                 return characterBodies.get("hungry1");
             default:
@@ -432,53 +443,61 @@ public class CharacterClass {
     public State getState(){ return state;}
 
     //Blink Loop
-    public void startCharacter() {
-        if (blinkTask != null) {
-            blinkTask.cancel(); // Cancel existing task if it's running
-        }
+    public void updateCharacter(float deltaTime){
+        stateDetermine();
 
-        float blinkInterval = 3.0f; // Blink every 3 seconds
-        float blinkDuration = 0.5f; // Blink lasts for 0.5 seconds
+        if (getState() == State.SLEEPING) {
+            sleepTimer += deltaTime;
 
-        float hungerDuration = 1.5f;
+            // Switch between sleep1 and sleep2 every 0.5 seconds
+            if (sleepTimer >= 0.5f) {
+                isSleepState1 = !isSleepState1; // Toggle sleep state
+                sleepTimer = 0f; // Reset sleep timer
 
-        blinkTask = Timer.schedule(new Timer.Task() {
-            @Override
-            public void run() {
-                if (!actionBlocked()) {
-
-                    stateDetermine();
-
-                    if (getState() == State.HUNGRY){
-
-                        Timer.schedule(new Timer.Task() {
-                            @Override
-                            public void run() {
-                                if (!actionBlocked()) {
-                                    setBody(characterBodies.get("hungry2")); // Revert to normal head
-                                    setHead(headDetermine());
-                                }
-                            }
-                        }, hungerDuration);
-
-                    }
-
-                    // Set to blinking head
-                    setHead(characterHeads.get("blink"));
-
-                    // Schedule reverting to normal head after blinkDuration
-                    Timer.schedule(new Timer.Task() {
-                        @Override
-                        public void run() {
-                            if (!actionBlocked()) {
-                                setHead(headDetermine());
-                                setBody(bodyDetermine()); // Revert to normal head
-                            }
-                        }
-                    }, blinkDuration); // Blink lasts for blinkDuration seconds
+                if (isSleepState1) {
+                    setHead(characterHeads.get("sleep1")); // Set to sleep1 head
+                } else {
+                    setHead(characterHeads.get("sleep2")); // Set to sleep2 head
                 }
             }
-        }, blinkInterval, blinkInterval); // Repeat every blinkInterval seconds
+        }
+
+        else if (getState() == State.HUNGRY){
+            if (!isHungry) {
+                isHungry = true;
+                hungerDurationTimer = 0f; // Start hunger duration timer
+                setBody(characterBodies.get("hungry2"));
+            }
+
+            if (isHungry) {
+                hungerDurationTimer += deltaTime;
+                if (hungerDurationTimer >= hungerDuration) {
+                    isHungry = false;
+                    setHead(headDetermine()); // Revert to normal head
+                    setBody(bodyDetermine()); // Revert to normal body
+                }
+            }
+        }
+        else{
+            blinkTimer += deltaTime;
+            if (blinkTimer >= blinkInterval && !isBlinking) {
+                isBlinking = true;
+                blinkTimer = 0f; // Reset blink interval timer
+                blinkDurationTimer = 0f; // Start blink duration timer
+                setHead(characterHeads.get("blink")); // Set to blinking head
+            }
+
+            if (isBlinking) {
+                blinkDurationTimer += deltaTime;
+                if (blinkDurationTimer >= blinkDuration) {
+                    isBlinking = false;
+                    setHead(headDetermine()); // Revert to normal head
+                    setBody(bodyDetermine()); // Revert to normal body
+                }
+            }
+        }
+
+
     }
 
     //Action Block Check
@@ -503,6 +522,55 @@ public class CharacterClass {
             }
         }, duration); // Reset after the 5-second exercise duration
     }
+
+//    public void startCharacter() {
+//        if (blinkTask != null) {
+//            blinkTask.cancel(); // Cancel existing task if it's running
+//        }
+//
+//        float blinkInterval = 3.0f; // Blink every 3 seconds
+//        float blinkDuration = 0.5f; // Blink lasts for 0.5 seconds
+//
+//        float hungerDuration = 1.5f;
+//
+//        blinkTask = Timer.schedule(new Timer.Task() {
+//            @Override
+//            public void run() {
+//                if (!actionBlocked()) {
+//
+//                    stateDetermine();
+//
+//                    if (getState() == State.HUNGRY){
+//
+//                        Timer.schedule(new Timer.Task() {
+//                            @Override
+//                            public void run() {
+//                                if (!actionBlocked()) {
+//                                    setBody(characterBodies.get("hungry2")); // Revert to normal head
+//                                    setHead(headDetermine());
+//                                }
+//                            }
+//                        }, hungerDuration);
+//
+//                    }
+//
+//                    // Set to blinking head
+//                    setHead(characterHeads.get("blink"));
+//
+//                    // Schedule reverting to normal head after blinkDuration
+//                    Timer.schedule(new Timer.Task() {
+//                        @Override
+//                        public void run() {
+//                            if (!actionBlocked()) {
+//                                setHead(headDetermine());
+//                                setBody(bodyDetermine()); // Revert to normal head
+//                            }
+//                        }
+//                    }, blinkDuration); // Blink lasts for blinkDuration seconds
+//                }
+//            }
+//        }, blinkInterval, blinkInterval); // Repeat every blinkInterval seconds
+//    }
 
     //placeholder function see comment
     public void crashedOut(){
@@ -674,7 +742,7 @@ public class CharacterClass {
 
     //checks if player is sleeping
     public boolean isSleeping() {
-        return compoundingStates[0];
+        return (state == State.SLEEPING);
     }
 
     public void loadImages(){
@@ -690,6 +758,8 @@ public class CharacterClass {
         characterTextures.put("exercise", new Texture(Gdx.files.internal("game/character/" + characterType + "-exercise.png")));
         characterTextures.put("happy", new Texture(Gdx.files.internal("game/character/" + characterType + "-happy.png")));
         characterTextures.put("angry", new Texture(Gdx.files.internal("game/character/" + characterType + "-angry.png")));
+        characterTextures.put("sleep1", new Texture(Gdx.files.internal("game/character/" + characterType + "-sleep1.png")));
+        characterTextures.put("sleep2", new Texture(Gdx.files.internal("game/character/" + characterType + "-sleep2.png")));
 
         // Create images from textures
         characterBodies.put("neutral", mainGame.createImage(characterTextures.get("neutralBody")));
@@ -703,6 +773,8 @@ public class CharacterClass {
         characterHeads.put("exercise", mainGame.createImage(characterTextures.get("exercise")));
         characterHeads.put("happy", mainGame.createImage(characterTextures.get("happy")));
         characterHeads.put("angry", mainGame.createImage(characterTextures.get("angry")));
+        characterHeads.put("sleep1", mainGame.createImage(characterTextures.get("sleep1")));
+        characterHeads.put("sleep2", mainGame.createImage(characterTextures.get("sleep2")));
     }
 
     public void dispose() {
