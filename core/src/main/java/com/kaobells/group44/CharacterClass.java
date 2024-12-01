@@ -190,7 +190,7 @@ public class CharacterClass {
             }
         }
         if(isSleeping()){
-            setSleep(this.getSleep() + (5.0f*sleepChange));
+            setSleep(this.getSleep() + (4.0f*sleepChange));
         } else {
             setSleep(this.getSleep() - sleepChange);
         }
@@ -230,7 +230,7 @@ public class CharacterClass {
 
             case 4:
                 // idea is that it starts you in a rough spot but if you can pull up your stats the reduced tick rate will be crazy useful
-                this.healthChange = 0.5f;
+                this.healthChange = 0.60f;
                 this.sleepChange = 0.75f;
                 this.happinessChange = 0.75f;
                 this.fullnessChange = 0.75f;
@@ -390,11 +390,11 @@ public class CharacterClass {
                 this.compoundingStates[2] = true;
             }
             //check if sleeping should be stopped
-            if(compoundingStates[0] && getSleep() > 95.0f){
+            if(compoundingStates[0] && getSleep() > 97.5f){
                 this.compoundingStates[0] = false;
             }
             //check if angry should be stopped
-            if(compoundingStates[1] && getHappiness() > 45.0f){
+            if(compoundingStates[1] && getHappiness() > 50.0f){
                 this.compoundingStates[1] = false;
             }
             //check if hungry should be resolved
