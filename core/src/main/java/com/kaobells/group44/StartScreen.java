@@ -136,7 +136,7 @@ public class StartScreen extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("ParentalButton", "Parental Controls button clicked!");
-                mainGame.pushScreen(new ParentalControlsScreen(mainGame)); // Transition to ParentalControlsScreen
+                mainGame.pushScreen(new SetParentalPassScreen(mainGame)); // Transition to ParentalControlsScreen
             }
         });
 

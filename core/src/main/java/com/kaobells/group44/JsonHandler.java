@@ -5,7 +5,6 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter;
 
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,9 +19,22 @@ class Database {
         characters = new HashMap<>();
         parentalControls = new HashMap<>();
     }
+
+    // Initialize parentalControls with default values
+    public void initializeParentalControls() {
+        if (parentalControls == null || parentalControls.isEmpty()) {
+            parentalControls.put("Password", "");
+            parentalControls.put("morningParentBlock", false);
+            parentalControls.put("afternoonParentBlock", false);
+            parentalControls.put("eveningParentBlock", false);
+            parentalControls.put("weekdayParentBlock", false);
+            parentalControls.put("weekendParentBlock", false);
+            parentalControls.put("totalSecondsPlayed", 0);
+            parentalControls.put("totalSessionsPlayed", 0);
+            parentalControls.put("averagePlaytimePerSession", 0);
+        }
+    }
 }
-
-
 
 public class JsonHandler {
     private FileHandle localFile;
@@ -30,11 +42,9 @@ public class JsonHandler {
     private final Json json = new Json(); // LibGDX JSON utility
 
     public JsonHandler() {
-
         initializeLocalFile();
         loadDatabase();
     }
-
 
     private void initializeLocalFile() {
         FileHandle internalFile = Gdx.files.internal("database.json");
@@ -44,7 +54,7 @@ public class JsonHandler {
             internalFile.copyTo(localFile);
             System.out.println("Database JSON created in local storage");
         } else {
-            System.out.println("Local Database JSON Previously Created");
+            System.out.println("Local Database JSON previously created.");
         }
     }
 
@@ -55,10 +65,12 @@ public class JsonHandler {
             database = json.fromJson(Database.class, jsonString);
         } else {
             database = new Database();
+            database.initializeParentalControls(); // Ensure parentalControls is initialized
+            saveDatabase();
         }
     }
 
-    private void saveDatabase() {
+    public void saveDatabase() {
         // Serialize the database object to a string
         json.setOutputType(JsonWriter.OutputType.json);
 
@@ -68,6 +80,10 @@ public class JsonHandler {
         localFile.writeString(jsonString, false);
 
         System.out.println("Database saved successfully in proper JSON format.");
+    }
+
+    public Database getDatabase() {
+        return database;
     }
 
     public boolean isSavedFiles() {
@@ -82,10 +98,13 @@ public class JsonHandler {
     }
 
     public boolean isEmptyParentalControls() {
-        return database.parentalControls.isEmpty();
+        return database.parentalControls == null || database.parentalControls.isEmpty();
     }
 
-
+    public void initializeParentalControls() {
+        database.initializeParentalControls();
+        saveDatabase();
+    }
 
     // Method to save a CharacterClass to a specific game slot
     public void saveCharacterToGameSlot(String slotId, CharacterClass character) {
@@ -107,22 +126,6 @@ public class JsonHandler {
         return null; // Return null if no character is found
     }
 
-    public void initializeParentalControls() {
-            // fill parentalControls with default values
-            database.parentalControls.put("Password", "");
-            database.parentalControls.put("morningParentBlock", false);
-            database.parentalControls.put("afternoonParentBlock", false);
-            database.parentalControls.put("eveningParentBlock", false);
-            database.parentalControls.put("weekdayParentBlock", false);
-            database.parentalControls.put("weekendParentBlock", false);
-            database.parentalControls.put("totalSecondsPlayed", 0);
-            database.parentalControls.put("totalSessionsPlayed ", 0);
-            database.parentalControls.put("averagePlaytimePerSession", 0);
-            saveDatabase();
-            System.out.println("Parental controls initialized with default values.");
-        }
-
-
     // Method to get a human-readable representation of a game slot
     public String gameToString(String slotId) {
         if (database.games.containsKey(slotId)) {
@@ -139,6 +142,4 @@ public class JsonHandler {
             return "Game Slot " + slotId + " does not exist or is empty.";
         }
     }
-
-
 }
