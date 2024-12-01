@@ -95,11 +95,18 @@ public class ParentalControlsScreen extends ScreenAdapter {
         // Arrange Buttons Horizontally
         Table buttonTable = new Table();
         buttonTable.center();
-        buttonTable.add(playtimeStatsButton).size(viewport.getWorldWidth() * 0.22f, viewport.getWorldHeight() * 0.3f).pad(15);
-        buttonTable.add(playtimeControlsButton).size(viewport.getWorldWidth() * 0.22f, viewport.getWorldHeight() * 0.3f).pad(15);
-        buttonTable.add(revivePetButton).size(viewport.getWorldWidth() * 0.22f, viewport.getWorldHeight() * 0.3f).pad(15);
 
-        parentTable.add(buttonTable).center().padTop(viewport.getWorldHeight() * 0.11f); // Adjust vertical spacing
+        float padding = viewport.getWorldWidth() * 0.01f;
+
+        float buttonWidth = viewport.getWorldWidth() * 0.20f;
+        float buttonHeight = viewport.getWorldWidth() * 0.4f;
+
+
+        buttonTable.add(playtimeStatsButton).size(buttonWidth, buttonHeight).pad(padding);
+        buttonTable.add(playtimeControlsButton).size(buttonWidth, buttonHeight).pad(padding);
+        buttonTable.add(revivePetButton).size(buttonWidth, buttonHeight).pad(padding);
+
+        parentTable.add(buttonTable).center().padTop(viewport.getWorldHeight() * 0.035f); // Adjust vertical spacing
         stage.addActor(parentTable);
     }
 
