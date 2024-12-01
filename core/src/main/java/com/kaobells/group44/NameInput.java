@@ -99,10 +99,14 @@ public class NameInput extends ScreenAdapter {
                 Item[] inventory = new Item[6];
                 boolean[] compoundingStates= new boolean[3];
                 CharacterClass newCharacter = new CharacterClass(mainGame, nameInputField.getText(), previousScreenVar.getCharacterIndex(), previousScreenVar.getCharacterType(previousScreenVar.getCharacterIndex()),inventory, compoundingStates, slot);
+                //SASHA
 
                 GameSession newGame = new GameSession(newCharacter,mainGame);
-                mainGame.pushScreen(new GameScreen(mainGame, newGame));
-
+                if(!(newGame.blockedPlayTimeCheck())){ //checks for playing during active parental block
+                    mainGame.pushScreen(new GameScreen(mainGame, newGame));
+                } else {
+                    //blocked playtime error
+                }
             }
         });
 

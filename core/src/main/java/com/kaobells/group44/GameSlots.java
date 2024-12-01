@@ -219,7 +219,11 @@ public class GameSlots  extends ScreenAdapter {
                         // just for this state right now, passing through to story screen
 
                         GameSession newGame = new GameSession(character, mainGame);
-                        mainGame.pushScreen(new GameScreen(mainGame, newGame));
+                        if(!(newGame.blockedPlayTimeCheck())){  //checks for playing during active parental block
+                            mainGame.pushScreen(new GameScreen(mainGame, newGame));
+                        } else {
+                            //blocked playtime error
+                        }
                     }
                 });
             }
