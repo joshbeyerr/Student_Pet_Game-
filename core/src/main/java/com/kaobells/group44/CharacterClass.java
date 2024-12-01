@@ -31,10 +31,10 @@ public class CharacterClass {
 
     // JUST FOR NOW - making all characters health change by 1
     // In the future this will be unique to each characterType and will be set when character is created.
-    private float healthChange = 1.0f;
-    private float sleepChange = 1.0f;
-    private float happinessChange = 1.0f;
-    private float fullnessChange = 1.0f;
+    private float healthChange;
+    private float sleepChange;
+    private float happinessChange;
+    private float fullnessChange;
     private float stressChange = 1.0f;
 
     private transient Item[] inventory;
@@ -86,7 +86,6 @@ public class CharacterClass {
     // Constructor
     public CharacterClass(Main mainGameSession, String charName, int characterNumber, String characterTypeStr, Item[] inventory, State state, boolean[] compoundingStates, String slotNumber) {
         this.mainGame = mainGameSession;
-
         this.name = charName;
         this.inventory = inventory;
         this.characterNumber = characterNumber;
@@ -102,7 +101,7 @@ public class CharacterClass {
         loadImages();
 
         setUpCharacter();
-
+        modifyModifers(characterNumber);
         startCharacter();
 
         Gdx.app.log("NAME", "health: " + health + "\nsleep: " + sleep + "\nhappiness: " + happiness + "\nfullness: " + fullness + "\nstress: " + stress);
@@ -179,14 +178,64 @@ public class CharacterClass {
 
 
     public void statBarTick(){
-        setHappiness(this.getHappiness() - happinessChange);
-        setHunger(this.getHunger() - fullnessChange);
-        setStress(this.getStress() - stressChange);
+        setHappiness(this.getHappiness() - this.happinessChange);
+        setHunger(this.getHunger() - this.fullnessChange);
+        setStress(this.getStress() - this.stressChange);
+        if (compoundingStates[2]){
+            if (compoundingStates[1]) { //hangry
+                setHealth(this.getHealth() - 2.0f*this.healthChange);
+            } else {
+                setHealth(this.getHealth() - this.healthChange);
+            }
+        }
         if(isSleeping()){
             setSleep(this.getSleep() + (5.0f*sleepChange));
         } else {
             setSleep(this.getSleep() - sleepChange);
         }
+    }
+
+    public void modifyModifers(int characterTypeNumber){
+        switch (characterTypeNumber){
+            case 0:
+                this.healthChange = 1.0f;
+                this.sleepChange = 1.0f;
+                this.happinessChange = 1.0f;
+                this.fullnessChange = 1.0f;
+
+
+            case 1:
+                //health and sleep go down faster but happiness and hunger go down slower
+                this.healthChange = 1.5f;
+                this.sleepChange = 1.5f;
+                this.happinessChange = 0.75f;
+                this.fullnessChange = 0.7f;
+                break;
+
+            case 2:
+                //sleep is twice as fast but happieness and slowness are slower
+                this.sleepChange = 2.0f;
+                this.happinessChange = 0.7f;
+                this.fullnessChange = 0.9f;
+                break;
+
+            case 3:
+                //idea is that you start with a super low health but if you can pull it up then you have a 15% slower tick speed
+                this.healthChange = 0.85f;
+                this.sleepChange = 0.85f;
+                this.happinessChange = 0.85f;
+                this.fullnessChange = 0.85f;
+                break;
+
+            case 4:
+                // idea is that it starts you in a rough spot but if you can pull up your stats the reduced tick rate will be crazy useful
+                this.healthChange = 0.5f;
+                this.sleepChange = 0.75f;
+                this.happinessChange = 0.75f;
+                this.fullnessChange = 0.75f;
+                break;
+        }
+
     }
 
     // initialize character stats based on character type selected
@@ -201,6 +250,24 @@ public class CharacterClass {
 
             // case 0 = relaxed
             case 0:
+                setHealth(80.0f);
+                setSleep(80.0f);
+                setHappiness(80.0f);
+                setHunger(80.0f);
+                setStress(80.0f);
+                break;
+
+            // case 1 = quirky
+            case 1:
+                setHealth(90.0f);
+                setSleep(90.0f);
+                setHappiness(90.0f);
+                setHunger(90.0f);
+                setStress(90.0f);
+                break;
+
+            // case 2 = hasty
+            case 2:
                 setHealth(100.0f);
                 setSleep(100.0f);
                 setHappiness(100.0f);
@@ -208,41 +275,23 @@ public class CharacterClass {
                 setStress(100.0f);
                 break;
 
-            // case 1 = quirky
-            case 1:
-                setHealth(90.0f);
-                setSleep(80.0f);
-                setHappiness(100.0f);
-                setHunger(100.0f);
-                setStress(80.0f);
-                break;
-
-            // case 2 = hasty
-            case 2:
-                setHealth(70.0f);
-                setSleep(70.0f);
-                setHappiness(80.0f);
-                setHunger(80.0f);
-                setStress(70.0f);
-                break;
-
 
             // case 3 == brave
             case 3:
-                setHealth(60.0f);
-                setSleep(60.0f);
-                setHappiness(70.0f);
-                setHunger(70.0f);
-                setStress(60.0f);
+                setHealth(10.0f);
+                setSleep(100.0f);
+                setHappiness(100.0f);
+                setHunger(100.0f);
+                setStress(100.0f);
                 break;
 
             // case 4 == serious
             case 4:
                 setHealth(50.0f);
                 setSleep(50.0f);
-                setHappiness(50.0f);
+                setHappiness(25.0f);
                 setHunger(25.0f);
-                setStress(50.0f);
+                setStress(25.0f);
                 break;
 
             default: throw new IllegalArgumentException("Invalid character index: " + characterNumber);
@@ -451,10 +500,10 @@ public class CharacterClass {
     }
 
     public void feedTriggered(Item selectedItem) {
-        if(!actionBlocked() && (getState() != State.ANGRY)) {
+        if(!actionBlocked() && !compoundingStates[1]) {
             if (selectedItem.getItemCount() > 0){
                 selectedItem.reduceCount();
-                this.fullness = Math.max(100.0f,getHunger() + (selectedItem.getItemStatValue()*fullnessChange));
+                this.fullness = Math.max(100.0f,getHunger() + (selectedItem.getItemStatValue()));
                 feedVisual();
             }
             else{
@@ -485,7 +534,7 @@ public class CharacterClass {
             //Update Stats
             this.fullness = Math.max(0.0f, getHunger() - 10.0f);
             this.sleep = Math.max(0.0f, getSleep() - 10.0f);
-            this.health = Math.min(100.0f, getHealth() + 20.0f);
+            this.health = Math.min(100.0f, getHealth() + 10.0f);
 
             setHead(characterHeads.get("exercise"));
             setBody(characterBodies.get("workout1"));
@@ -592,7 +641,7 @@ public class CharacterClass {
 
     public void giveGift(int inventoryIndex){
         if(!actionBlocked() && inventory[inventoryIndex].reduceCount()){
-            this.fullness = Math.min(100.0f, getHappiness() + (inventory[inventoryIndex].getItemStatValue()*happinessChange));
+            this.fullness = Math.min(100.0f, getHappiness() + inventory[inventoryIndex].getItemStatValue());
         }
         else{
             //need to throw an error for a player trying to use an item they don't have here
