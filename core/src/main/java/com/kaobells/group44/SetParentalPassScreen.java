@@ -64,7 +64,6 @@ public class SetParentalPassScreen extends ScreenAdapter {
         textures.put("loginPassButton", new Texture(Gdx.files.internal("parentalControlsScreen/submit-pass-btn.png")));
         textures.put("textImageSet", new Texture(Gdx.files.internal("parentalControlsScreen/set-pass-txtbox.png")));
         textures.put("textImageEnter", new Texture(Gdx.files.internal("parentalControlsScreen/submit-pass-txtbox.png")));
-
     }
 
     private void initializeState() {
@@ -115,8 +114,8 @@ public class SetParentalPassScreen extends ScreenAdapter {
 
         Table buttonTable = new Table();
         buttonTable.add(submissionButton)
-            .size(viewport.getWorldWidth() * 0.4f, viewport.getWorldHeight() * 0.14f)
-            .padTop(viewport.getWorldHeight() * 0.05f);
+                .size(viewport.getWorldWidth() * 0.4f, viewport.getWorldHeight() * 0.14f)
+                .padTop(viewport.getWorldHeight() * 0.05f);
 
         // Add the tables to the parent table and stage
         parentTable.add(titleTable).row();
@@ -134,7 +133,6 @@ public class SetParentalPassScreen extends ScreenAdapter {
     }
 
     private void handleSubmit() {
-        // Handle the submission logic
         if (enteredPassword.length() == 4) { // Ensure all 4 digits are entered
             if (isPasswordSet) {
                 String storedPassword = mainGame.jsonHandler.getParentalPassword();
@@ -179,7 +177,6 @@ public class SetParentalPassScreen extends ScreenAdapter {
     }
 
     private void changeImageToHidden(int index) {
-        // Change the image of the pin box at the specified index to the hidden texture
         switch (index) {
             case 0:
                 pinBox1.setDrawable(new Image(hiddenImageTexture).getDrawable());
@@ -197,7 +194,6 @@ public class SetParentalPassScreen extends ScreenAdapter {
     }
 
     private void changeImageToDefault(int index) {
-        // Change the image of the pin box at the specified index to the default texture
         switch (index) {
             case 0:
                 pinBox1.setDrawable(new Image(defaultImageTexture).getDrawable());
@@ -214,11 +210,10 @@ public class SetParentalPassScreen extends ScreenAdapter {
         }
     }
 
+
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
-
-        // idk rn, this just works
         stage.addActor(backButton);
     }
 

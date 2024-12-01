@@ -353,7 +353,7 @@ public class GameScreen extends ScreenAdapter{
 
         return buttonsTable;
     }
-
+    //SASHA
     public void gameSection() {
         Table gameSection = getOrCreateTable("gameSection");
 

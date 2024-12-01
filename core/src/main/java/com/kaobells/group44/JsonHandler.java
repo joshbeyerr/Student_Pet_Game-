@@ -13,6 +13,7 @@ class Database {
     public HashMap<String, HashMap<String, Object>> games;
     public HashMap<String, CharacterClass> characters;
     public HashMap<String, Object> parentalControls; // Field for "Parental Controls"
+    private boolean isPasswordSet;
 
     // Constructor for initializing fields if null
     public Database() {
@@ -21,20 +22,7 @@ class Database {
         parentalControls = new HashMap<>();
     }
 
-    // Initialize parentalControls with default values
-    public void initializeParentalControls() {
-        if (parentalControls == null || parentalControls.isEmpty()) {
-            parentalControls.put("Password", "");
-            parentalControls.put("morningParentBlock", false);
-            parentalControls.put("afternoonParentBlock", false);
-            parentalControls.put("eveningParentBlock", false);
-            parentalControls.put("weekdayParentBlock", false);
-            parentalControls.put("weekendParentBlock", false);
-            parentalControls.put("totalSecondsPlayed", 0);
-            parentalControls.put("totalSessionsPlayed", 0);
-            parentalControls.put("averagePlaytimePerSession", 0);
-        }
-    }
+
 }
 
 public class JsonHandler {
@@ -66,7 +54,7 @@ public class JsonHandler {
             database = json.fromJson(Database.class, jsonString);
         } else {
             database = new Database();
-            database.initializeParentalControls(); // Ensure parentalControls is initialized
+            initializeParentalControls(); // Ensure parentalControls is initialized
             saveDatabase();
         }
     }
@@ -147,8 +135,7 @@ public class JsonHandler {
     }
 
     public void initializeParentalControls() {
-        // fill parentalControls with default values
-        database.parentalControls.put("Password", "");
+        //database.parentalControls.put("Password", "");
         database.parentalControls.put("morningParentBlock", false);
         database.parentalControls.put("afternoonParentBlock", false);
         database.parentalControls.put("eveningParentBlock", false);
@@ -174,19 +161,6 @@ public class JsonHandler {
         return (boolean) database.parentalControls.getOrDefault(key, false);
     }
 
-    public void setParentalControlBoolean(String key, boolean value) {
-        database.parentalControls.put(key, value);
-        saveDatabase();
-    }
-
-    public String getParentalControlString(String key) {
-        return (String) database.parentalControls.getOrDefault(key, "");
-    }
-
-    public void setParentalControlString(String key, String value) {
-        database.parentalControls.put(key, value);
-        saveDatabase();
-    }
 
     public int getParentalControlInt(String key) {
         return (int) database.parentalControls.getOrDefault(key, 0);
@@ -195,6 +169,26 @@ public class JsonHandler {
     public void setParentalControlInt(String key, int value) {
         database.parentalControls.put(key, value);
         saveDatabase();
+    }
+
+    // Method to get the parental control password
+    public String getParentalControlPassword() {
+        Object passwordObj = database.parentalControls.get("Password");
+        if (passwordObj instanceof String) {
+            return (String) passwordObj;
+        }
+        return ""; // Return an empty string if the password is not set
+    }
+
+    // Method to save the parental control password
+    public void setParentalControlPassword(String password) {
+        if (password != null && !password.isEmpty()) {
+            database.parentalControls.put("Password", password);
+            saveDatabase(); // Save the updated password to the file
+            System.out.println("Password updated successfully.");
+        } else {
+            System.out.println("Password cannot be null.");
+        }
     }
 
 
