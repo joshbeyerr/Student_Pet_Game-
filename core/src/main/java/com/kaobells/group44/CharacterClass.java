@@ -22,17 +22,16 @@ public class CharacterClass {
     private final int characterNumber;
     // e.g relaxed, brave
     private final String characterType;
-
+    //"prime state" meaning it is the state highest in the priority and the one that the character will display as
     private State state = State.NEUTRAL;
-
+    //current stat values for a character
     private float health;
     private float sleep;
     private float happiness;
     private float fullness;
     private float stress;
 
-    // JUST FOR NOW - making all characters health change by 1
-    // In the future this will be unique to each characterType and will be set when character is created.
+    //variables uses as multipliers for tick rates
     private transient float healthChange;
     private transient float sleepChange;
     private transient float happinessChange;
@@ -40,10 +39,10 @@ public class CharacterClass {
     private transient float stressChange = 1.0f;
 
     private transient Item[] inventory;
-
+    //displayed sprite head and body
     private transient Image currentHead;
     private transient Image currentBody;
-
+    //Hashmap of the heads and bodies
     private transient Map<String, Image> characterHeads;
     private transient Map<String, Image> characterBodies;
     private transient final Map<String, Texture> characterTextures = new HashMap<>();
@@ -78,13 +77,12 @@ public class CharacterClass {
         characterNumber = 100;
         characterType = "default";
     }
-
+    //load in a character's data
     public void startLoadCharacter(Main mainG){
         mainGame = mainG;
         characterHeads = new HashMap<>();
         characterBodies = new HashMap<>();
 
-        // initialize character stats based on character type selected THIS WILL NEED TO CHANGE WHEN WE START IMPLEMENTING SAVE FILES
         loadImages();
 
         setHead(headDetermine());
@@ -129,19 +127,16 @@ public class CharacterClass {
 
     // Getter for name
     public String getName() { return name;}
-
-    public String getCharacterType(){
-        return characterType;
-    }
-    public String getSlotNumber(){
-        return slot;
-    }
-
+    //Getter for character type
+    public String getCharacterType(){return characterType;}
+    //Getter for slot that character is saved in
+    public String getSlotNumber(){ return slot;}
+    //Getter for Score
     public int getScore() { return score;}
-
+    //Method to increment score
     public void incrementScore() { this.score = score+1;}
 
-    // Getter and Setter for health
+    // Getter for health
     public float getHealth() { return health;}
     //Setter for health
     public void setHealth(float health) {
@@ -176,6 +171,7 @@ public class CharacterClass {
         } else {
         this.fullness = 100.0f;
     }}
+
     // Getter for sleep
     public float getSleep() { return sleep; }
     // Setter for sleep
@@ -200,7 +196,7 @@ public class CharacterClass {
             this.stress = 100.0f;
     }}
 
-
+    //Updates the stats based on characters change multipliers and any active states
     public void statBarTick(){
         setHappiness(this.getHappiness() - this.happinessChange);
         setHunger(this.getHunger() - this.fullnessChange);
@@ -219,6 +215,7 @@ public class CharacterClass {
         }
     }
 
+    //sets the stat change modifiers based on character type
     public void modifyModifiers(int characterTypeNumber){
         switch (characterTypeNumber){
             case 0:
@@ -227,7 +224,6 @@ public class CharacterClass {
                 this.happinessChange = 1.1f;
                 this.fullnessChange = 1.0f;
                 break;
-
 
             case 1:
                 //health and sleep go down faster but happiness and hunger go down slower
@@ -260,7 +256,6 @@ public class CharacterClass {
                 this.fullnessChange = 0.75f;
                 break;
         }
-
     }
 
     // initialize character stats based on character type selected
@@ -270,7 +265,6 @@ public class CharacterClass {
             for (int i = 0; i < 6; i++) {
                 this.inventory[i] = new Item(i,0);
             }
-
         }
         switch (characterNumber) {
 
@@ -322,43 +316,23 @@ public class CharacterClass {
 
             default: throw new IllegalArgumentException("Invalid character index: " + characterNumber);
         }
-
         setHead(headDetermine());
         setBody(bodyDetermine());
     }
 
     //Head Getter
     public Image getHead() { return currentHead; }
-
     //Head Setter
     public void setHead(Image newHead) {
         if (!actionBlocked()) { // Only allow setting the head if actions aren't blocked
             this.currentHead = newHead;
         }
     }
-
     // Overriding set head if action block flag is set
     public void setHead(Image newHead, boolean Override) {
         this.currentHead = newHead;
     }
-
-    //Body Getter
-    public Image getBody() { return currentBody; }
-
-    //Body Setter
-    public void setBody(Image newBody) {
-        if (!actionBlocked()) { // Only allow setting the body if actions aren't blocked
-            this.currentBody = newBody;
-        }
-    }
-
-    // Overriding set body if action block flag is set
-    public void setBody(Image newBody, boolean Override) {
-        this.currentBody = newBody;
-    }
-
-
-
+    //determine head to display based on state variable
     private Image headDetermine() {
         stateDetermine(); // Update the state before determining the head image
 
@@ -376,9 +350,21 @@ public class CharacterClass {
         }
     }
 
+    //Body Getter
+    public Image getBody() { return currentBody; }
+    //Body Setter
+    public void setBody(Image newBody) {
+        if (!actionBlocked()) { // Only allow setting the body if actions aren't blocked
+            this.currentBody = newBody;
+        }
+    }
+    // Overriding set body if action block flag is set
+    public void setBody(Image newBody, boolean Override) {
+        this.currentBody = newBody;
+    }
+    //determine body to display based on state variable
     private Image bodyDetermine() {
         stateDetermine(); // Update the state before determining the body image
-
         switch (state) {
             case DEAD:
                 return characterBodies.get("hungry1"); // CHANGE TO DEAD IF/WHEN WE HAVE DEAD BODY SPRITE
@@ -393,8 +379,9 @@ public class CharacterClass {
         }
     }
 
+    //Method to evaluate if any states should be triggered or resolved
+    //After checks sets state variable to highest priority state
     public void stateDetermine() {
-
         //Checks if dead, if not dead then move further in if not end here
         if (getHealth() < 1.0f) {
             this.state = State.DEAD;
@@ -415,7 +402,7 @@ public class CharacterClass {
                 this.compoundingStates[2] = true;
             }
             //check if sleeping should be stopped
-            if(compoundingStates[0] && getSleep() > 95.0f){
+            if(compoundingStates[0] && getSleep() > 97.5f){
                 this.compoundingStates[0] = false;
             }
             //check if angry should be stopped
@@ -429,8 +416,7 @@ public class CharacterClass {
             stateEvaluate();
         }
     }
-
-    //after setDetermine has updated the compounding states array state evaluate sets state variable to highest state in hierarchy
+    //Sets state variable to highest priority State
     public void stateEvaluate(){
         if (compoundingStates[0]){
             this.state = State.SLEEPING;
@@ -442,10 +428,10 @@ public class CharacterClass {
             this.state = State.NEUTRAL;
         }
     }
-
     //State Getter
     public State getState(){ return state;}
 
+    //Blink Loop
     public void startCharacter() {
         if (blinkTask != null) {
             blinkTask.cancel(); // Cancel existing task if it's running
@@ -495,16 +481,18 @@ public class CharacterClass {
         }, blinkInterval, blinkInterval); // Repeat every blinkInterval seconds
     }
 
+    //Action Block Check
     public boolean actionBlocked(){
         return actionBlockCooldownRemaining != 0;
     }
-
+    //update action block timer
     public void updateActionBlock(float deltaTime) {
         if (actionBlockCooldownRemaining > 0) {
             actionBlockCooldownRemaining = Math.max(0, actionBlockCooldownRemaining - deltaTime);
         }
     }
 
+    //method to force re-evaluating state, body, and head
     public void resumeDefaultCharacterState(float duration){
         Timer.schedule(new Timer.Task() {
             @Override
@@ -516,7 +504,7 @@ public class CharacterClass {
         }, duration); // Reset after the 5-second exercise duration
     }
 
-    //palceholder function see comment
+    //placeholder function see comment
     public void crashedOut(){
         /*
         placeholder for eventual dead pet function. Will need to:
@@ -525,43 +513,15 @@ public class CharacterClass {
          */
     }
 
-    public void feedTriggered(Item selectedItem) {
-        if(!actionBlocked() && !compoundingStates[1]) {
-            if (selectedItem.getItemCount() > 0){
-                selectedItem.reduceCount();
-                this.fullness = Math.max(100.0f,getHunger() + (selectedItem.getItemStatValue()));
-                feedVisual();
-            }
-            else{
-                //Code to display that you do not have any of that item
-            }
-        }
-        else{
-            //Code to say that you cannot feed pet while in the state they are in
-        }
-    }
-
-    public void feedVisual() {
-        if (!actionBlocked()) {
-
-            float actionLength = 5.0f;
-
-            setHead(characterHeads.get("happy"));;
-
-            actionBlockCooldownRemaining = (actionLength);
-
-            resumeDefaultCharacterState(actionLength);
-        }
-    }
-
-
+    //exercise action
     public void exercise(){
-        if(!actionBlocked() && (!compoundingStates[1])) {
+        if(!actionBlocked() && (!compoundingStates[1])) { //check if action is allowed
             //Update Stats
             this.fullness = Math.max(0.0f, getHunger() - 10.0f);
             this.sleep = Math.max(0.0f, getSleep() - 20.0f);
             this.health = Math.min(100.0f, getHealth() + 10.0f);
 
+            //starting exercise body/head
             setHead(characterHeads.get("exercise"));
             setBody(characterBodies.get("workout1"));
 
@@ -596,15 +556,12 @@ public class CharacterClass {
         }
     }
 
-    public void playVisual(){
-        //tbd
-    }
-
+    //Play action method stat change
+    //Will eventually be replaced with mini-game
     public void play(){
-        if(!actionBlocked()){
+        if(!actionBlocked()){ //check if action is allowed
             if(!(playCooldownRemaining > 0)){
                 this.happiness = Math.min(100.0f, getHappiness() + 20.0f);
-                playVisual();
 
                 playCooldownRemaining = 30.0f;
 
@@ -619,8 +576,9 @@ public class CharacterClass {
         }
     }
 
+    //Take to doctor action
     public boolean takeToDoctor(){
-        if(!actionBlocked() && !compoundingStates[1]){
+        if(!actionBlocked() && !compoundingStates[1]){ //check if action is allowed
             if(!(doctorCooldownRemaining > 0)){
                 float actionLength = 3.0f;
 
@@ -646,6 +604,7 @@ public class CharacterClass {
         }
     }
 
+    //cooldown timer update method
     public void updateCooldowns(float deltaTime) {
         if (doctorCooldownRemaining > 0) {
             doctorCooldownRemaining = Math.max(0, doctorCooldownRemaining - deltaTime);
@@ -653,7 +612,6 @@ public class CharacterClass {
         if (playCooldownRemaining > 0){
             playCooldownRemaining = Math.max(0, playCooldownRemaining - deltaTime);
         }
-
 
         if (saveTimer < 30) {
             saveTimer = Math.min(30, saveTimer + deltaTime);
@@ -664,29 +622,44 @@ public class CharacterClass {
             saveTimer = 0;
 
         }
-
-
-
     }
 
+    //feed action
+    //may need to be tweaked to link to GameScreen and to display correct reason it could not be done
     public void feed(int inventoryIndex){
-        if(!actionBlocked() && !compoundingStates[1] && inventory[inventoryIndex].reduceCount()){
-            this.fullness = Math.min(100.0f, getHunger() + (inventory[inventoryIndex].getItemStatValue()*fullnessChange));
+        if(!actionBlocked() && !compoundingStates[1] && inventory[inventoryIndex].reduceCount()){ //check if action is allowed
+            this.fullness = Math.min(100.0f, getHunger() + (inventory[inventoryIndex].getItemStatValue()));
         }
         else{
             //need to throw an error for a player trying to use an item they don't have here
         }
     }
+    //placeholder visual effect for feed
+    public void feedVisual() {
+        if (!actionBlocked()) {
 
+            float actionLength = 5.0f;
+
+            setHead(characterHeads.get("happy"));;
+
+            actionBlockCooldownRemaining = (actionLength);
+
+            resumeDefaultCharacterState(actionLength);
+        }
+    }
+
+    //giveGift action
+    //may need to be tweaked to link to GameScreen and to display correct reason it could not be done
     public void giveGift(int inventoryIndex){
-        if(!actionBlocked() && inventory[inventoryIndex].reduceCount()){
-            this.fullness = Math.min(100.0f, getHappiness() + inventory[inventoryIndex].getItemStatValue());
+        if(!actionBlocked() && inventory[inventoryIndex].reduceCount()){ //check if action is allowed
+            this.happiness = Math.min(100.0f, getHappiness() + inventory[inventoryIndex].getItemStatValue());
         }
         else{
             //need to throw an error for a player trying to use an item they don't have here
         }
     }
 
+    //go to sleep action
     public void sleep(){
         if(!actionBlocked()) {
             this.compoundingStates[0] = true;
@@ -694,17 +667,17 @@ public class CharacterClass {
         }
     }
 
+    //method to increase count of item at index by 1
     public void gainItem(int index) {
         inventory[index].increaseCount();
     }
 
+    //checks if player is sleeping
     public boolean isSleeping() {
         return compoundingStates[0];
     }
 
-
     public void loadImages(){
-
         // Load textures into the texture map
         characterTextures.put("neutralBody", new Texture(Gdx.files.internal("game/character/body-neutral.png")));
         characterTextures.put("workout1Body", new Texture(Gdx.files.internal("game/character/body-workout1.png")));

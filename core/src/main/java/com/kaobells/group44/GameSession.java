@@ -35,10 +35,6 @@ public class GameSession {
         this.weekendParentBlock = mainGame.jsonHandler.getParentalControlBoolean("weekendParentBlock");
         this.sessionsPlayed = mainGame.jsonHandler.getParentalControlInt("totalSessionsPlayed") + 1;
         mainGame.jsonHandler.setParentalControlInt("totalSessionsPlayed", sessionsPlayed); //increment sessions played on new creation of a GameSession
-
-
-
-        //code to load number of game sessions created from JSON and increment by one (then write that updated count back to JSON)
     }
 
     public boolean blockedPlayTimeCheck(){
@@ -87,7 +83,7 @@ public class GameSession {
             }
         }
 
-        return false;
+        return false; //if no blocks found return false
     }
 
 
