@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -31,8 +30,12 @@ public class SetParentalPassScreen extends ScreenAdapter {
     private final Table parentTable;
     private final BitmapFont font;
 
-    private TextField pinBox1, pinBox2, pinBox3, pinBox4;
+    private Image pinBox1, pinBox2, pinBox3, pinBox4;
     private boolean isPasswordSet;
+    private int currentIndex;
+    private final Texture hiddenImageTexture;
+    private final Texture defaultImageTexture;
+    private String enteredPassword;
 
     public SetParentalPassScreen(Main game) {
         this.mainGame = game;
@@ -48,6 +51,10 @@ public class SetParentalPassScreen extends ScreenAdapter {
 
         this.font = mainGame.resourceManager.getTitleFont();
 
+        // Load textures for hidden and default pin images
+        this.hiddenImageTexture = new Texture(Gdx.files.internal("parentalControlsScreen/hidden-pass-pin.png"));
+        this.defaultImageTexture = new Texture(Gdx.files.internal("parentalControlsScreen/password-pin.png"));
+
         loadTextures();
         initializeState();
         initializeUI();
@@ -55,41 +62,38 @@ public class SetParentalPassScreen extends ScreenAdapter {
 
     private void loadTextures() {
         textures = new HashMap<>();
-        textures.put("passwordBox", new Texture(Gdx.files.internal("parentalControlsScreen/password-pin.png")));
         textures.put("submitButton", new Texture(Gdx.files.internal("parentalControlsScreen/set-pass-btn.png")));
+        textures.put("loginPassButton", new Texture(Gdx.files.internal("parentalControlsScreen/submit-pass-btn.png")));
         textures.put("textImageSet", new Texture(Gdx.files.internal("parentalControlsScreen/set-pass-txtbox.png")));
         textures.put("textImageEnter", new Texture(Gdx.files.internal("parentalControlsScreen/submit-pass-txtbox.png")));
+
     }
 
     private void initializeState() {
         String password = (String) jsonHandler.getDatabase().parentalControls.get("Password");
         isPasswordSet = password != null && !password.isEmpty();
+        currentIndex = 0; // Start at the first pin box
+        enteredPassword = ""; // Initialize empty password
     }
 
     private void initializeUI() {
         stage.clear();
 
-        // Add the back button
+        // Add the back button to the stage
         stage.addActor(backButton);
 
-        // Title Image
+        // Title image based on whether a password is set or not
         Image titleImage = new Image(isPasswordSet ? textures.get("textImageEnter") : textures.get("textImageSet"));
 
-        // PIN Boxes
-        pinBox1 = createPinBox(isPasswordSet);
-        pinBox2 = createPinBox(isPasswordSet);
-        pinBox3 = createPinBox(isPasswordSet);
-        pinBox4 = createPinBox(isPasswordSet);
+        // Initialize the pin boxes
+        pinBox1 = createImageBox();
+        pinBox2 = createImageBox();
+        pinBox3 = createImageBox();
+        pinBox4 = createImageBox();
 
-        // Navigation between PIN boxes
-        setupPinBoxNavigation(pinBox1, null, pinBox2);
-        setupPinBoxNavigation(pinBox2, pinBox1, pinBox3);
-        setupPinBoxNavigation(pinBox3, pinBox2, pinBox4);
-        setupPinBoxNavigation(pinBox4, pinBox3, null);
-
-        // Submit Button
-        ImageButton submitButton = mainGame.createImageButton(textures.get("submitButton"));
-        submitButton.addListener(new InputListener() {
+        // Submit button with a listener
+        ImageButton submissionButton = mainGame.createImageButton(isPasswordSet ? textures.get("loginPassButton") : textures.get("submitButton"));
+        submissionButton.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 handleSubmit();
@@ -97,6 +101,7 @@ public class SetParentalPassScreen extends ScreenAdapter {
             }
         });
 
+        // Layout the components using tables
         Table titleTable = new Table();
         float titleWidth = viewport.getWorldWidth() * 0.7f;
         float titleHeight = viewport.getWorldHeight() * 0.18f;
@@ -111,20 +116,28 @@ public class SetParentalPassScreen extends ScreenAdapter {
         pinTable.add(pinBox4).size(pinBoxSize);
 
         Table buttonTable = new Table();
-        buttonTable.add(submitButton)
+        buttonTable.add(submissionButton)
             .size(viewport.getWorldWidth() * 0.4f, viewport.getWorldHeight() * 0.14f)
             .padTop(viewport.getWorldHeight() * 0.05f);
 
+        // Add the tables to the parent table and stage
         parentTable.add(titleTable).row();
         parentTable.add(pinTable).padTop(viewport.getWorldHeight() * 0.05f).row();
         parentTable.add(buttonTable).padTop(viewport.getWorldHeight() * 0.05f);
-
         stage.addActor(parentTable);
+
+        // Set the input listener for keyboard interaction
+        setInputListener();
+    }
+
+    private Image createImageBox() {
+        // Create an image box with the default texture
+        return new Image(defaultImageTexture);
     }
 
     private void handleSubmit() {
-        if (areAllBoxesFilled()) {
-            String enteredPassword = pinBox1.getText() + pinBox2.getText() + pinBox3.getText() + pinBox4.getText();
+        // Handle the submission logic
+        if (enteredPassword.length() == 4) { // Ensure all 4 digits are entered
             if (isPasswordSet) {
                 String storedPassword = (String) jsonHandler.getDatabase().parentalControls.get("Password");
                 if (enteredPassword.equals(storedPassword)) {
@@ -138,73 +151,68 @@ public class SetParentalPassScreen extends ScreenAdapter {
                 Gdx.app.log("ParentalControls", "Password Set: " + enteredPassword);
             }
         } else {
-            Gdx.app.log("ParentalControls", "All PIN boxes must be filled.");
+            Gdx.app.log("ParentalControls", "Incomplete PIN. Please fill all boxes.");
         }
     }
 
-    private boolean areAllBoxesFilled() {
-        return !pinBox1.getText().isEmpty() && !pinBox2.getText().isEmpty() &&
-            !pinBox3.getText().isEmpty() && !pinBox4.getText().isEmpty();
-    }
-
-    private TextField createPinBox(boolean isPasswordMasked) {
-        TextField.TextFieldStyle style = new TextField.TextFieldStyle();
-        style.font = font;
-        style.fontColor = com.badlogic.gdx.graphics.Color.BLACK;
-        style.background = new Image(textures.get("passwordBox")).getDrawable();
-
-        TextField pinBox = new TextField("", style);
-        pinBox.setMaxLength(1);
-        pinBox.setAlignment(1);
-        pinBox.setTextFieldFilter((textField, c) -> Character.isDigit(c));
-        pinBox.setFocusTraversal(false); // Ensure manual navigation
-        if (isPasswordMasked) {
-            pinBox.setPasswordMode(true);
-            pinBox.setPasswordCharacter('●'); // Mask input with dots
-        }
-        return pinBox;
-    }
-
-    private void setupPinBoxNavigation(final TextField currentBox, final TextField previousBox, final TextField nextBox) {
-        currentBox.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                stage.setKeyboardFocus(currentBox); // Focus the clicked box
-                return true;
-            }
-
-            @Override
-            public boolean keyDown(InputEvent event, int keycode) {
-                if (keycode == com.badlogic.gdx.Input.Keys.BACKSPACE) {
-                    if (currentBox.getText().isEmpty() && previousBox != null) {
-                        stage.setKeyboardFocus(previousBox);
-                        previousBox.setText("");
-                    } else {
-                        currentBox.setText("");
-                    }
-                    return true;
-                }
-                return false;
-            }
-
+    private void setInputListener() {
+        Gdx.input.setInputProcessor(stage);
+        stage.addListener(new InputListener() {
             @Override
             public boolean keyTyped(InputEvent event, char character) {
-                if (Character.isDigit(character)) {
-                    currentBox.setText(String.valueOf(character));
-                    if (nextBox != null) {
-                        stage.setKeyboardFocus(nextBox);
-                    }
-                    return true;
+                if (Character.isDigit(character) && currentIndex < 4) {
+                    enteredPassword += character; // Append digit to password
+                    changeImageToHidden(currentIndex);
+                    currentIndex++;
+                } else if (character == '\b' && currentIndex > 0) { // Backspace
+                    currentIndex--;
+                    enteredPassword = enteredPassword.substring(0, enteredPassword.length() - 1); // Remove last character
+                    changeImageToDefault(currentIndex);
                 }
-                return false;
+                return true;
             }
         });
+    }
+
+    private void changeImageToHidden(int index) {
+        // Change the image of the pin box at the specified index to the hidden texture
+        switch (index) {
+            case 0:
+                pinBox1.setDrawable(new Image(hiddenImageTexture).getDrawable());
+                break;
+            case 1:
+                pinBox2.setDrawable(new Image(hiddenImageTexture).getDrawable());
+                break;
+            case 2:
+                pinBox3.setDrawable(new Image(hiddenImageTexture).getDrawable());
+                break;
+            case 3:
+                pinBox4.setDrawable(new Image(hiddenImageTexture).getDrawable());
+                break;
+        }
+    }
+
+    private void changeImageToDefault(int index) {
+        // Change the image of the pin box at the specified index to the default texture
+        switch (index) {
+            case 0:
+                pinBox1.setDrawable(new Image(defaultImageTexture).getDrawable());
+                break;
+            case 1:
+                pinBox2.setDrawable(new Image(defaultImageTexture).getDrawable());
+                break;
+            case 2:
+                pinBox3.setDrawable(new Image(defaultImageTexture).getDrawable());
+                break;
+            case 3:
+                pinBox4.setDrawable(new Image(defaultImageTexture).getDrawable());
+                break;
+        }
     }
 
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
-        stage.setKeyboardFocus(pinBox1); // Autofocus on the first PIN box
     }
 
     @Override
@@ -225,6 +233,8 @@ public class SetParentalPassScreen extends ScreenAdapter {
 
     @Override
     public void dispose() {
+        hiddenImageTexture.dispose();
+        defaultImageTexture.dispose();
         for (Texture texture : textures.values()) {
             texture.dispose();
         }
