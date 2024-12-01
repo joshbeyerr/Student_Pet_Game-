@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CharacterClass {
-    private transient final Main mainGame;
+    private transient Main mainGame;
     private final String name;
 
     // slot 1 through 3;
@@ -42,8 +42,9 @@ public class CharacterClass {
     private transient Image currentHead;
     private transient Image currentBody;
 
-    private transient final Map<String, Image> characterHeads;
-    private transient final Map<String, Image> characterBodies;
+    private transient Map<String, Image> characterHeads;
+    private transient Map<String, Image> characterBodies;
+    private transient final Map<String, Texture> characterTextures = new HashMap<>();
 
     // a button has been clicked, no other animations or buttons are allowed to be clicked during this
     private transient Timer.Task blinkTask;
@@ -76,6 +77,23 @@ public class CharacterClass {
         characterNumber = 100;
         characterType = "default";
         slot = "0";
+    }
+
+    public void startLoadCharacter(Main mainG){
+        mainGame = mainG;
+        characterHeads = new HashMap<>();
+        characterBodies = new HashMap<>();
+
+        // initialize character stats based on character type selected THIS WILL NEED TO CHANGE WHEN WE START IMPLEMENTING SAVE FILES
+        loadImages();
+
+        setHead(headDetermine());
+        setBody(bodyDetermine());
+
+        modifyModifers(characterNumber);
+        startCharacter();
+
+        Gdx.app.log("NAME", "health: " + health + "\nsleep: " + sleep + "\nhappiness: " + happiness + "\nfullness: " + fullness + "\nstress: " + stress);
     }
 
 
@@ -111,7 +129,7 @@ public class CharacterClass {
     // Getter for name
     public String getName() { return name;}
 
-    public String getcharacterType(){
+    public String getCharacterType(){
         return characterType;
     }
     public String getSlotNumber(){
@@ -201,7 +219,7 @@ public class CharacterClass {
             case 0:
                 this.healthChange = 1.0f;
                 this.sleepChange = 1.0f;
-                this.happinessChange = 1.0f;
+                this.happinessChange = 1.1f;
                 this.fullnessChange = 1.0f;
 
 
@@ -241,12 +259,13 @@ public class CharacterClass {
 
     // initialize character stats based on character type selected
     private void setUpCharacter(){
-        //filling inventory with all the items with the count set to zero
-        for (int i = 0; i < 6; i++) {
-            this.inventory[i] = new Item(i,0);
+        //filling inventory with all the items with the count set to zer0
+        if (this.inventory != null){
+            for (int i = 0; i < 6; i++) {
+                this.inventory[i] = new Item(i,0);
+            }
+
         }
-
-
         switch (characterNumber) {
 
             // case 0 = relaxed
@@ -553,7 +572,6 @@ public class CharacterClass {
                         this.cancel();
                         return;
                     }
-
                     // Toggle between workout1 and workout2
                     if (toggle) {
                         setBody(characterBodies.get("workout1"), true);
@@ -681,18 +699,57 @@ public class CharacterClass {
 
     public void loadImages(){
 
-        characterBodies.put("neutral", mainGame.createImage(new Texture(Gdx.files.internal("game/character/body-neutral.png"))));
-        characterBodies.put("workout1", mainGame.createImage(new Texture(Gdx.files.internal("game/character/body-workout1.png"))));
-        characterBodies.put("workout2", mainGame.createImage(new Texture(Gdx.files.internal("game/character/body-workout2.png"))));
-        characterBodies.put("hungry1", mainGame.createImage(new Texture(Gdx.files.internal("game/character/body-hungry1.png"))));
-        characterBodies.put("hungry2", mainGame.createImage(new Texture(Gdx.files.internal("game/character/body-hungry2.png"))));
+        // Load textures into the texture map
+        characterTextures.put("neutralBody", new Texture(Gdx.files.internal("game/character/body-neutral.png")));
+        characterTextures.put("workout1Body", new Texture(Gdx.files.internal("game/character/body-workout1.png")));
+        characterTextures.put("workout2Body", new Texture(Gdx.files.internal("game/character/body-workout2.png")));
+        characterTextures.put("hungry1Body", new Texture(Gdx.files.internal("game/character/body-hungry1.png")));
+        characterTextures.put("hungry2Body", new Texture(Gdx.files.internal("game/character/body-hungry2.png")));
 
-        characterHeads.put("head", mainGame.createImage(new Texture(Gdx.files.internal("game/character/" + characterType + "-head.png"))));
-        characterHeads.put("blink", mainGame.createImage(new Texture(Gdx.files.internal("game/character/" + characterType + "-blink.png"))));
-        characterHeads.put("exercise", mainGame.createImage(new Texture(Gdx.files.internal("game/character/" + characterType + "-exercise.png"))));
-        characterHeads.put("happy", mainGame.createImage(new Texture(Gdx.files.internal("game/character/" + characterType + "-happy.png"))));
-        characterHeads.put("angry", mainGame.createImage(new Texture(Gdx.files.internal("game/character/" + characterType + "-angry.png"))));
+        characterTextures.put("head", new Texture(Gdx.files.internal("game/character/" + characterType + "-head.png")));
+        characterTextures.put("blink", new Texture(Gdx.files.internal("game/character/" + characterType + "-blink.png")));
+        characterTextures.put("exercise", new Texture(Gdx.files.internal("game/character/" + characterType + "-exercise.png")));
+        characterTextures.put("happy", new Texture(Gdx.files.internal("game/character/" + characterType + "-happy.png")));
+        characterTextures.put("angry", new Texture(Gdx.files.internal("game/character/" + characterType + "-angry.png")));
 
+        // Create images from textures
+        characterBodies.put("neutral", mainGame.createImage(characterTextures.get("neutralBody")));
+        characterBodies.put("workout1", mainGame.createImage(characterTextures.get("workout1Body")));
+        characterBodies.put("workout2", mainGame.createImage(characterTextures.get("workout2Body")));
+        characterBodies.put("hungry1", mainGame.createImage(characterTextures.get("hungry1Body")));
+        characterBodies.put("hungry2", mainGame.createImage(characterTextures.get("hungry2Body")));
+
+        characterHeads.put("head", mainGame.createImage(characterTextures.get("head")));
+        characterHeads.put("blink", mainGame.createImage(characterTextures.get("blink")));
+        characterHeads.put("exercise", mainGame.createImage(characterTextures.get("exercise")));
+        characterHeads.put("happy", mainGame.createImage(characterTextures.get("happy")));
+        characterHeads.put("angry", mainGame.createImage(characterTextures.get("angry")));
     }
+
+    public void dispose() {
+        // Dispose textures
+        for (Texture texture : characterTextures.values()) {
+            texture.dispose();
+        }
+        characterTextures.clear();
+
+        // Clear image maps
+        characterHeads.clear();
+        characterBodies.clear();
+
+        // Cancel and nullify tasks
+        if (blinkTask != null) {
+            blinkTask.cancel();
+            blinkTask = null;
+        }
+
+        // Reset transient fields
+        currentHead = null;
+        currentBody = null;
+        inventory = null;
+    }
+
+
+
 
 }

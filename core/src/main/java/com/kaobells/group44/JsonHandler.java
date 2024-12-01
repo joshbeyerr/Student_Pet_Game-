@@ -3,6 +3,7 @@ package com.kaobells.group44;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
 
 import java.util.HashMap;
@@ -121,7 +122,6 @@ public class JsonHandler {
         }
         return null; // Return null if no character is found
     }
-
 
     // Method to get a human-readable representation of a game slot
     public String gameToString(String slotId) {

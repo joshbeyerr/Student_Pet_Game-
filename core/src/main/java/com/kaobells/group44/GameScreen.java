@@ -417,7 +417,6 @@ public class GameScreen extends ScreenAdapter{
     }
 
 
-
     // ? idk, i think all head and body textures should be stored in character class,
     // and a call of getHead or getBody will return the image
 
@@ -578,6 +577,7 @@ public class GameScreen extends ScreenAdapter{
             public void clicked(InputEvent event, float x, float y) {
                 // Perform an action, for example, print a message or switch screens
                 Gdx.app.log("exitButton", "Exiting game to main menu...");
+
                 mainGame.popScreen();
             }
         });
@@ -685,6 +685,9 @@ public class GameScreen extends ScreenAdapter{
 
     @Override
     public void dispose() {
+        session.character.dispose();
+        session.character = null;
+
         for (Texture texture : textures.values()) {
             texture.dispose();
         }
