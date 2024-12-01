@@ -142,6 +142,8 @@ public class SetParentalPassScreen extends ScreenAdapter {
                 String storedPassword = (String) jsonHandler.getDatabase().parentalControls.get("Password");
                 if (enteredPassword.equals(storedPassword)) {
                     Gdx.app.log("ParentalControls", "Password Correct!");
+                    mainGame.popScreen();
+                    mainGame.pushScreen(new ParentalControlsScreen(mainGame));
                 } else {
                     Gdx.app.log("ParentalControls", "Incorrect Password!");
                 }
@@ -149,6 +151,8 @@ public class SetParentalPassScreen extends ScreenAdapter {
                 jsonHandler.getDatabase().parentalControls.put("Password", enteredPassword);
                 jsonHandler.saveDatabase();
                 Gdx.app.log("ParentalControls", "Password Set: " + enteredPassword);
+                mainGame.popScreen();
+                mainGame.pushScreen(new SetParentalPassScreen(mainGame));
             }
         } else {
             Gdx.app.log("ParentalControls", "Incomplete PIN. Please fill all boxes.");
@@ -213,6 +217,9 @@ public class SetParentalPassScreen extends ScreenAdapter {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
+
+        // idk rn, this just works
+        stage.addActor(backButton);
     }
 
     @Override
