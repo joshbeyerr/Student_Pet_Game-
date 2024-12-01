@@ -1,9 +1,5 @@
 package com.kaobells.group44;
 
-import com.badlogic.gdx.Gdx;
-import java.util.Date;
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.utils.Json;
 import java.time.Instant;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -45,11 +41,6 @@ public class GameSession {
         //code to load number of game sessions created from JSON and increment by one (then write that updated count back to JSON)
     }
 
-
-    public void saveState(){
-
-    }
-
     public boolean blockedPlayTimeCheck(){
         //Returns true if player is playing in a blocked time
         //Call on launch game and maybe every 10 min
@@ -88,26 +79,19 @@ public class GameSession {
     }
 
 
-    public void updateParentalStats(){
-        //to be called on save
+    public void updateParentalStats(){ //to be called on save
 
-        //get old stats
-        long oldTotalSecondsPlayed = 0; //to be replaced by call to JSON
-        long TotalSessionsPlayed = 0; //to be replaced by call to JSON
-
-        //update stats with new session's data
-        long newTotalSecondsPlayed = oldTotalSecondsPlayed+getSecondsPlayed();
-        long newAverageSecondsPlayed = newTotalSecondsPlayed/TotalSessionsPlayed;
-
-        /*
-        Code needs to be put here to write these new values into JSON.
-         */
-
+        //create values
+        int oldTotalSecondsPlayed = mainGame.jsonHandler.getParentalControlInt("totalSecondsPlayed"); //to be replaced by call to JSON
+        int newTotalSecondsPlayed = oldTotalSecondsPlayed + getSecondsPlayedThisSession();
+        //write new stats to JSON
+        mainGame.jsonHandler.setParentalControlInt("totalSecondsPlayed",newTotalSecondsPlayed);
+        mainGame.jsonHandler.setParentalControlInt("averagePlaytimePerSession",(newTotalSecondsPlayed/sessionsPlayed));
     }
 
-    public long getSecondsPlayed(){
+    public int getSecondsPlayedThisSession(){
         this.secondsPlayed = Duration.between(this.startTime, Instant.now()).toSeconds();
-        return secondsPlayed;
+        return (int) secondsPlayed;
     }
 
 

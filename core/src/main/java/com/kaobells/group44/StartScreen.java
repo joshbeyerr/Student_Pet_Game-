@@ -96,6 +96,13 @@ public class StartScreen extends ScreenAdapter {
         });
 
         ImageButton instructionsButton = mainGame.createImageButton(assetManager.get("startScreen/instructions-btn.png"));
+        instructionsButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.log("Instructions Button", "instructions Button button clicked!");
+                mainGame.pushScreen(new InstructionsScreens(mainGame));
+            }
+        });
 
         ImageButton creditsButton = mainGame.createImageButton(assetManager.get("startScreen/credits-btn.png"));
         creditsButton.addListener(new ClickListener() {
@@ -136,7 +143,7 @@ public class StartScreen extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("ParentalButton", "Parental Controls button clicked!");
-                mainGame.pushScreen(new ParentalControlsScreen(mainGame)); // Transition to ParentalControlsScreen
+                mainGame.pushScreen(new SetParentalPassScreen(mainGame)); // Transition to ParentalControlsScreen
             }
         });
 

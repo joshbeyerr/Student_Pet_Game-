@@ -512,6 +512,7 @@ public class GameScreen extends ScreenAdapter{
         });
         images.put("exercise", exercise);
 
+        //
         ImageButton play = mainGame.createImageButton(textures.get("play"));
         play.addListener(new ClickListener() {
             @Override
@@ -519,7 +520,7 @@ public class GameScreen extends ScreenAdapter{
                 Gdx.app.log("play", "here");
                 if(!session.character.isSleeping()) {
                     session.character.play();
-                    session.character.playVisual();
+                    mainGame.pushScreen(new ComputerScreen(mainGame, session));
                 }
             }
         });
