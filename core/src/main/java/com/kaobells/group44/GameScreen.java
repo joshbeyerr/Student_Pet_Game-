@@ -1,8 +1,10 @@
 package com.kaobells.group44;
 
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -35,6 +37,9 @@ public class GameScreen extends ScreenAdapter{
     Label.LabelStyle nameLabelStyle;
     Label.LabelStyle scoreLabelStyle;
 
+    private Sound doorOpen;
+    private Sound doorClose;
+    private Sound fullHeal;
     private Map<String, Texture> textures;
     private final Map<String, Table> tables;
     private Map<String, TextureRegionDrawable> drawables;
@@ -396,9 +401,17 @@ public class GameScreen extends ScreenAdapter{
         // Create an action sequence for the head
         Action headAction = Actions.sequence(
             Actions.moveTo(offScreenRightX, originalYHead, 1f), // Move to the right off the screen
-            Actions.run(() -> headContainer.setVisible(false)), // Hide after moving out
-            Actions.delay(0.5f), // Wait for 1 second
-            Actions.run(() -> headContainer.setVisible(true)), // Show again
+            Actions.run(() -> {
+                headContainer.setVisible(false); // Hide after moving out
+                doorOpen.play(); // Play door open sound
+            }),
+            Actions.delay(1.5f), // Wait for the sound effect duration or pause
+            Actions.run(() -> fullHeal.play()), // Play full heal sound
+            Actions.delay(2.5f), // Wait for another pause
+            Actions.run(() -> {
+                doorClose.play(); // Play door close sound
+                headContainer.setVisible(true); // Show head again
+            }),
             Actions.moveTo(originalX, originalYHead, 1f) // Move back to the original position from the right
         );
 
@@ -406,8 +419,9 @@ public class GameScreen extends ScreenAdapter{
         Action bodyAction = Actions.sequence(
             Actions.moveTo(offScreenRightX, originalYBody, 1f), // Move to the right off the screen
             Actions.run(() -> bodyContainer.setVisible(false)), // Hide after moving out
-            Actions.delay(0.5f), // Wait for 1 second
-            Actions.run(() -> bodyContainer.setVisible(true)), // Show again
+            Actions.delay(1.5f), // Wait for synchronization
+            Actions.delay(2.5f), // Ensure body stays hidden during fullHeal sound
+            Actions.run(() -> bodyContainer.setVisible(true)), // Show body again
             Actions.moveTo(originalX, originalYBody, 1f) // Move back to the original position from the right
         );
 
@@ -415,6 +429,7 @@ public class GameScreen extends ScreenAdapter{
         headContainer.addAction(headAction);
         bodyContainer.addAction(bodyAction);
     }
+
 
 
     // ? idk, i think all head and body textures should be stored in character class,
@@ -464,6 +479,10 @@ public class GameScreen extends ScreenAdapter{
         textures.put("purpleLabel", new Texture(Gdx.files.internal("game/" + sideBar + "/purple-label.png")));
 
         textures.put("gameBackground", new Texture(Gdx.files.internal("game/actual-game-bg.png")));
+
+        doorOpen = Gdx.audio.newSound(Gdx.files.internal("music/door-open.mp3"));
+        doorClose = Gdx.audio.newSound(Gdx.files.internal("music/door-exit.mp3"));
+        fullHeal = Gdx.audio.newSound(Gdx.files.internal("music/heal-noise.mp3"));
 
     }
 

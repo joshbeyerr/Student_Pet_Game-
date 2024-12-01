@@ -156,7 +156,7 @@ public class StartScreen extends ScreenAdapter {
         Music backgroundMusic = assetManager.get("music/jb-sample-lowqual.mp3", Music.class);
         backgroundMusic.setLooping(true); // Loop the music
         backgroundMusic.setVolume(0.5f); // Set volume (range: 0.0 to 1.0)
-        backgroundMusic.play(); // Play the music
+//        backgroundMusic.play(); // Play the music
 
     }
 
