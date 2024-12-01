@@ -149,7 +149,7 @@ public class JsonHandler {
         database.parentalControls.put("weekdayParentBlock", false);
         database.parentalControls.put("weekendParentBlock", false);
         database.parentalControls.put("totalSecondsPlayed", 0);
-        database.parentalControls.put("totalSessionsPlayed ", 0);
+        database.parentalControls.put("totalSessionsPlayed", 0);
         database.parentalControls.put("averagePlaytimePerSession", 0);
         saveDatabase();
         System.out.println("Parental controls initialized with default values.");

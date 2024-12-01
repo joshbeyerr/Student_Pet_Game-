@@ -3,31 +3,68 @@
 	"1": {
 		"character": {
 			"class": "com.kaobells.group44.CharacterClass",
-			"name": "awdawd",
+			"name": "",
 			"slot": "1",
+			"score": 6,
 			"characterNumber": 0,
 			"characterType": "relaxed",
 			"state": "NEUTRAL",
 			"health": 80,
-			"sleep": 51,
-			"happiness": 48.100044,
-			"fullness": 51,
-			"stress": 51,
-			"healthChange": 1.1,
-			"sleepChange": 1,
-			"happinessChange": 1.1,
-			"fullnessChange": 1,
-			"score": 29,
-			"saveTimer": 0.0101836,
+			"sleep": 74,
+			"happiness": 73.40001,
+			"fullness": 74,
+			"stress": 74,
+			"compoundingStates": [
+				false,
+				false,
+				false
+			],
+			"saveTimer": 5.9912305
+		}
+	},
+	"2": {
+		"character": {
+			"class": "com.kaobells.group44.CharacterClass",
+			"name": "d",
+			"slot": "2",
+			"score": 13,
+			"characterNumber": 0,
+			"characterType": "relaxed",
+			"state": "NEUTRAL",
+			"health": 80,
+			"sleep": 67,
+			"happiness": 65.70002,
+			"fullness": 67,
+			"stress": 67,
+			"compoundingStates": [
+				false,
+				false,
+				false
+			],
+			"saveTimer": 13.699312
+		}
+	},
+	"3": {
+		"character": {
+			"class": "com.kaobells.group44.CharacterClass",
+			"name": "",
+			"slot": "3",
+			"score": 30,
+			"characterNumber": 0,
+			"characterType": "relaxed",
+			"state": "NEUTRAL",
+			"health": 80,
+			"sleep": 50,
+			"happiness": 47.000046,
+			"fullness": 50,
+			"stress": 50,
 			"compoundingStates": [
 				false,
 				false,
 				false
 			]
 		}
-	},
-	"2": {},
-	"3": {}
+	}
 },
 "parentalControls": {
 	"morningParentBlock": {
@@ -36,11 +73,11 @@
 	},
 	"totalSessionsPlayed": {
 		"class": "java.lang.Integer",
-		"value": 52
+		"value": 2
 	},
 	"averagePlaytimePerSession": {
 		"class": "java.lang.Integer",
-		"value": 0
+		"value": 43
 	},
 	"weekendParentBlock": {
 		"class": "java.lang.Boolean",
@@ -56,11 +93,7 @@
 	},
 	"totalSecondsPlayed": {
 		"class": "java.lang.Integer",
-		"value": 17
-	},
-	"totalSessionsPlayed ": {
-		"class": "java.lang.Integer",
-		"value": 0
+		"value": 86
 	},
 	"weekdayParentBlock": {
 		"class": "java.lang.Boolean",
