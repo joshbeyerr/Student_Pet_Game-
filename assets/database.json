@@ -8,13 +8,17 @@
 			"characterNumber": 0,
 			"characterType": "relaxed",
 			"state": "NEUTRAL",
-			"stress": 100,
+			"health": 1,
+			"sleep": 80,
+			"happiness": 1,
+			"fullness": 1,
+			"stress": 80,
 			"compoundingStates": [
 				false,
 				false,
 				false
 			],
-			"blinkTimer": 0.12764293
+			"blinkTimer": 0.42236
 		}
 	},
 	"2": {
@@ -73,11 +77,11 @@
 	},
 	"totalSessionsPlayed": {
 		"class": "java.lang.Integer",
-		"value": 8
+		"value": 74
 	},
 	"averagePlaytimePerSession": {
 		"class": "java.lang.Integer",
-		"value": 0
+		"value": 1
 	},
 	"weekendParentBlock": {
 		"class": "java.lang.Boolean",
@@ -92,6 +96,10 @@
 		"value": false
 	},
 	"totalSecondsPlayed": {
+		"class": "java.lang.Integer",
+		"value": 63
+	},
+	"totalSessionsPlayed ": {
 		"class": "java.lang.Integer",
 		"value": 0
 	},

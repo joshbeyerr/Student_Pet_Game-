@@ -64,6 +64,7 @@ public class GameSlots  extends ScreenAdapter {
 
         super.show();
         setStage(); // Reset input processor
+        stage.addActor(backButton);
     }
 
     public void setLabels(){
@@ -98,8 +99,6 @@ public class GameSlots  extends ScreenAdapter {
             table.add(warningTable).row();
         }
 
-
-        stage.addActor(backButton);
         stage.addActor(table);
     }
 
@@ -181,14 +180,10 @@ public class GameSlots  extends ScreenAdapter {
             slot.add(characterImg).size(headWidth, headHeight).padBottom(headPad);
         }
 
-        System.out.println("here !");
-
         slot.addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 mainGame.getClickSound().play();
-
-                System.out.println("Table clickewad222d!");
 
                 // Scale down the table when touched
                 slot.setTransform(true);
@@ -208,27 +203,31 @@ public class GameSlots  extends ScreenAdapter {
         });
 
         if (screen == Screen.LOAD){
-            slot.addListener(new ClickListener(){
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    System.out.println("Table clicked new!!");
+            if (character != null){
+                slot.addListener(new ClickListener(){
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        character.startLoadCharacter(mainGame);
+                        // Clear all screens except the main menu, memory saver
+                        mainGame.clearStackExceptMain();
+                        // just for this state right now, passing through to story screen
 
-                    // Clear all screens except the main menu, memory saver
-                    mainGame.clearStackExceptMain();
+                        GameSession newGame = new GameSession(character, mainGame);
+                        if(!(newGame.blockedPlayTimeCheck())){  //checks for playing during active parental block
+                            mainGame.pushScreen(new GameScreen(mainGame, newGame));
+                        } else {
+                            //blocked playtime error
+                        }
+                    }
+                });
+            }
 
-                    // just for this state right now, passing through to story screen
-
-                    GameSession newGame = new GameSession(character,mainGame);
-                    mainGame.pushScreen(new GameScreen(mainGame, newGame));
-                }
-            });
         }
 
         else{
             slot.addListener(new ClickListener(){
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    System.out.println("Table clickewadd!");
                     // just for this state right now, passing through to story screen
                     mainGame.pushScreen(new StoryScreen(mainGame, slotNumber));
                 }
@@ -241,15 +240,17 @@ public class GameSlots  extends ScreenAdapter {
     public Table slotTable(){
         Table newTable = new Table();
 
+        System.out.println("HERE1");
+
+
         CharacterClass character1 = (mainGame.jsonHandler.getCharacterFromGameSlot("1"));
         CharacterClass character2 = (mainGame.jsonHandler.getCharacterFromGameSlot("2"));
         CharacterClass character3 = (mainGame.jsonHandler.getCharacterFromGameSlot("3"));
 
+
         // slot1
         Table slot1 = createSlot(character1, "1");
         Table slot2 = createSlot(character2, "2");
-
-
         Table slot3 = createSlot(character3, "3");
 
         float padVal = viewport.getWorldWidth() * 0.01f;

@@ -169,7 +169,7 @@ public class CharacterClass {
             this.happiness = 0.0f;
         } else {
             this.happiness = 100.0f;
-        }}
+    }}
 
     // Getter for hunger
     public float getHunger() { return fullness; }
@@ -180,8 +180,8 @@ public class CharacterClass {
         } else if(hunger <= 0.0f){
             this.fullness = 0.0f;
         } else {
-            this.fullness = 100.0f;
-        }}
+        this.fullness = 100.0f;
+    }}
 
     // Getter for sleep
     public float getSleep() { return sleep; }
@@ -192,8 +192,8 @@ public class CharacterClass {
         } else if(sleep <= 0.0f){
             this.sleep = 0.0f;
         } else {
-            this.sleep = 100.0f;
-        }}
+        this.sleep = 100.0f;
+    }}
 
     // Getter for stress
     public float getStress() { return stress; }
@@ -205,7 +205,7 @@ public class CharacterClass {
             this.stress = 0.0f;
         } else {
             this.stress = 100.0f;
-        }}
+    }}
 
     //Updates the stats based on characters change multipliers and any active states
     public void statBarTick(){
@@ -281,11 +281,11 @@ public class CharacterClass {
 
             // case 0 = relaxed
             case 0:
-                setHealth(100.0f);
-                setSleep(100.0f);
-                setHappiness(100.0f);
-                setHunger(100.0f);
-                setStress(100.0f);
+                setHealth(1.0f);
+                setSleep(80.0f);
+                setHappiness(1.0f);
+                setHunger(1.0f);
+                setStress(80.0f);
                 break;
 
             // case 1 = quirky
@@ -720,7 +720,7 @@ public class CharacterClass {
 
             float actionLength = 5.0f;
 
-            setHead(characterHeads.get("happy"));
+            setHead(characterHeads.get("happy"));;
 
             actionBlockCooldownRemaining = (actionLength);
 
