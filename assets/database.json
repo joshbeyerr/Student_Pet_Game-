@@ -97,7 +97,7 @@
 	},
 	"Password": {
 		"class": "java.lang.String",
-		"value": ""
+		"value": "1231"
 	}
 }
 }
