@@ -98,10 +98,8 @@ public class CharacterClass {
         characterHeads = new HashMap<>();
         characterBodies = new HashMap<>();
 
-        // initialize character stats based on character type selected THIS WILL NEED TO CHANGE WHEN WE START IMPLEMENTING SAVE FILES
         loadImages();
-
-        setUpCharacter();
+        setUpCharacter(); //need to change this as this should only be called for new characters not loaded characters
         modifyModifers(characterNumber);
         startCharacter();
 
@@ -110,10 +108,11 @@ public class CharacterClass {
 
     // Getter for name
     public String getName() { return name;}
-
+    // Getter for character type
     public String getcharacterType(){
         return characterType;
     }
+    // Getter for slot number
     public String getSlotNumber(){
         return slot;
     }
@@ -153,6 +152,7 @@ public class CharacterClass {
         } else {
         this.fullness = 100.0f;
     }}
+
     // Getter for sleep
     public float getSleep() { return sleep; }
     // Setter for sleep
@@ -177,11 +177,12 @@ public class CharacterClass {
             this.stress = 100.0f;
     }}
 
-
+    //calculates stats bar ticks based on state and characters change modifiers
     public void statBarTick(){
         setHappiness(this.getHappiness() - this.happinessChange);
         setHunger(this.getHunger() - this.fullnessChange);
         setStress(this.getStress() - this.stressChange);
+        //if hungry health goes down, if hungry and angry then it goes down at double speed
         if (compoundingStates[2]){
             if (compoundingStates[1]) { //hangry
                 setHealth(this.getHealth() - 2.0f*this.healthChange);
@@ -189,6 +190,7 @@ public class CharacterClass {
                 setHealth(this.getHealth() - this.healthChange);
             }
         }
+        //if not sleeping then sleep value goes down, if asleep it fills up at 4 times speed
         if(isSleeping()){
             setSleep(this.getSleep() + (4.0f*sleepChange));
         } else {
@@ -196,6 +198,7 @@ public class CharacterClass {
         }
     }
 
+    //sets each character type unique modifers to the tick rates for different values
     public void modifyModifers(int characterTypeNumber){
         switch (characterTypeNumber){
             case 0:
@@ -246,7 +249,7 @@ public class CharacterClass {
             this.inventory[i] = new Item(i,0);
         }
 
-
+        //starting stats based on character type
         switch (characterNumber) {
 
             // case 0 = relaxed
@@ -333,7 +336,7 @@ public class CharacterClass {
     }
 
 
-
+    //determines head to display based on state
     private Image headDetermine() {
         stateDetermine(); // Update the state before determining the head image
 
@@ -351,6 +354,7 @@ public class CharacterClass {
         }
     }
 
+    //determines body to display based on state
     private Image bodyDetermine() {
         stateDetermine(); // Update the state before determining the body image
 
@@ -368,6 +372,7 @@ public class CharacterClass {
         }
     }
 
+    //method evaluates what the state variable should be and any changes to states in compounding states
     public void stateDetermine() {
 
         //Checks if dead, if not dead then move further in if not end here
@@ -421,6 +426,7 @@ public class CharacterClass {
     //State Getter
     public State getState(){ return state;}
 
+    //blink/get head&body loop
     public void startCharacter() {
         if (blinkTask != null) {
             blinkTask.cancel(); // Cancel existing task if it's running
@@ -470,16 +476,19 @@ public class CharacterClass {
         }, blinkInterval, blinkInterval); // Repeat every blinkInterval seconds
     }
 
+    //boolen for actionBlocked timer
     public boolean actionBlocked(){
         return actionBlockCooldownRemaining != 0;
     }
 
+    //update actionBlocked
     public void updateActionBlock(float deltaTime) {
         if (actionBlockCooldownRemaining > 0) {
             actionBlockCooldownRemaining = Math.max(0, actionBlockCooldownRemaining - deltaTime);
         }
     }
 
+    //resets head and body post action animation
     public void resumeDefaultCharacterState(float duration){
         Timer.schedule(new Timer.Task() {
             @Override
@@ -500,6 +509,7 @@ public class CharacterClass {
          */
     }
 
+    //uses food item and adjusts stats accordingly
     public void feedTriggered(Item selectedItem) {
         if(!actionBlocked() && !compoundingStates[1]) {
             if (selectedItem.getItemCount() > 0){
@@ -516,6 +526,7 @@ public class CharacterClass {
         }
     }
 
+    //method for the feed action
     public void feedVisual() {
         if (!actionBlocked()) {
 
@@ -529,7 +540,7 @@ public class CharacterClass {
         }
     }
 
-
+    //method for exercise action
     public void exercise(){
         if(!actionBlocked() && (!compoundingStates[1])) {
             //Update Stats
