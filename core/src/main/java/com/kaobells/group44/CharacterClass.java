@@ -58,7 +58,7 @@ public class CharacterClass {
     private float actionBlockCooldownRemaining  = 0;
 
     //Array holding booleans representing the states that can have compounding effects with other states (sleeping,angry,hungry).
-    private boolean[] compoundingStates;
+    private transient boolean[] compoundingStates;
 
     // Add default constructor for LibGDX Json Loader
     public CharacterClass() {
@@ -124,9 +124,11 @@ public class CharacterClass {
     public void setHealth(float health) {
         if (health >= 0.0f && health <= 100.0f) {
             this.health = health;
-        } else {
-            System.out.println("Health value must be between 0 and 100.");
-        } }
+        } else if(health <= 0.0f){
+            this.health = 0.0f;
+        }else {
+            this.health = 100.0f;
+        }}
 
     // Getter for happiness
     public float getHappiness() { return happiness;}
@@ -134,9 +136,11 @@ public class CharacterClass {
     public void setHappiness(float happiness) {
         if (happiness >= 0.0f && happiness <= 100.0f) {
             this.happiness = happiness;
+        } else if(happiness <= 0.0f){
+            this.happiness = 0.0f;
         } else {
-            System.out.println("Happiness value must be between 0 and 100.");
-        } }
+            this.happiness = 100.0f;
+    }}
 
     // Getter for hunger
     public float getHunger() { return fullness; }
@@ -144,18 +148,22 @@ public class CharacterClass {
     public void setHunger(float hunger) {
         if (hunger >= 0.0f && hunger <= 100.0f) {
             this.fullness = hunger;
+        } else if(hunger <= 0.0f){
+            this.fullness = 0.0f;
         } else {
-            System.out.println("fullness value must be between 0 and 100.");
-        } }
+        this.fullness = 100.0f;
+    }}
     // Getter for sleep
     public float getSleep() { return sleep; }
     // Setter for sleep
     public void setSleep(float sleep) {
         if (sleep >= 0.0f && sleep <= 100.0f) {
             this.sleep = sleep;
+        } else if(sleep <= 0.0f){
+            this.sleep = 0.0f;
         } else {
-            System.out.println("sleep value must be between 0 and 100.");
-        } }
+        this.sleep = 100.0f;
+    }}
 
     // Getter for stress
     public float getStress() { return stress; }
@@ -163,16 +171,22 @@ public class CharacterClass {
     public void setStress(float stress) {
         if (stress >= 0.0f && stress <= 100.0f) {
             this.stress = stress;
+        } else if(stress <= 0.0f){
+            this.stress = 0.0f;
         } else {
-            System.out.println("stress value must be between 0 and 100.");
-        } }
+            this.stress = 100.0f;
+    }}
 
 
     public void statBarTick(){
         setHappiness(this.getHappiness() - happinessChange);
-        setSleep(this.getSleep() - sleepChange);
         setHunger(this.getHunger() - fullnessChange);
         setStress(this.getStress() - stressChange);
+        if(isSleeping()){
+            setSleep(this.getSleep() + (5.0f*sleepChange));
+        } else {
+            setSleep(this.getSleep() - sleepChange);
+        }
     }
 
     // initialize character stats based on character type selected
@@ -304,8 +318,6 @@ public class CharacterClass {
         }
     }
 
-
-
     public void stateDetermine() {
 
         //Checks if dead, if not dead then move further in if not end here
@@ -314,9 +326,9 @@ public class CharacterClass {
             crashedOut();
         } else {
             //check if sleeping should be triggered
-            if (getSleep() < 1.0f) {
+            if (getSleep() < 1.0f && !this.compoundingStates[0]) {
                 this.compoundingStates[0] = true;
-                setHealth(Math.min(0.0f, (getHealth()-10.0f)));
+                setHealth(Math.max(0.0f, (getHealth()-10.0f)));
                 System.out.println("he just like me fr");
             }
             //check if angry should be triggered
@@ -347,7 +359,6 @@ public class CharacterClass {
     public void stateEvaluate(){
         if (compoundingStates[0]){
             this.state = State.SLEEPING;
-            System.out.println("he just like me fr");
         } else if (compoundingStates[1]){
             this.state = State.ANGRY;
         } else if (compoundingStates[2]) {
@@ -359,7 +370,6 @@ public class CharacterClass {
 
     //State Getter
     public State getState(){ return state;}
-
 
     public void startCharacter() {
         if (blinkTask != null) {
@@ -536,7 +546,7 @@ public class CharacterClass {
     }
 
     public boolean takeToDoctor(){
-        if(!actionBlocked() && (!compoundingStates[1])){
+        if(!actionBlocked() && !compoundingStates[1]){
             if(!(doctorCooldownRemaining > 0)){
                 float actionLength = 3.0f;
 
@@ -572,7 +582,7 @@ public class CharacterClass {
     }
 
     public void feed(int inventoryIndex){
-        if(!actionBlocked() && (!compoundingStates[1]) && inventory[inventoryIndex].reduceCount()){
+        if(!actionBlocked() && !compoundingStates[1] && inventory[inventoryIndex].reduceCount()){
             this.fullness = Math.min(100.0f, getHunger() + (inventory[inventoryIndex].getItemStatValue()*fullnessChange));
         }
         else{
@@ -589,6 +599,13 @@ public class CharacterClass {
         }
     }
 
+    public void sleep(){
+        if(!actionBlocked()) {
+            this.compoundingStates[0] = true;
+            this.state = State.SLEEPING;
+        }
+    }
+
     public void gainItem(int index) {
         inventory[index].increaseCount();
     }
@@ -596,6 +613,7 @@ public class CharacterClass {
     public boolean isSleeping() {
         return compoundingStates[0];
     }
+
 
     public void loadImages(){
 

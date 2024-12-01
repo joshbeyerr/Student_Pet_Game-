@@ -486,12 +486,21 @@ public class GameScreen extends ScreenAdapter{
                 }
                 //This will need to be updated to open inventory where all the food items are buttons
                 //Those item buttons should trigger the feed action's
-
             }
         });
         images.put("feed", feed);
 
-        images.put("sleep", mainGame.createImageButton(textures.get("sleep")));
+        ImageButton sleep = mainGame.createImageButton(textures.get("sleep"));
+        sleep.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.log("sleep", "here");
+                if(!session.character.isSleeping()) {
+                    session.character.sleep();
+                }
+            }
+        });
+        images.put("sleep", sleep);
 
         ImageButton exercise = mainGame.createImageButton(textures.get("exercise"));
         exercise.addListener(new ClickListener() {
@@ -504,10 +513,32 @@ public class GameScreen extends ScreenAdapter{
 
             }
         });
-
         images.put("exercise", exercise);
-        images.put("play", mainGame.createImageButton(textures.get("play")));
-        images.put("gift", mainGame.createImageButton(textures.get("gift")));
+
+        ImageButton play = mainGame.createImageButton(textures.get("play"));
+        play.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.log("play", "here");
+                if(!session.character.isSleeping()) {
+                    session.character.play();
+                    session.character.playVisual();
+                }
+            }
+        });
+        images.put("play", play);
+
+        ImageButton gift = mainGame.createImageButton(textures.get("gift"));
+        gift.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.log("gift", "here");
+                if(!session.character.isSleeping()) {
+                    //code for the gift stuff
+                }
+            }
+        });
+        images.put("gift", gift);
 
         ImageButton doctor = mainGame.createImageButton(textures.get("doctor"));
         doctor.addListener(new ClickListener() {
