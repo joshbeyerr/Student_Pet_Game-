@@ -116,11 +116,11 @@ public class StartScreen extends ScreenAdapter {
         parentalButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // Perform an action, for example, print a message or switch screens
                 Gdx.app.log("ParentalButton", "Parental Controls button clicked!");
-                // DO PARENT SHIT
+                mainGame.pushScreen(new ParentalControlsScreen(mainGame)); // Transition to ParentalControlsScreen
             }
         });
+
 
         stage.addActor(exitButton);
         stage.addActor(parentalButton);
