@@ -564,7 +564,7 @@ public class GameScreen extends ScreenAdapter{
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 mainGame.jsonHandler.saveCharacterToGameSlot(session.character.getSlotNumber(), session.character);
-
+                session.updateParentalStats();
 
             }
         });

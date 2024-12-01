@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.DayOfWeek;
 
+//TLDR Class handles the active session for parental control and stats functionality
 public class GameSession {
 
     CharacterClass character;
@@ -22,7 +23,7 @@ public class GameSession {
     private int sessionsPlayed;
 
 
-
+    //constructor
     public GameSession(CharacterClass charc, Main game){
         this.mainGame = game;
         this.character = charc;
@@ -91,7 +92,7 @@ public class GameSession {
     }
 
 
-    public void updateParentalStats(){ //to be called on save
+    public void updateParentalStats(){ //Called on save
 
         //create values
         int oldTotalSecondsPlayed = mainGame.jsonHandler.getParentalControlInt("totalSecondsPlayed"); //to be replaced by call to JSON
@@ -101,6 +102,7 @@ public class GameSession {
         mainGame.jsonHandler.setParentalControlInt("averagePlaytimePerSession",(newTotalSecondsPlayed/sessionsPlayed));
     }
 
+    //helper method to return the seconds since the GameSession was created as an Int
     public int getSecondsPlayedThisSession(){
         this.secondsPlayed = Duration.between(this.startTime, Instant.now()).toSeconds();
         return (int) secondsPlayed;
