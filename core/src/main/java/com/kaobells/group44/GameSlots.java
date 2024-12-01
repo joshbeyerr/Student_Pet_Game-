@@ -218,7 +218,7 @@ public class GameSlots  extends ScreenAdapter {
 
                     // just for this state right now, passing through to story screen
 
-                    GameSession newGame = new GameSession(character);
+                    GameSession newGame = new GameSession(character,mainGame);
                     mainGame.pushScreen(new GameScreen(mainGame, newGame));
                 }
             });

@@ -22,20 +22,25 @@ public class GameSession {
     private boolean eveningParentBlock;
     private boolean weekdayParentBlock;
     private boolean weekendParentBlock;
+    private final Main mainGame;
+    private int sessionsPlayed;
 
 
 
-    public GameSession(CharacterClass charc){
+    public GameSession(CharacterClass charc, Main game){
+        this.mainGame = game;
         this.character = charc;
         this.startTime = LocalTime.now();
         this.currentDay = LocalDate.now().getDayOfWeek();
-        //load in all the parental blocks from JSON here
-        //Temporarily autosetting to false
-        morningParentBlock = false;
-        afternoonParentBlock = false;
-        eveningParentBlock = false;
-        weekdayParentBlock = false;
-        weekendParentBlock = false;
+        this.morningParentBlock = mainGame.jsonHandler.getParentalControlBoolean("morningParentBlock");
+        this.afternoonParentBlock = mainGame.jsonHandler.getParentalControlBoolean("afternoonParentBlock");
+        this.eveningParentBlock = mainGame.jsonHandler.getParentalControlBoolean("eveningParentBlock");
+        this.weekdayParentBlock = mainGame.jsonHandler.getParentalControlBoolean("weekdayParentBlock");
+        this.weekendParentBlock = mainGame.jsonHandler.getParentalControlBoolean("weekendParentBlock");
+        this.sessionsPlayed = mainGame.jsonHandler.getParentalControlInt("totalSessionsPlayed") + 1;
+        mainGame.jsonHandler.setParentalControlInt("totalSessionsPlayed", sessionsPlayed); //increment sessions played on new creation of a GameSession
+
+
 
         //code to load number of game sessions created from JSON and increment by one (then write that updated count back to JSON)
     }

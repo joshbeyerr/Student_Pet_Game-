@@ -107,21 +107,6 @@ public class JsonHandler {
         return null; // Return null if no character is found
     }
 
-    public void initializeParentalControls() {
-            // fill parentalControls with default values
-            database.parentalControls.put("Password", "");
-            database.parentalControls.put("morningParentBlock", false);
-            database.parentalControls.put("afternoonParentBlock", false);
-            database.parentalControls.put("eveningParentBlock", false);
-            database.parentalControls.put("weekdayParentBlock", false);
-            database.parentalControls.put("weekendParentBlock", false);
-            database.parentalControls.put("totalSecondsPlayed", 0);
-            database.parentalControls.put("totalSessionsPlayed ", 0);
-            database.parentalControls.put("averagePlaytimePerSession", 0);
-            saveDatabase();
-            System.out.println("Parental controls initialized with default values.");
-        }
-
 
     // Method to get a human-readable representation of a game slot
     public String gameToString(String slotId) {
@@ -138,6 +123,56 @@ public class JsonHandler {
         } else {
             return "Game Slot " + slotId + " does not exist or is empty.";
         }
+    }
+
+
+
+    public void initializeParentalControls() {
+        // fill parentalControls with default values
+        database.parentalControls.put("Password", "");
+        database.parentalControls.put("morningParentBlock", false);
+        database.parentalControls.put("afternoonParentBlock", false);
+        database.parentalControls.put("eveningParentBlock", false);
+        database.parentalControls.put("weekdayParentBlock", false);
+        database.parentalControls.put("weekendParentBlock", false);
+        database.parentalControls.put("totalSecondsPlayed", 0);
+        database.parentalControls.put("totalSessionsPlayed ", 0);
+        database.parentalControls.put("averagePlaytimePerSession", 0);
+        saveDatabase();
+        System.out.println("Parental controls initialized with default values.");
+    }
+
+    // Getter for boolean values
+    public boolean getParentalControlBoolean(String key) {
+        return (boolean) database.parentalControls.getOrDefault(key, false);
+    }
+
+    // Setter for boolean values
+    public void setParentalControlBoolean(String key, boolean value) {
+        database.parentalControls.put(key, value);
+        saveDatabase();
+    }
+
+    // Getter for String values
+    public String getParentalControlString(String key) {
+        return (String) database.parentalControls.getOrDefault(key, "");
+    }
+
+    // Setter for String values
+    public void setParentalControlString(String key, String value) {
+        database.parentalControls.put(key, value);
+        saveDatabase();
+    }
+
+    // Getter for int values
+    public int getParentalControlInt(String key) {
+        return (int) database.parentalControls.getOrDefault(key, 0);
+    }
+
+    // Setter for int values
+    public void setParentalControlInt(String key, int value) {
+        database.parentalControls.put(key, value);
+        saveDatabase();
     }
 
 
