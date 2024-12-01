@@ -102,12 +102,18 @@ public class JsonHandler {
         return database.parentalControls == null || database.parentalControls.isEmpty();
     }
 
+    public void printStuff(){
+
+        System.out.println(database.parentalControls);
+    }
+
 
     // Method to save a CharacterClass to a specific game slot
     public void saveCharacterToGameSlot(String slotId, CharacterClass character) {
         if (database.games.containsKey(slotId)) {
             // Update the game slot with new data
             database.games.get(slotId).put("character", character);
+
             saveDatabase(); // Save the updated database to file
             System.out.println("Character saved to game slot: " + slotId);
         } else {
@@ -153,6 +159,15 @@ public class JsonHandler {
         database.parentalControls.put("averagePlaytimePerSession", 0);
         saveDatabase();
         System.out.println("Parental controls initialized with default values.");
+    }
+
+    public void setParentalPassword(String password) {
+        database.parentalControls.put("Password", password);
+        saveDatabase();
+
+    }
+    public String getParentalPassword() {
+        return (String) database.parentalControls.get("Password");
     }
 
     public boolean getParentalControlBoolean(String key) {

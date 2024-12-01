@@ -38,7 +38,7 @@ public class CharacterClass {
     private transient float fullnessChange;
     private transient float stressChange = 1.0f;
 
-    private transient Item[] inventory;
+    private Item[] inventory;
     //displayed sprite head and body
     private transient Image currentHead;
     private transient Image currentBody;
@@ -789,6 +789,8 @@ public class CharacterClass {
         characterHeads.put("angry", mainGame.createImage(characterTextures.get("angry")));
         characterHeads.put("sleep1", mainGame.createImage(characterTextures.get("sleep1")));
         characterHeads.put("sleep2", mainGame.createImage(characterTextures.get("sleep2")));
+
+
     }
 
     public void dispose() {
