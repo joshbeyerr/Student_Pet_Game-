@@ -126,7 +126,6 @@ public class JsonHandler {
     }
 
 
-
     public void initializeParentalControls() {
         // fill parentalControls with default values
         database.parentalControls.put("Password", "");
@@ -142,34 +141,28 @@ public class JsonHandler {
         System.out.println("Parental controls initialized with default values.");
     }
 
-    // Getter for boolean values
     public boolean getParentalControlBoolean(String key) {
         return (boolean) database.parentalControls.getOrDefault(key, false);
     }
 
-    // Setter for boolean values
     public void setParentalControlBoolean(String key, boolean value) {
         database.parentalControls.put(key, value);
         saveDatabase();
     }
 
-    // Getter for String values
     public String getParentalControlString(String key) {
         return (String) database.parentalControls.getOrDefault(key, "");
     }
 
-    // Setter for String values
     public void setParentalControlString(String key, String value) {
         database.parentalControls.put(key, value);
         saveDatabase();
     }
 
-    // Getter for int values
     public int getParentalControlInt(String key) {
         return (int) database.parentalControls.getOrDefault(key, 0);
     }
 
-    // Setter for int values
     public void setParentalControlInt(String key, int value) {
         database.parentalControls.put(key, value);
         saveDatabase();
