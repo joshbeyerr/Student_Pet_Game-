@@ -96,6 +96,13 @@ public class StartScreen extends ScreenAdapter {
         });
 
         ImageButton instructionsButton = mainGame.createImageButton(assetManager.get("startScreen/instructions-btn.png"));
+        instructionsButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.log("Instructions Button", "instructions Button button clicked!");
+                mainGame.pushScreen(new InstructionsScreens(mainGame));
+            }
+        });
 
         ImageButton creditsButton = mainGame.createImageButton(assetManager.get("startScreen/credits-btn.png"));
         creditsButton.addListener(new ClickListener() {
