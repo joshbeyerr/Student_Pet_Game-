@@ -287,9 +287,6 @@ public class CharacterClass {
         for (int i = 0; i < inventory.length; i++) {
             ImageButton invButton;
 
-            // if true its a good, if false than its a gift
-            boolean feedUse = true;
-
             if (i == 0){
                 invButton = mainGame.createImageButton(characterTextures.get("appleFrame"));
 

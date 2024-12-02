@@ -15,6 +15,7 @@ public class BugDodger extends ScreenAdapter {
 
     private final SpriteBatch spriteBatch;
     private final Viewport viewport;
+    private final CharacterClass player;
 
     private Texture backgroundTexture, computerTexture, bugTexture, titleTexture, bugBoxEmptyTexture, bugBoxFilledTexture, winTexture;
 
@@ -26,23 +27,24 @@ public class BugDodger extends ScreenAdapter {
     private float bugTimer;
     private int maxBugs = 5;
 
-    public BugDodger(Main game) {
+    public BugDodger(Main game, CharacterClass playa) {
         this.mainGame = game;
 
         this.spriteBatch = mainGame.getSharedBatch();
         this.viewport = mainGame.getViewport();
+        player = playa;
 
         initialize();
     }
 
     private void initialize() {
-        backgroundTexture = new Texture("background.png");
-        computerTexture = new Texture("computer-happy.png");
-        bugTexture = new Texture("blue-bug.png");
-        titleTexture = new Texture("title.png");
-        bugBoxEmptyTexture = new Texture("bug-box-empty.png");
-        bugBoxFilledTexture = new Texture("bug-box-filled.png");
-        winTexture = new Texture("bug-win-txtbox.png");
+        backgroundTexture = new Texture("bugDodge/background.png");
+        computerTexture = new Texture("bugDodge/computer-happy.png");
+        bugTexture = new Texture("bugDodge/blue-bug.png");
+        titleTexture = new Texture("bugDodge/title.png");
+        bugBoxEmptyTexture = new Texture("bugDodge/bug-box-empty.png");
+        bugBoxFilledTexture = new Texture("bugDodge/bug-box-filled.png");
+        winTexture = new Texture("bugDodge/bug-win-txtbox.png");
 
         bugSprites = new Array<>();
         bugBoxStatus = new Array<>(maxBugs);
@@ -75,6 +77,9 @@ public class BugDodger extends ScreenAdapter {
             float winX = (viewport.getWorldWidth() - winWidth) / 2;
             float winY = (viewport.getWorldHeight() - winHeight) / 2;
             spriteBatch.draw(winTexture, winX, winY, winWidth, winHeight);
+
+            player.gainItem((int) (Math.random() * 6));
+
         } else {
             // Draw title
             spriteBatch.draw(titleTexture, 1.5f, viewport.getWorldHeight() - 2f, 3f, 1f);

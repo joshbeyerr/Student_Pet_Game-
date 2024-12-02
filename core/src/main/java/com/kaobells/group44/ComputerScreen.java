@@ -8,9 +8,11 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,9 +20,11 @@ import java.util.Map;
 public class ComputerScreen extends ScreenAdapter {
     private final Main mainGame;
     private final GameSession session;
+    private final Viewport viewport;
 
     private final SpriteBatch spriteBatch;
     private final Stage stage;
+    private final ImageButton backButton;
 
     private Map<String, Texture> textures;
     private final Map<String, ImageButton> buttons;
@@ -29,8 +33,11 @@ public class ComputerScreen extends ScreenAdapter {
         this.mainGame = mainGame;
         this.session = session;
 
+        viewport = mainGame.getViewport();
         spriteBatch = mainGame.getSharedBatch();
         stage = new Stage(mainGame.getViewport(), spriteBatch);
+        backButton = mainGame.getBackButton();
+
 
         buttons = new HashMap<>();
         loadTextures();
@@ -52,55 +59,61 @@ public class ComputerScreen extends ScreenAdapter {
         Image background = new Image(new TextureRegionDrawable(textures.get("computerScreenBg")));
         background.setSize(stage.getWidth(), stage.getHeight());
         background.setPosition(0, 0);
-
-        // Add background to the stage
         stage.addActor(background);
 
-        // Add the prompt text image
+        Table table = new Table();
+        table.setFillParent(true); // Make the table fill the screen
+//        table.top().padTop(viewport.getWorldWidth() * 0.06f);   // Align the table to the top of the screen with some padding
+        stage.addActor(table);
+
+
+        Table gamePromtTable = new Table();
         Image prompt = new Image(new TextureRegionDrawable(textures.get("minigamePrompt")));
-        prompt.setSize(stage.getWidth() * 0.8f, stage.getHeight() * 0.1f); // Adjust size as needed
-        prompt.setPosition(stage.getWidth() * 0.1f, stage.getHeight() * 0.8f); // Position near the top
-        stage.addActor(prompt);
+        gamePromtTable.add(prompt);
 
-        // Create buttons
-        createButton("bugdodgeBtn", "Bug Dodge", stage.getWidth() * 0.25f, stage.getHeight() * 0.5f, () -> {
-            // Start Bug Dodge minigame
-            Gdx.app.log("ComputerScreen", "Bug Dodge selected.");
-            // Push BugDodgeScreen or similar
-            mainGame.pushScreen(new BugDodger(mainGame));
-        });
+        float padBottom = viewport.getWorldWidth() * 0.01f;
+        table.add(gamePromtTable).padBottom(padBottom).center().row();
 
-        createButton("jbordleBtn", "Jbordle", stage.getWidth() * 0.55f, stage.getHeight() * 0.5f, () -> {
-            // Start Jbordle minigame
-            Gdx.app.log("ComputerScreen", "Jbordle selected.");
-            // Push JbordleScreen or similar
-            mainGame.pushScreen(new JBordle(mainGame,session.character));
 
-        });
+        Table gameButtonsTable = new Table();
 
-        createButton("backBtn", "Back", stage.getWidth() * 0.4f, stage.getHeight() * 0.2f, () -> {
-            // Go back to the previous screen
-            Gdx.app.log("ComputerScreen", "Returning to previous screen.");
-            mainGame.popScreen();
-        });
-    }
-
-    private void createButton(String textureKey, String logMessage, float x, float y, Runnable onClick) {
-        ImageButton button = mainGame.createImageButton(textures.get(textureKey));
-        button.setPosition(x, y, Align.center);
-        button.addListener(new ClickListener() {
+        ImageButton bugdodgeBtn = mainGame.createImageButton(textures.get("bugdodgeBtn"));
+        bugdodgeBtn.addListener(new ClickListener() {
             @Override
-            public void clicked(InputEvent event, float screenX, float screenY) {
-                Gdx.app.log("ComputerScreen", logMessage);
-                onClick.run();
+            public void clicked(InputEvent event, float x, float y) {
+                mainGame.popScreen();
+                mainGame.pushScreen(new BugDodger(mainGame, session.character));
             }
         });
-        stage.addActor(button);
-        buttons.put(textureKey, button);
+
+        ImageButton jbordle = mainGame.createImageButton(textures.get("jbordleBtn"));
+        jbordle.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                mainGame.popScreen();
+                mainGame.pushScreen(new JBordle(mainGame,session.character));
+
+            }
+        });
+
+        float pad = viewport.getWorldWidth() * 0.05f;
+        gameButtonsTable.add(bugdodgeBtn).padLeft(pad).padRight(pad).center();
+        gameButtonsTable.add(jbordle).padLeft(pad).padRight(pad).center();
+;
+        table.add(gameButtonsTable).center();
+
+
     }
+
 
     @Override
     public void show() {
+        float buttonWidth = viewport.getWorldWidth() * 0.1f; // 10% of the viewport width
+        float buttonHeight = viewport.getWorldHeight() * 0.1f; // 10% of the viewport height
+        float offsetX = viewport.getWorldWidth() * 0.08f; // Add 2% of the viewport width as offset
+
+        backButton.setPosition(buttonWidth + offsetX, viewport.getWorldHeight() - buttonHeight - buttonHeight);
+        stage.addActor(backButton);
         Gdx.input.setInputProcessor(stage);
     }
 

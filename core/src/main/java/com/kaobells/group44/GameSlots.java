@@ -281,7 +281,14 @@ public class GameSlots  extends ScreenAdapter {
 
         BitmapFont font = mainGame.resourceManager.getTitleFont();
 
-        mainGame.drawBackground(spriteBatch, mainGame.resourceManager.get("mainBackground"), font, "New Game");         // Draw the current background
+        if (screen == Screen.NEW){
+            mainGame.drawBackground(spriteBatch, mainGame.resourceManager.get("mainBackground"), font, "New Game");         // Draw the current background
+
+        }
+        else{
+            mainGame.drawBackground(spriteBatch, mainGame.resourceManager.get("mainBackground"), font, "Load Game");         // Draw the current background
+
+        }
         spriteBatch.end();
 
         // Render the stage (actors like buttons, character sprites, etc.)

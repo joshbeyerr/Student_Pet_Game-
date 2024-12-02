@@ -5,13 +5,13 @@
 			"class": "com.kaobells.group44.CharacterClass",
 			"name": "Jbordle",
 			"slot": "1",
-			"score": -131632,
+			"score": -131520,
 			"characterNumber": 0,
 			"characterType": "relaxed",
-			"state": "HUNGRY",
-			"health": 32,
-			"sleep": 82,
-			"happiness": 2,
+			"state": "DEAD",
+			"health": 0,
+			"sleep": 0,
+			"happiness": 0,
 			"fullness": 0,
 			"inventory": [
 				{
@@ -24,7 +24,7 @@
 				},
 				{
 					"itemID": 2,
-					"itemCount": 1
+					"itemCount": 0
 				},
 				{
 					"itemID": 3,
@@ -32,7 +32,7 @@
 				},
 				{
 					"itemID": 4,
-					"itemCount": 1
+					"itemCount": 0
 				},
 				{
 					"itemID": 5,
@@ -42,17 +42,60 @@
 			"compoundingStates": [
 				false,
 				false,
-				true
+				false
 			],
-			"blinkDurationTimer": 0.1990169,
-			"hungerDurationTimer": 1.0972437,
-			"isBlinking": true,
+			"blinkDurationTimer": 0.50513786,
+			"hungerDurationTimer": 0.93477273,
 			"isHungry": true,
-			"sleepTimer": 0.12784308,
-			"isSleepState1": false
+			"sleepTimer": 0.45517963
 		}
 	},
-	"2": {},
+	"2": {
+		"character": {
+			"class": "com.kaobells.group44.CharacterClass",
+			"name": "Josh",
+			"slot": "2",
+			"characterNumber": 0,
+			"characterType": "relaxed",
+			"state": "NEUTRAL",
+			"health": 80,
+			"sleep": 80,
+			"happiness": 80,
+			"fullness": 80,
+			"stress": 80,
+			"inventory": [
+				{
+					"itemID": 0,
+					"itemCount": 0
+				},
+				{
+					"itemID": 1,
+					"itemCount": 0
+				},
+				{
+					"itemID": 2,
+					"itemCount": 0
+				},
+				{
+					"itemID": 3,
+					"itemCount": 0
+				},
+				{
+					"itemID": 4,
+					"itemCount": 0
+				},
+				{
+					"itemID": 5,
+					"itemCount": 0
+				}
+			],
+			"compoundingStates": [
+				false,
+				false,
+				false
+			]
+		}
+	},
 	"3": {}
 },
 "parentalControls": {
@@ -62,7 +105,7 @@
 	},
 	"totalSessionsPlayed": {
 		"class": "java.lang.Integer",
-		"value": 94
+		"value": 108
 	},
 	"averagePlaytimePerSession": {
 		"class": "java.lang.Integer",
