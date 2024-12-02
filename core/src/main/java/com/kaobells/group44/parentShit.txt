@@ -1,0 +1,56 @@
+
+
+
+
+      private void addCenteredActorToTable(Table table, Actor actor, boolean newRow) {
+           float actorWidth = getButtonWidth();
+           float actorHeight = getButtonHeight();
+           float actorPadding = getDynamicPadding();
+
+           // Make the cell span the entire row and center the actor
+           table.add(actor)
+               .size(actorWidth, actorHeight) // Constrain size
+               .pad(actorPadding)            // Add padding
+               .colspan(2)                   // Span two columns to center in a wider area
+               .center();                    // Align the actor to the center of its cell
+
+           if (newRow) {
+               table.row();
+           }
+       }
+
+
+
+               assetManager.load("startScreen/parent-textbox.png", Texture.class);
+               assetManager.load("startScreen/proceed-parent-btn.png", Texture.class);
+               assetManager.load("startScreen/back-parent-btn.png", Texture.class);
+
+
+
+                private void parentsButton(){
+
+                      currentState = UIState.PARENTAL_CONTROLS; // Update state
+                      table.clear();
+
+                      addCenteredActorToTable(table, parentQuestion, true);
+
+                      addActorToTable(table, noBack, false);
+                      addActorToTable(table, yesProceed, false);
+
+                      // Add table to the stage
+                      stage.clear(); // Clear existing actors (if any)
+                      stage.addActor(table);
+
+                  }
+
+
+
+        noBack.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                // Perform an action, for example, print a message or switch screens
+                Gdx.app.log("noBack", "noBack clicked!");
+                initializeUI();
+
+            }
+        });

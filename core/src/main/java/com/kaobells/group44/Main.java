@@ -3,11 +3,14 @@ package com.kaobells.group44;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -15,7 +18,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.badlogic.gdx.files.FileHandle;
 
 import java.util.Stack;
 
@@ -24,13 +26,18 @@ import java.util.Stack;
 public class Main extends Game {
 
     private Viewport viewport;
+    public JsonHandler jsonHandler;
 
 
     private ImageButton backButton;
-
+    private Sound clickSound;
+    private Sound backButtonSound;
     private SpriteBatch sharedBatch;
 
-    // global resource manager
+    // global resource manager GOING TO ERASE THIS
+
+    private AssetManager assetManager;
+
     public ResourceManager resourceManager;
 
     private Stack<Screen> screenStack;
@@ -38,10 +45,14 @@ public class Main extends Game {
     @Override
     public void create() {
 
+
+//        assetManager = new AssetManager();
         screenStack = new Stack<>();
 
-        int baseWidth = Gdx.graphics.getDisplayMode().width;  // Fullscreen width
-        int baseHeight = Gdx.graphics.getDisplayMode().height; // Fullscreen height
+        jsonHandler = new JsonHandler();
+
+        int baseWidth = 1920;
+        int baseHeight = 1080;
 
         sharedBatch = new SpriteBatch();
         resourceManager = new ResourceManager();
@@ -53,7 +64,8 @@ public class Main extends Game {
 
         viewport = new FitViewport(baseWidth, baseHeight);
         viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
-        initializeLocalFile();
+
+
         this.pushScreen(new StartScreen(this));
 
     }
@@ -89,11 +101,22 @@ public class Main extends Game {
         return null; // No previous screen exists
     }
 
+    // for when a game is loading, clear all menu screens in memory except for very main menu
+    public void clearStackExceptMain() {
+        while (screenStack.size() > 1) {
+            Screen screen = screenStack.pop();
+            screen.dispose(); // Dispose of each screen being popped
+        }
+        // Leave the main menu (first screen) in the stack
+    }
+
 
     private void loadTextures(){
 
         resourceManager.add("mainBackground", new Texture(Gdx.files.internal("globalAssets/menu-bg.png")));
         resourceManager.add("storyBackground", new Texture(Gdx.files.internal("globalAssets/story-bg.png")));
+        clickSound = Gdx.audio.newSound(Gdx.files.internal("music/btn-click.mp3"));
+        backButtonSound = Gdx.audio.newSound(Gdx.files.internal("music/back-click.mp3"));
     }
 
     @Override
@@ -111,6 +134,12 @@ public class Main extends Game {
         return viewport;
     }
 
+    public Sound getClickSound(){
+        return clickSound;
+    }
+
+
+
     // for creating any custom Button !
     public ImageButton createImageButton(Texture upTexture) {
         TextureRegionDrawable upDrawable = new TextureRegionDrawable(new TextureRegion(upTexture));
@@ -122,14 +151,34 @@ public class Main extends Game {
         button.addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                ((ImageButton) event.getListenerActor()).getImage().setScale(0.95f);
+
+                clickSound.play();
+
+                // Cast the event actor to ImageButton
+                Image image = ((ImageButton) event.getListenerActor()).getImage();
+
+                // Set the origin to the center of the image
+                image.setOrigin(image.getWidth() / 2, image.getHeight() / 2);
+
+                // Scale down the image relative to its center
+                image.setScale(0.95f);
+
                 return true;
             }
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                ((ImageButton) event.getListenerActor()).getImage().setScale(1f);
+
+                // Cast the event actor to ImageButton
+                Image image = ((ImageButton) event.getListenerActor()).getImage();
+
+                // Reset the origin to the center of the image
+                image.setOrigin(image.getWidth() / 2, image.getHeight() / 2);
+
+                // Reset the scale to normal
+                image.setScale(1f);
             }
+
         });
 
         return button;
@@ -157,6 +206,7 @@ public class Main extends Game {
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                backButtonSound.play();
                 popScreen();
             }
         });
@@ -164,7 +214,6 @@ public class Main extends Game {
         return backButton;
 
     }
-
 
 
     public void drawBackground(SpriteBatch batch, Texture backgroundTexture, BitmapFont font, String title) {
@@ -180,15 +229,8 @@ public class Main extends Game {
 
         // Calculate text position to center it in the viewport
         float textX = (viewport.getWorldWidth() - layout.width) / 2f;
+        float textY = (float) ((viewport.getWorldHeight() + layout.height) / 2f + (viewport.getWorldHeight() * 0.32)); // Center vertically
 
-        float textY; // Declare textY outside the conditional
-
-        // title should be a bit higher on the new game screens for formatting
-        if (title.equals("New Game")) {
-            textY = (float) ((viewport.getWorldHeight() + layout.height) / 2f + (viewport.getWorldHeight() * 0.32)); // Center vertically
-        } else {
-            textY = (float) ((viewport.getWorldHeight() + layout.height) / 2f + (viewport.getWorldHeight() * 0.25)); // Center vertically
-        }
 
         // Draw the text
         font.draw(batch, title, textX, textY);
@@ -204,21 +246,5 @@ public class Main extends Game {
         viewport.update(width, height, true);
     }
 
-    //Internal JSON cannot be written too, only local ones
-    //So we must create a local version of database on first launch
-    private void initializeLocalFile(){
-        // Get file handles for the assets and local directories
-        FileHandle internalFile = Gdx.files.internal("database.json");
-        FileHandle localFile = Gdx.files.local("database.json");
 
-        // Check if the local file already exists
-        if (!localFile.exists()) {
-            // Copy the file from assets to local storage
-            internalFile.copyTo(localFile);
-            System.out.println("Database JSON created in local storage");
-        }
-        else {
-            System.out.println("Local Database JSON Previously Created");
-        }
-    }
 }

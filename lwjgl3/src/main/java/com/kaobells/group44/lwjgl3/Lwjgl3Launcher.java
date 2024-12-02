@@ -25,7 +25,7 @@ public class Lwjgl3Launcher {
         configuration.useVsync(true);
 
         // Start in fullscreen mode
-//        configuration.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode());
+        //configuration.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode());
 
         // Set the window icons (optional)
         configuration.setWindowIcon("libgdx128.png", "libgdx64.png", "libgdx32.png", "libgdx16.png");

@@ -26,6 +26,7 @@ import java.util.Map;
 public class NameInput extends ScreenAdapter {
 
     private final Main mainGame;
+    private final String slot;
     private final characterSelection previousScreenVar;
 
     private final SpriteBatch spriteBatch;
@@ -40,8 +41,9 @@ public class NameInput extends ScreenAdapter {
     BitmapFont font;
     BitmapFont textFont;
 
-    public NameInput(Main game) {
+    public NameInput(Main game, String slotNumber) {
         mainGame = game;
+        slot = slotNumber;
         previousScreenVar = (characterSelection)mainGame.getPreviousScreen();
 
         font = mainGame.resourceManager.getTitleFont();
@@ -91,11 +93,20 @@ public class NameInput extends ScreenAdapter {
 
                 // starting game
 
-                CharacterClass newCharacter = new CharacterClass(nameInputField.getText(), characterImage, previousScreenVar.getCharacterIndex(), previousScreenVar.getCharacterType(previousScreenVar.getCharacterIndex()));
-                GameSession newGame = new GameSession(newCharacter);
+                // Clear all screens except the main menu, memory saver
+                mainGame.clearStackExceptMain();
 
-                mainGame.pushScreen(new GameScreen(mainGame, newGame));
+                Item[] inventory = new Item[6];
 
+                boolean[] compoundingStates= new boolean[3];
+                CharacterClass newCharacter = new CharacterClass(mainGame, nameInputField.getText(), previousScreenVar.getCharacterIndex(), previousScreenVar.getCharacterType(previousScreenVar.getCharacterIndex()),inventory, compoundingStates, slot,0);
+
+                GameSession newGame = new GameSession(newCharacter,mainGame);
+                if(!(newGame.blockedPlayTimeCheck())){ //checks for playing during active parental block
+                    mainGame.pushScreen(new GameScreen(mainGame, newGame));
+                } else {
+                    //blocked playtime error
+                }
             }
         });
 
@@ -175,7 +186,7 @@ public class NameInput extends ScreenAdapter {
             @Override
             public boolean acceptChar(TextField textField, char c) {
                 // Allow the character only if the text length is less than 15
-                return textField.getText().length() < 15;
+                return textField.getText().length() < 10;
             }
         });
 

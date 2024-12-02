@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 public class StoryScreen extends ScreenAdapter {
 
     private final Main mainGame;
+    private final String slot;
 
     // only need to make this a class variable because of the back button logic custom to this class
 
@@ -34,8 +35,9 @@ public class StoryScreen extends ScreenAdapter {
     InputMultiplexer multiplexer;
 
 
-    public StoryScreen(Main game) {
+    public StoryScreen(Main game, String slotNumber) {
         mainGame = game;
+        slot = slotNumber;
 
         // getting fonts, title font is set in resource manager
         font = mainGame.resourceManager.getTitleFont();
@@ -125,7 +127,7 @@ public class StoryScreen extends ScreenAdapter {
             storyTexts[0] = stringFormatter("Welcome. You have been tasked with taking care of a Computer Science student at Western University. They can only get through their tough semester with your love and care.");
             storyTexts[1] = stringFormatter("You can take care of your Student by feeding them, playing with them, having them exercise, taking them to the doctor, making sure they sleep, and giving them gifts.");
             storyTexts[2] = stringFormatter("But be careful! You have to keep the health, happiness, energy and stress level of your Student in check, or there may be consequences!");
-            storyTexts[3] = stringFormatter("They are waiting for you, so we won’t keep you any longer.  Good luck! And take good care.");
+            storyTexts[3] = stringFormatter("Now's time to choose what kind of student you want to take care of and name him!");
         }
 
         textFont.setColor(Color.WHITE);
@@ -173,7 +175,7 @@ public class StoryScreen extends ScreenAdapter {
 
     private void handleKeyPress() {
         if (currentTextIndex == 3) {
-            mainGame.pushScreen(new characterSelection(mainGame));
+            mainGame.pushScreen(new characterSelection(mainGame, slot));
         } else if (0 <= currentTextIndex && currentTextIndex < 3) {
             currentTextIndex++;
             createUI();

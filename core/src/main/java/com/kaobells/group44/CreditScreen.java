@@ -34,7 +34,6 @@ public class CreditScreen  extends ScreenAdapter {
         viewport = mainGame.getViewport();
 
         backButton = mainGame.getBackButton();
-
         stage = new Stage(viewport, spriteBatch);
     }
 
@@ -74,12 +73,16 @@ public class CreditScreen  extends ScreenAdapter {
         Table newTable = new Table();
         newTable.setFillParent(true);
         newTable.center();
-        newTable.padTop(viewport.getWorldHeight() * 0.2f);
+        newTable.padTop(viewport.getWorldHeight() * 0.1f);
         return newTable;
     }
 
     private void addToTable(Table table, Actor actor) {
-        table.add(actor).size(1497f, 486f).pad(18f).center();
+        float width = viewport.getWorldWidth() * 0.4f;
+        float height = viewport.getWorldHeight() * 0.3f;
+        float pad = viewport.getWorldHeight() * 0.01f;
+
+        table.add(actor).size(width, height).pad(pad).center();
         table.row();
     }
 
