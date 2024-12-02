@@ -587,6 +587,12 @@ public class CharacterClass {
     public boolean actionBlocked(){
         return actionBlockCooldownRemaining != 0;
     }
+    public void setActionBlocked(float val){
+        if (actionBlockCooldownRemaining == 0){
+            actionBlockCooldownRemaining = val;
+        }
+
+    }
     //update action block timer
     public void updateActionBlock(float deltaTime) {
         if (actionBlockCooldownRemaining > 0) {
@@ -701,7 +707,7 @@ public class CharacterClass {
     public boolean takeToDoctor(){
         if(!actionBlocked() && !compoundingStates[1]){ //check if action is allowed
             if(!(doctorCooldownRemaining > 0)){
-                float actionLength = 3.0f;
+                float actionLength = 8.0f;
 
                 setHead(headDetermine()); // Set normal head
                 setBody(bodyDetermine()); // Set normal body

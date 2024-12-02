@@ -445,7 +445,6 @@ public class GameScreen extends ScreenAdapter{
     }
 
     public void walkOffScreenAndReturn() {
-
         // Check if headContainer and bodyContainer are not null
         if (headContainer == null || bodyContainer == null) {
             throw new IllegalStateException("Head and Body containers must be initialized before calling this method.");
@@ -466,9 +465,9 @@ public class GameScreen extends ScreenAdapter{
                 headContainer.setVisible(false); // Hide after moving out
                 doorOpen.play(); // Play door open sound
             }),
-            Actions.delay(1.5f), // Wait for the sound effect duration or pause
+            Actions.delay(1f), // Wait for the sound effect duration or pause
             Actions.run(() -> fullHeal.play()), // Play full heal sound
-            Actions.delay(2.5f), // Wait for another pause
+            Actions.delay(1.5f), // Wait for another pause
             Actions.run(() -> {
                 doorClose.play(); // Play door close sound
                 headContainer.setVisible(true); // Show head again
@@ -480,8 +479,8 @@ public class GameScreen extends ScreenAdapter{
         Action bodyAction = Actions.sequence(
             Actions.moveTo(offScreenRightX, originalYBody, 1f), // Move to the right off the screen
             Actions.run(() -> bodyContainer.setVisible(false)), // Hide after moving out
-            Actions.delay(1.5f), // Wait for synchronization
-            Actions.delay(2.5f), // Ensure body stays hidden during fullHeal sound
+            Actions.delay(1f), // Wait for synchronization
+            Actions.delay(1.5f), // Ensure body stays hidden during fullHeal sound
             Actions.run(() -> bodyContainer.setVisible(true)), // Show body again
             Actions.moveTo(originalX, originalYBody, 1f) // Move back to the original position from the right
         );
