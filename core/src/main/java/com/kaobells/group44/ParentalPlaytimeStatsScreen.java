@@ -130,7 +130,7 @@ public class ParentalPlaytimeStatsScreen extends ScreenAdapter {
     public void render(float delta) {
         ScreenUtils.clear(0, 0, 0, 1); // Clear the screen with a black background
         spriteBatch.begin();
-        mainGame.drawBackground(spriteBatch, mainGame.resourceManager.get("mainBackground"), font, "Playtime Controls");
+        mainGame.drawBackground(spriteBatch, mainGame.resourceManager.get("mainBackground"), font, "Playtime Stats");
         spriteBatch.end();
 
         stage.act(delta);
