@@ -67,12 +67,15 @@ public class ComputerScreen extends ScreenAdapter {
             // Start Bug Dodge minigame
             Gdx.app.log("ComputerScreen", "Bug Dodge selected.");
             // Push BugDodgeScreen or similar
+            mainGame.pushScreen(new BugDodger(mainGame));
         });
 
         createButton("jbordleBtn", "Jbordle", stage.getWidth() * 0.55f, stage.getHeight() * 0.5f, () -> {
             // Start Jbordle minigame
             Gdx.app.log("ComputerScreen", "Jbordle selected.");
             // Push JbordleScreen or similar
+            mainGame.pushScreen(new JBordle(mainGame));
+
         });
 
         createButton("backBtn", "Back", stage.getWidth() * 0.4f, stage.getHeight() * 0.2f, () -> {
