@@ -306,7 +306,7 @@ public class JBordle extends ScreenAdapter {
         Random random = new Random();
         targetWord = words.get(random.nextInt(words.size())); // Save the selected word
         targetWord = targetWord.toLowerCase();
-        System.out.println("A word has been chosen! Try to guess it.");
+        System.out.println("A word has been chosen! Try to guess it." + targetWord);
     }
 
     public boolean validWord(String word){
@@ -331,8 +331,6 @@ public class JBordle extends ScreenAdapter {
 
         System.out.println("Validating word: " + wordGuessed);
 
-        targetWord = "broad";
-
         // Check for correct positions (green)
         for (int i = 0; i < row.size(); i++) {
             InputBox inputBox = row.get(i);
@@ -352,7 +350,7 @@ public class JBordle extends ScreenAdapter {
                 for (int j = 0; j < row.size(); j++) {
                     InputBox inputBoxDeep = row.get(j);
                     char letter = inputBoxDeep.getCharacter();
-                    if (!inputBoxDeep.getMatched() && targetWord.charAt(i) == letter){
+                    if (!inputBoxDeep.getMatched() && !inputBoxDeep.getIsGreen() && targetWord.charAt(i) == letter){
                         inputBoxDeep.setImage(textures.get("yellowTile"));
                         inputBoxDeep.setMatched(true);
                         break;

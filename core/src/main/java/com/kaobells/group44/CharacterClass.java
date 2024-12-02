@@ -4,6 +4,7 @@ package com.kaobells.group44;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.utils.Timer;
 
 import java.beans.Transient;
@@ -64,7 +65,7 @@ public class CharacterClass {
     private float actionBlockCooldownRemaining  = 0;
     private float saveTimer = 30f; // starts off at 30 so that game saves right when character is created
 
-    private float blinkTimer = 0f;
+    private transient float blinkTimer = 0f;
     private float blinkDurationTimer = 0f;
     private float hungerDurationTimer = 0f;
     private boolean isBlinking = false;
@@ -101,6 +102,7 @@ public class CharacterClass {
 
         loadImages();
 
+        setUpInventory();
         setHead(headDetermine());
         setBody(bodyDetermine());
 
@@ -132,7 +134,9 @@ public class CharacterClass {
 
         loadImages();
 
+
         setUpCharacter();
+        setUpInventory();
         modifyModifiers(characterNumber);
 
         Gdx.app.log("NAME", "health: " + health + "\nsleep: " + sleep + "\nhappiness: " + happiness + "\nfullness: " + fullness + "\nstress: " + stress);
@@ -209,6 +213,10 @@ public class CharacterClass {
             this.stress = 100.0f;
     }}
 
+    public Item[] getInventory() {
+        return this.inventory;
+    }
+
     //Updates the stats based on characters change multipliers and any active states
     public void statBarTick(){
         setHappiness(this.getHappiness() - this.happinessChange);
@@ -268,6 +276,35 @@ public class CharacterClass {
                 this.happinessChange = 0.75f;
                 this.fullnessChange = 0.75f;
                 break;
+        }
+    }
+
+    private void setUpInventory(){
+        for (int i = 0; i < inventory.length; i++) {
+            ImageButton invButton;
+            if (i == 0){
+                invButton = mainGame.createImageButton(characterTextures.get("appleFrame"));
+
+            }
+            else if (i == 1){
+                invButton = mainGame.createImageButton(characterTextures.get("lemonFrame"));
+            }
+            else if (i == 2){
+                invButton = mainGame.createImageButton(characterTextures.get("orangeFrame"));
+            }
+
+            else if (i == 3){
+                invButton = mainGame.createImageButton(characterTextures.get("duckFrame"));
+            }
+            else if (i == 4){
+                invButton = mainGame.createImageButton(characterTextures.get("orduckFrame"));
+            }
+            // i == 5
+            else {
+                invButton = mainGame.createImageButton(characterTextures.get("bluckFrame"));
+            }
+            inventory[i].setImage(invButton);
+
         }
     }
 
@@ -797,6 +834,15 @@ public class CharacterClass {
         characterHeads.put("angry", mainGame.createImage(characterTextures.get("angry")));
         characterHeads.put("sleep1", mainGame.createImage(characterTextures.get("sleep1")));
         characterHeads.put("sleep2", mainGame.createImage(characterTextures.get("sleep2")));
+
+
+        // inventory textures loaded here
+        characterTextures.put("appleFrame", new Texture(Gdx.files.internal("game/inventory/apple-frame.png")));
+        characterTextures.put("bluckFrame", new Texture(Gdx.files.internal("game/inventory/bluck-frame.png")));
+        characterTextures.put("duckFrame", new Texture(Gdx.files.internal("game/inventory/duck-frame.png")));
+        characterTextures.put("lemonFrame", new Texture(Gdx.files.internal("game/inventory/lemon-frame.png")));
+        characterTextures.put("orangeFrame", new Texture(Gdx.files.internal("game/inventory/orange-frame.png")));
+        characterTextures.put("orduckFrame", new Texture(Gdx.files.internal("game/inventory/orduck-frame.png")));
 
 
     }

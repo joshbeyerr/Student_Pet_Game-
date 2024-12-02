@@ -8,10 +8,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Action;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -36,6 +33,7 @@ public class GameScreen extends ScreenAdapter{
 
     Label.LabelStyle nameLabelStyle;
     Label.LabelStyle scoreLabelStyle;
+    Label.LabelStyle inventoryLabelStyle;
 
     private Sound doorOpen;
     private Sound doorClose;
@@ -103,6 +101,12 @@ public class GameScreen extends ScreenAdapter{
         scoreLabelStyle = new Label.LabelStyle();
         scoreLabelStyle.font = scoreFont; // Set the font for the label
         scoreLabelStyle.fontColor = new Color(0xb5 / 255f, 0x84 / 255f, 0xdb / 255f, 1f);
+
+        BitmapFont inventoryFont = mainGame.resourceManager.getFont(true);
+        inventoryFont.getData().setScale((viewport.getWorldHeight() / 1500f)); // Scale by 1.5x
+        inventoryLabelStyle = new Label.LabelStyle();
+        inventoryLabelStyle.font = scoreFont; // Set the font for the label
+        inventoryLabelStyle.fontColor = Color.BLACK;
     }
 
 
@@ -353,7 +357,56 @@ public class GameScreen extends ScreenAdapter{
 
         return buttonsTable;
     }
-    //SASHA
+
+    public Table inventoryImagesTable(){
+        Table inventoryImagesTable = new Table();
+        float pad = viewport.getWorldWidth() * 0.0125f;
+        float width = viewport.getWorldWidth() * 0.045f;
+        float height = viewport.getWorldWidth() * 0.045f;
+
+        for (int i=0; i < session.character.getInventory().length; i++){
+            inventoryImagesTable.add(session.character.getInventory()[i].getImage()).size(width, height).padLeft(pad).padRight(pad);
+        }
+        return inventoryImagesTable;
+
+    }
+
+    public Table inventoryCountTable(){
+        Table inventoryCountTable = new Table();
+        float pad = viewport.getWorldWidth() * 0.031f;
+        float width = viewport.getWorldWidth() * 0.035f;
+        float height = viewport.getWorldWidth() * 0.035f;
+
+        for (int i=0; i < session.character.getInventory().length; i++){
+            Label scoreLabel = (Label)images.get("inv" + i);
+
+            inventoryCountTable.add(scoreLabel).padLeft(pad).padRight(pad);
+        }
+        return inventoryCountTable;
+
+    }
+
+    public Table createInventoryTable(){
+        Table inventoryTable = getOrCreateTable("inventoryTable");
+        inventoryTable.setBackground(new TextureRegionDrawable(new TextureRegion(textures.get("inventoryBox"))));
+//        inventoryTable.setTouchable(Touchable.enabled);
+
+
+        float pad = viewport.getWorldWidth() * 0.001f;
+
+        inventoryTable.add(inventoryImagesTable()).padBottom(pad).center().row();
+        inventoryTable.add(inventoryCountTable()).center();
+        inventoryTable.setVisible(false);
+        return inventoryTable;
+
+    /*    // Update score
+        Label scoreLabel = (Label) images.get("Score");
+        session.character.incrementScore();
+        scoreLabel.setText("Score: " + session.character.getScore());*/
+
+    }
+
+
     public void gameSection() {
         Table gameSection = getOrCreateTable("gameSection");
 
@@ -361,14 +414,22 @@ public class GameScreen extends ScreenAdapter{
         TextureRegionDrawable backgroundDrawable = new TextureRegionDrawable(new TextureRegion(textures.get("gameBackground")));
         gameSection.setBackground(backgroundDrawable);
 
+        Table invTable = createInventoryTable();
+        float invWidth = viewport.getWorldWidth() * 0.5f;
+        float invHeight = viewport.getWorldWidth() * 0.075f;
+        float invPadTop = viewport.getWorldWidth() * 0.0005f;
+        gameSection.add(invTable).size(invWidth,invHeight).padTop(invPadTop).top().row();
+
         // Create a container for the head
         headContainer = new Container<>();
         headContainer.size(viewport.getWorldHeight() * 0.375f, viewport.getWorldHeight() * 0.33f);
         headContainer.setActor(session.character.getHead());
 
+        float characterBottomPad = viewport.getWorldHeight() * 0.035f;
         // Add the head container to the table
         gameSection.add(headContainer)
-            .padTop(viewport.getWorldHeight() * 0.22f)
+            .padTop(viewport.getWorldHeight() * 0.136f)
+
             .row(); // Move to the next row
 
         // Create a container for the body
@@ -377,7 +438,7 @@ public class GameScreen extends ScreenAdapter{
         bodyContainer.setActor(session.character.getBody());
 
         // Add the body container to the table
-        gameSection.add(bodyContainer);
+        gameSection.add(bodyContainer).padBottom(characterBottomPad);
 
         // Center the gameSection content within itself
         gameSection.center();
@@ -480,6 +541,25 @@ public class GameScreen extends ScreenAdapter{
 
         textures.put("gameBackground", new Texture(Gdx.files.internal("game/actual-game-bg.png")));
 
+        // inventory
+        textures.put("appleFrame", new Texture(Gdx.files.internal("game/inventory/apple-frame.png")));
+        textures.put("appleItem", new Texture(Gdx.files.internal("game/inventory/apple-item.png")));
+        textures.put("bluckFrame", new Texture(Gdx.files.internal("game/inventory/bluck-frame.png")));
+        textures.put("bluckItem", new Texture(Gdx.files.internal("game/inventory/bluck-item.png")));
+        textures.put("duckFrame", new Texture(Gdx.files.internal("game/inventory/duck-frame.png")));
+        textures.put("duckItem", new Texture(Gdx.files.internal("game/inventory/duck-item.png")));
+        textures.put("lemonFrame", new Texture(Gdx.files.internal("game/inventory/lemon-frame.png")));
+        textures.put("lemonItem", new Texture(Gdx.files.internal("game/inventory/lemon-item.png")));
+        textures.put("orangeFrame", new Texture(Gdx.files.internal("game/inventory/orange-frame.png")));
+        textures.put("orangeItem", new Texture(Gdx.files.internal("game/inventory/orange-item.png")));
+        textures.put("orduckFrame", new Texture(Gdx.files.internal("game/inventory/orduck-frame.png")));
+        textures.put("orduckItem", new Texture(Gdx.files.internal("game/inventory/orduck-item.png")));
+
+        textures.put("inventoryBox", new Texture(Gdx.files.internal("game/inventory/inventory-box.png")));
+        textures.put("inventoryClose", new Texture(Gdx.files.internal("game/inventory/inventory-close.png")));
+
+
+
         doorOpen = Gdx.audio.newSound(Gdx.files.internal("music/door-open.mp3"));
         doorClose = Gdx.audio.newSound(Gdx.files.internal("music/door-exit.mp3"));
         fullHeal = Gdx.audio.newSound(Gdx.files.internal("music/heal-noise.mp3"));
@@ -576,7 +656,20 @@ public class GameScreen extends ScreenAdapter{
         images.put("healthBox", mainGame.createImage(textures.get("healthBox")));
         images.put("stressBox", mainGame.createImage(textures.get("stressBox")));
 
-        images.put("openInventory", mainGame.createImageButton(textures.get("openInventory")));
+        ImageButton openInventory = mainGame.createImageButton(textures.get("openInventory"));
+        openInventory.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Table inv = tables.get("inventoryTable");
+                if (inv.isVisible()){
+                    tables.get("inventoryTable").setVisible(false);
+                }
+                else{
+                    tables.get("inventoryTable").setVisible(true);
+                }
+            }
+        });
+        images.put("openInventory", openInventory);
 
         ImageButton saveButton = mainGame.createImageButton(textures.get("saveButton"));
         saveButton.addListener(new ClickListener() {
@@ -606,6 +699,11 @@ public class GameScreen extends ScreenAdapter{
 
         images.put("Name", new Label(session.character.getName(), nameLabelStyle));
         images.put("Score", new Label("Score: " + (session.character.getScore()), scoreLabelStyle));
+
+        for (int i=0; i < session.character.getInventory().length; i++){
+            images.put("inv" + (i), new Label("" + (session.character.getInventory()[i].getItemCount()), inventoryLabelStyle));
+
+        }
 
         // star bar colors
         drawables = new HashMap<>();
@@ -660,6 +758,12 @@ public class GameScreen extends ScreenAdapter{
             updateStatBar("healthBar", session.character.getHealth());
             updateStatBar("sleepBar", session.character.getSleep());
             updateStatBar("stressBar", session.character.getStress());
+
+            // sneaking inventory count updating in here
+            for (int i=0; i < session.character.getInventory().length; i++){
+                Label invLabel = (Label) images.get("inv"+i);
+                invLabel.setText(session.character.getInventory()[i].getItemCount());
+            }
         }
     }
 

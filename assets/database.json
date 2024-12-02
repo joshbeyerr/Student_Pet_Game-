@@ -3,17 +3,16 @@
 	"1": {
 		"character": {
 			"class": "com.kaobells.group44.CharacterClass",
-			"name": "",
+			"name": "Jbordle",
 			"slot": "1",
-			"score": 24,
-			"characterNumber": 1,
-			"characterType": "quirky",
+			"characterNumber": 0,
+			"characterType": "relaxed",
 			"state": "NEUTRAL",
-			"health": 90,
-			"sleep": 54,
-			"happiness": 73.20007,
-			"fullness": 70.79993,
-			"stress": 66,
+			"health": 80,
+			"sleep": 80,
+			"happiness": 80,
+			"fullness": 80,
+			"stress": 80,
 			"inventory": [
 				{
 					"itemID": 0,
@@ -44,61 +43,11 @@
 				false,
 				false,
 				false
-			],
-			"saveTimer": 25.461546,
-			"blinkTimer": 1.1973394,
-			"blinkDurationTimer": 0.51455563
+			]
 		}
 	},
-	"2": {
-		"character": {
-			"class": "com.kaobells.group44.CharacterClass",
-			"name": "awwda",
-			"slot": "2",
-			"score": 28,
-			"characterNumber": 3,
-			"characterType": "brave",
-			"state": "NEUTRAL",
-			"health": 20,
-			"sleep": 56.200043,
-			"happiness": 92.35001,
-			"fullness": 66.20004,
-			"stress": 72,
-			"compoundingStates": [
-				false,
-				false,
-				false
-			],
-			"playCooldownRemaining": 19.77062,
-			"blinkTimer": 0.3969494,
-			"blinkDurationTimer": 0.4123854,
-			"isBlinking": true
-		}
-	},
-	"3": {
-		"character": {
-			"class": "com.kaobells.group44.CharacterClass",
-			"name": "AWDAWDWA",
-			"slot": "3",
-			"score": 208,
-			"characterNumber": 0,
-			"characterType": "relaxed",
-			"state": "DEAD",
-			"health": 0,
-			"sleep": 0,
-			"happiness": 0,
-			"fullness": 0,
-			"compoundingStates": [
-				false,
-				true,
-				true
-			],
-			"blinkTimer": 13.149317,
-			"blinkDurationTimer": 0.51753366,
-			"hungerDurationTimer": 0.7325332,
-			"isHungry": true
-		}
-	}
+	"2": {},
+	"3": {}
 },
 "parentalControls": {
 	"morningParentBlock": {
@@ -107,7 +56,7 @@
 	},
 	"totalSessionsPlayed": {
 		"class": "java.lang.Integer",
-		"value": 0
+		"value": 90
 	},
 	"averagePlaytimePerSession": {
 		"class": "java.lang.Integer",
@@ -126,6 +75,10 @@
 		"value": false
 	},
 	"totalSecondsPlayed": {
+		"class": "java.lang.Integer",
+		"value": 77
+	},
+	"totalSessionsPlayed ": {
 		"class": "java.lang.Integer",
 		"value": 0
 	},

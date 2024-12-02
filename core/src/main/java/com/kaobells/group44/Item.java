@@ -1,5 +1,6 @@
 package com.kaobells.group44;
 
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 
@@ -7,17 +8,19 @@ public class Item implements Json.Serializable {
     public int itemID;  // Item identifier
     public int itemCount;
     public transient float itemStatValue; //Float for calculating how much item will change stat
+    private ImageButton image;
 
 
-    public Item(){ //Constructor
+    public Item(){
         itemID = 0; // default
         itemCount = 0; // default
     }
 
     public Item(int ItemValID, int itemTotal){ //Constructor
-    this.itemID = ItemValID;
-    this.itemCount = itemTotal;
-    setItemValues(itemID);
+        this.itemID = ItemValID;
+        this.itemCount = itemTotal;
+        setItemValues(itemID);
+
     }
 
     public void setItemValues(int ItemID){ //based on item ID fills in stats
@@ -78,6 +81,14 @@ public class Item implements Json.Serializable {
     public void setItemCount(int setCount){ this.itemCount = setCount; }
 
     public int getItemCount(){ return this.itemCount; }
+
+    public ImageButton getImage() {
+        return image;
+    }
+
+    public void setImage(ImageButton image) {
+        this.image = image;
+    }
 
     @Override
     public void write(Json json) {
