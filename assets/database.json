@@ -3,16 +3,17 @@
 	"1": {
 		"character": {
 			"class": "com.kaobells.group44.CharacterClass",
-			"name": "AWDAWD",
+			"name": "",
 			"slot": "1",
-			"characterNumber": 0,
-			"characterType": "relaxed",
+			"score": 24,
+			"characterNumber": 1,
+			"characterType": "quirky",
 			"state": "NEUTRAL",
-			"health": 80,
-			"sleep": 80,
-			"happiness": 80,
-			"fullness": 80,
-			"stress": 80,
+			"health": 90,
+			"sleep": 54,
+			"happiness": 73.20007,
+			"fullness": 70.79993,
+			"stress": 66,
 			"inventory": [
 				{
 					"itemID": 0,
@@ -44,11 +45,59 @@
 				false,
 				false
 			],
-			"blinkTimer": 0.3934197
+			"saveTimer": 25.461546,
+			"blinkTimer": 1.1973394,
+			"blinkDurationTimer": 0.51455563
 		}
 	},
-	"2": {},
-	"3": {}
+	"2": {
+		"character": {
+			"class": "com.kaobells.group44.CharacterClass",
+			"name": "awwda",
+			"slot": "2",
+			"score": 28,
+			"characterNumber": 3,
+			"characterType": "brave",
+			"state": "NEUTRAL",
+			"health": 20,
+			"sleep": 56.200043,
+			"happiness": 92.35001,
+			"fullness": 66.20004,
+			"stress": 72,
+			"compoundingStates": [
+				false,
+				false,
+				false
+			],
+			"playCooldownRemaining": 19.77062,
+			"blinkTimer": 0.3969494,
+			"blinkDurationTimer": 0.4123854,
+			"isBlinking": true
+		}
+	},
+	"3": {
+		"character": {
+			"class": "com.kaobells.group44.CharacterClass",
+			"name": "AWDAWDWA",
+			"slot": "3",
+			"score": 208,
+			"characterNumber": 0,
+			"characterType": "relaxed",
+			"state": "DEAD",
+			"health": 0,
+			"sleep": 0,
+			"happiness": 0,
+			"fullness": 0,
+			"compoundingStates": [
+				false,
+				true,
+				true
+			],
+			"blinkTimer": 0.2775396,
+			"blinkDurationTimer": 0.54011977,
+			"sleepTimer": 0.36595562
+		}
+	}
 },
 "parentalControls": {
 	"morningParentBlock": {
@@ -57,11 +106,11 @@
 	},
 	"totalSessionsPlayed": {
 		"class": "java.lang.Integer",
-		"value": 89
+		"value": 0
 	},
 	"averagePlaytimePerSession": {
 		"class": "java.lang.Integer",
-		"value": 0
+		"value": 700
 	},
 	"weekendParentBlock": {
 		"class": "java.lang.Boolean",
@@ -77,11 +126,11 @@
 	},
 	"totalSecondsPlayed": {
 		"class": "java.lang.Integer",
-		"value": 77
+		"value": 999
 	},
 	"totalSessionsPlayed ": {
 		"class": "java.lang.Integer",
-		"value": 0
+		"value": 123
 	},
 	"weekdayParentBlock": {
 		"class": "java.lang.Boolean",

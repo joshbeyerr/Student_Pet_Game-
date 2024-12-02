@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -16,6 +17,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class ParentalPlaytimeStatsScreen extends ScreenAdapter {
@@ -26,8 +28,7 @@ public class ParentalPlaytimeStatsScreen extends ScreenAdapter {
     private final Viewport viewport;
     private final ImageButton backButton;
     private final BitmapFont font;
-
-    private final JsonHandler jsonHandler;
+    private final Map<String, Texture> textures; // Texture management
 
     public ParentalPlaytimeStatsScreen(Main game) {
         this.mainGame = game;
@@ -36,13 +37,13 @@ public class ParentalPlaytimeStatsScreen extends ScreenAdapter {
         this.stage = new Stage(viewport, spriteBatch);
         this.backButton = mainGame.getBackButton();
         this.font = mainGame.resourceManager.getTitleFont();
-
-        this.jsonHandler = new JsonHandler();
+        this.textures = new HashMap<>(); // Initialize textures map
     }
 
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
+        loadTextures(); // Load all textures
         initializeUI();
     }
 
@@ -52,12 +53,6 @@ public class ParentalPlaytimeStatsScreen extends ScreenAdapter {
         // Back Button
         stage.addActor(backButton);
 
-        // Load heading and reset button textures
-        Texture avgPlaytimeTextBox = new Texture(Gdx.files.internal("parentalControlsScreen/avg-playtime-txtbox.png"));
-        Texture totalPlaytimeTextBox = new Texture(Gdx.files.internal("parentalControlsScreen/total-playtime-txtbox.png"));
-        Texture resetButtonTexture = new Texture(Gdx.files.internal("parentalControlsScreen/reset-playtime-txtbox.png"));
-
-
         // Main Content Table
         Table mainTable = new Table();
         mainTable.center();
@@ -65,8 +60,8 @@ public class ParentalPlaytimeStatsScreen extends ScreenAdapter {
         stage.addActor(mainTable);
 
         // Heading Labels
-        Image avgPlaytimeLabelImage = new Image(avgPlaytimeTextBox);
-        Image totalPlaytimeLabelImage = new Image(totalPlaytimeTextBox);
+        Image avgPlaytimeLabelImage = new Image(textures.get("avgPlaytimeTextBox"));
+        Image totalPlaytimeLabelImage = new Image(textures.get("totalPlaytimeTextBox"));
 
         // Playtime Values
         Label avgPlaytimeValue = new Label(formatTime(getAveragePlaytime()), new Label.LabelStyle(font, com.badlogic.gdx.graphics.Color.BLACK));
@@ -76,7 +71,7 @@ public class ParentalPlaytimeStatsScreen extends ScreenAdapter {
         totalPlaytimeValue.setAlignment(Align.center);
 
         // Reset Playtime Button
-        ImageButton resetButton = new ImageButton(new Image(resetButtonTexture).getDrawable());
+        ImageButton resetButton = mainGame.createImageButton(textures.get("resetButton"));
         resetButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -85,6 +80,7 @@ public class ParentalPlaytimeStatsScreen extends ScreenAdapter {
                 totalPlaytimeValue.setText(formatTime(getTotalPlaytime()));
             }
         });
+
 
         // Add Components to Main Table
         float labelWidth = viewport.getWorldWidth() * 0.4f;
@@ -102,34 +98,24 @@ public class ParentalPlaytimeStatsScreen extends ScreenAdapter {
         mainTable.add(resetButton).colspan(2).size(viewport.getWorldWidth() * 0.6f, viewport.getWorldHeight() * 0.1f).padTop(20);
     }
 
+    private void loadTextures() {
+        textures.put("avgPlaytimeTextBox", new Texture(Gdx.files.internal("parentalControlsScreen/avg-playtime-txtbox.png")));
+        textures.put("totalPlaytimeTextBox", new Texture(Gdx.files.internal("parentalControlsScreen/total-playtime-txtbox.png")));
+        textures.put("resetButton", new Texture(Gdx.files.internal("parentalControlsScreen/reset-playtime-txtbox.png")));
+    }
+
     private int getAveragePlaytime() {
-        // Retrieve average playtime in seconds from the database
-        Object avgTime = jsonHandler.getDatabase().parentalControls.get("averagePlaytimePerSession");
-        if (avgTime instanceof Map) {
-            Object value = ((Map<?, ?>) avgTime).get("value");
-            if (value instanceof Integer) {
-                return (Integer) value; // Return the integer value directly
-            }
-        }
-        return 0; // Default value if not found
+        return mainGame.jsonHandler.getParentalControlInt("averagePlaytimePerSession");
     }
 
     private int getTotalPlaytime() {
-        // Retrieve total playtime in seconds from the database
-        Object totalTime = jsonHandler.getDatabase().parentalControls.get("totalSecondsPlayed");
-        if (totalTime instanceof Map) {
-            Object value = ((Map<?, ?>) totalTime).get("value");
-            if (value instanceof Integer) {
-                return (Integer) value; // Return the integer value directly
-            }
-        }
-        return 0; // Default value if not found
+        return mainGame.jsonHandler.getParentalControlInt("totalSecondsPlayed");
     }
 
     private void resetPlaytimeStats() {
-        jsonHandler.getDatabase().parentalControls.put("averagePlaytimePerSession", 0);
-        jsonHandler.getDatabase().parentalControls.put("totalSecondsPlayed", 0);
-        jsonHandler.saveDatabase();
+        mainGame.jsonHandler.setParentalControlInt("averagePlaytimePerSession", 0);
+        mainGame.jsonHandler.setParentalControlInt("totalSecondsPlayed", 0);
+        mainGame.jsonHandler.setParentalControlInt("totalSessionsPlayed", 0);
     }
 
     private String formatTime(int seconds) {
@@ -158,6 +144,10 @@ public class ParentalPlaytimeStatsScreen extends ScreenAdapter {
 
     @Override
     public void dispose() {
+        // Dispose of all textures
+        for (Texture texture : textures.values()) {
+            texture.dispose();
+        }
         stage.dispose();
     }
 }
