@@ -63,7 +63,7 @@ public class GameSession {
             }
         }
 
-        if(weekdayParentBlock){
+        if(weekendParentBlock){
             if(currentDay == DayOfWeek.FRIDAY || currentDay == DayOfWeek.SATURDAY || currentDay == DayOfWeek.SUNDAY){
                 this.sessionsPlayed = mainGame.jsonHandler.getParentalControlInt("totalSessionsPlayed") - 1;
                 mainGame.jsonHandler.setParentalControlInt("totalSessionsPlayed", sessionsPlayed);
@@ -71,7 +71,7 @@ public class GameSession {
             }
         }
 
-        if(weekendParentBlock){
+        if(weekdayParentBlock){
             if(currentDay != DayOfWeek.FRIDAY && currentDay != DayOfWeek.SATURDAY && currentDay != DayOfWeek.SUNDAY){
                 this.sessionsPlayed = mainGame.jsonHandler.getParentalControlInt("totalSessionsPlayed") - 1;
                 mainGame.jsonHandler.setParentalControlInt("totalSessionsPlayed", sessionsPlayed);
