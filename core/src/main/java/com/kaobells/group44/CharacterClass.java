@@ -764,11 +764,34 @@ public class CharacterClass {
         if(!actionBlocked() && item.reduceCount()){ //check if action is allowed
 
             this.happiness = Math.min(100.0f, getHappiness() + item.getItemStatValue());
-            feedVisual();
+            giftVisual(item);
 
         }
         else{
            System.out.println("could not give gift");
+        }
+    }
+
+    public void giftVisual(Item item) {
+        if (!actionBlocked()) {
+
+            float actionLength = 5.0f;
+
+            setHead(characterHeads.get("happy"));;
+            if (item.getItemID() == 3){
+                setBody(characterBodies.get("duck"));;
+
+            }
+            else if (item.getItemID() == 4){
+                setBody(characterBodies.get("orduck"));;
+            }
+            else if (item.getItemID() == 5){
+                setBody(characterBodies.get("bluck"));;
+            }
+
+            actionBlockCooldownRemaining = (actionLength + 0.5f);
+
+            resumeDefaultCharacterState(actionLength);
         }
     }
 
@@ -802,6 +825,10 @@ public class CharacterClass {
         characterTextures.put("workout2Body", new Texture(Gdx.files.internal("game/character/body-workout2.png")));
         characterTextures.put("hungry1Body", new Texture(Gdx.files.internal("game/character/body-hungry1.png")));
         characterTextures.put("hungry2Body", new Texture(Gdx.files.internal("game/character/body-hungry2.png")));
+        characterTextures.put("bluckBody", new Texture(Gdx.files.internal("game/character/body-hold-bluck.png")));
+        characterTextures.put("duckBody", new Texture(Gdx.files.internal("game/character/body-hold-duck.png")));
+        characterTextures.put("orduckBody", new Texture(Gdx.files.internal("game/character/body-hold-orduck.png")));
+
 
         characterTextures.put("head", new Texture(Gdx.files.internal("game/character/" + characterType + "-head.png")));
         characterTextures.put("blink", new Texture(Gdx.files.internal("game/character/" + characterType + "-blink.png")));
@@ -812,6 +839,8 @@ public class CharacterClass {
         characterTextures.put("sleep2", new Texture(Gdx.files.internal("game/character/" + characterType + "-sleep2.png")));
         characterTextures.put("dead", new Texture(Gdx.files.internal("game/character/" + characterType + "-dead.png")));
 
+
+
         // Create images from textures
         characterBodies.put("neutral", mainGame.createImage(characterTextures.get("neutralBody")));
         characterBodies.put("workout1", mainGame.createImage(characterTextures.get("workout1Body")));
@@ -819,6 +848,9 @@ public class CharacterClass {
         characterBodies.put("hungry1", mainGame.createImage(characterTextures.get("hungry1Body")));
         characterBodies.put("hungry2", mainGame.createImage(characterTextures.get("hungry2Body")));
         characterBodies.put("dead", mainGame.createImage(characterTextures.get("dead")));
+        characterBodies.put("bluck", mainGame.createImage(characterTextures.get("bluckBody")));
+        characterBodies.put("duck", mainGame.createImage(characterTextures.get("duckBody")));
+        characterBodies.put("orduck", mainGame.createImage(characterTextures.get("orduckBody")));
 
         characterHeads.put("head", mainGame.createImage(characterTextures.get("head")));
         characterHeads.put("blink", mainGame.createImage(characterTextures.get("blink")));
