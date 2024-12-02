@@ -75,7 +75,7 @@ public class CharacterClass {
     private float blinkDurationTimer = 0f;
     private float hungerDurationTimer = 0f;
     private boolean isBlinking = false;
-    private boolean isHungry = false;
+    private boolean isHungry1 = true;
 
     private final float blinkInterval = 3.0f; // Blink every 3 seconds
     private final float blinkDuration = 0.5f; // Blink lasts for 0.5 seconds
@@ -83,6 +83,7 @@ public class CharacterClass {
     private final float deadDuration = 100.0f;
     private float sleepTimer = 0f; // Tracks time for sleep animation
     private boolean isSleepState1 = true; // Tracks which sleep state is active
+    private float hungerTimer = 0f;
 
 
     // Add default constructor for LibGDX Json Loader
@@ -524,7 +525,9 @@ public class CharacterClass {
 
         if (getState() == State.SLEEPING) {
             sleepTimer += deltaTime;
-
+            if (compoundingStates[2]){
+                setBody(characterBodies.get("hungry1"));
+            }
             // Switch between sleep1 and sleep2 every 0.5 seconds
             if (sleepTimer >= 0.5f) {
                 isSleepState1 = !isSleepState1; // Toggle sleep state
@@ -539,19 +542,17 @@ public class CharacterClass {
         }
 
         else if (compoundingStates[2]){
-            if (!isHungry) {
-                isHungry = true;
-                hungerDurationTimer = 0f; // Start hunger duration timer
-                setBody(characterBodies.get("hungry2"));
-            }
+            hungerTimer += deltaTime;
+            if (hungerTimer >= 0.5f) {
+                isHungry1 = !isHungry1; // Toggle sleep state
+                hungerTimer = 0f; // Reset sleep timer
 
-            if (isHungry) {
-                hungerDurationTimer += deltaTime;
-                if (hungerDurationTimer >= hungerDuration) {
-                    isHungry = false;
-                    setHead(headDetermine()); // Revert to normal head
-                    setBody(bodyDetermine()); // Revert to normal body
+                if (isHungry1) {
+                    setBody(characterBodies.get("hungry1")); // Set to hungry1 body
+                } else {
+                    setBody(characterBodies.get("hungry2")); // Set to hungry2 body
                 }
+                setHead(headDetermine());
             }
         }
 
@@ -632,8 +633,16 @@ public class CharacterClass {
                 this.health = Math.min(100.0f, getHealth() + 5.0f);
                 this.sleep = Math.max(0.0f, getSleep() - 10.0f);
             }
-            //starting exercise body/head
-            setHead(characterHeads.get("exercise"));
+
+            stateDetermine();
+
+            //if exercising forced character to go to sleep exercise body animation play's while head displays character entered sleep
+            if(this.compoundingStates[0]) {
+                setHead(characterHeads.get("sleep1"));
+            } else {
+                setHead(characterHeads.get("exercise"));
+            }
+            //starting exercise body
             setBody(characterBodies.get("workout1"));
 
             float actionLength = 5.0f;
