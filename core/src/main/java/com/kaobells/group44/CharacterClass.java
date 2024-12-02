@@ -326,9 +326,9 @@ public class CharacterClass {
             // case 4 == serious
             case 4:
                 setHealth(50.0f);
-                setSleep(50.0f);
-                setHappiness(5.0f);
-                setHunger(25.0f);
+                setSleep(10.0f);
+                setHappiness(100.0f);
+                setHunger(20.0f);
                 setStress(25.0f);
                 break;
 
@@ -383,25 +383,14 @@ public class CharacterClass {
     //determine body to display based on state variable
     private Image bodyDetermine() {
         stateDetermine(); // Update the state before determining the body image
-        switch (state) {
-            case DEAD:
-                return characterBodies.get("dead");
-            case SLEEPING:
-                if(compoundingStates[2]){
-                    return characterBodies.get("hungry1");
-                } else {
-                    return characterBodies.get("neutral");
-                }
-            case ANGRY:
-                if(compoundingStates[2]){
-                    return characterBodies.get("hungry1");
-                } else {
-                return characterBodies.get("neutral");
-                }
-            case HUNGRY:
-                return characterBodies.get("hungry1");
-            default:
-                return characterBodies.get("neutral");
+        if (state == State.DEAD){
+            return characterBodies.get("dead");
+        }
+        else if (compoundingStates[2]){
+            return characterBodies.get("hungry1");
+        }
+        else{
+            return characterBodies.get("neutral");
         }
     }
 
