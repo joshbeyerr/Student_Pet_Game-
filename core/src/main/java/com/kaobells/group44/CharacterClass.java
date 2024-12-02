@@ -737,7 +737,7 @@ public class CharacterClass {
     public void feed(Item item){
         if(!actionBlocked() && !compoundingStates[1] && item.reduceCount()){ //check if action is allowed
             this.fullness = Math.min(100.0f, getHunger() + (item.getItemStatValue()));
-
+            feedVisual();
         }
         else{
             //need to throw an error for a player trying to use an item they don't have here
@@ -764,6 +764,7 @@ public class CharacterClass {
         if(!actionBlocked() && item.reduceCount()){ //check if action is allowed
 
             this.happiness = Math.min(100.0f, getHappiness() + item.getItemStatValue());
+            feedVisual();
 
         }
         else{

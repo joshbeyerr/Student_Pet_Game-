@@ -51,14 +51,15 @@
 			"class": "com.kaobells.group44.CharacterClass",
 			"name": "Josh",
 			"slot": "2",
+			"score": 30,
 			"characterNumber": 0,
 			"characterType": "relaxed",
 			"state": "NEUTRAL",
 			"health": 80,
-			"sleep": 80,
-			"happiness": 80,
-			"fullness": 80,
-			"stress": 80,
+			"sleep": 50,
+			"happiness": 50,
+			"fullness": 81,
+			"stress": 50,
 			"inventory": [
 				{
 					"itemID": 0,
@@ -89,7 +90,8 @@
 				false,
 				false,
 				false
-			]
+			],
+			"blinkDurationTimer": 0.61400276
 		}
 	},
 	"3": {}
@@ -101,7 +103,7 @@
 	},
 	"totalSessionsPlayed": {
 		"class": "java.lang.Integer",
-		"value": 110
+		"value": 113
 	},
 	"averagePlaytimePerSession": {
 		"class": "java.lang.Integer",
