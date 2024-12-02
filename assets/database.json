@@ -78,10 +78,6 @@
 		"class": "java.lang.Integer",
 		"value": 77
 	},
-	"totalSessionsPlayed ": {
-		"class": "java.lang.Integer",
-		"value": 0
-	},
 	"weekdayParentBlock": {
 		"class": "java.lang.Boolean",
 		"value": false

@@ -148,10 +148,12 @@ public class CharacterClass {
     public String getCharacterType(){return characterType;}
     //Getter for slot that character is saved in
     public String getSlotNumber(){ return slot;}
+
     //Getter for Score
     public int getScore() { return score;}
     //Method to increment score
     public void incrementScore() { this.score = score+1;}
+    public void setScore(int score) { this.score = score;}
 
     // Getter for health
     public float getHealth() { return health;}
@@ -442,15 +444,17 @@ public class CharacterClass {
             if (getSleep() < 1.0f && !this.compoundingStates[0]) {
                 this.compoundingStates[0] = true;
                 setHealth(Math.max(0.0f, (getHealth()-10.0f)));
-                System.out.println("he just like me fr");
+                setScore(getScore()-100);
             }
             //check if angry should be triggered
             if(getHappiness() < 1.0f) {
                 this.compoundingStates[1] = true;
+                setScore(getScore()-50);
             }
             //check if hungry should be triggered
             if(getHunger() < 1.0f) {
                 this.compoundingStates[2] = true;
+                setScore(getScore()-50);
             }
             //check if sleeping should be stopped
             if(compoundingStates[0] && getSleep() > 97.5f){
@@ -639,8 +643,12 @@ public class CharacterClass {
             //Update Stats
             this.fullness = Math.max(0.0f, getHunger() - 10.0f);
             this.sleep = Math.max(0.0f, getSleep() - 20.0f);
-            this.health = Math.min(100.0f, getHealth() + 10.0f);
-
+            if(!compoundingStates[2]) {
+                this.health = Math.min(100.0f, getHealth() + 10.0f);
+            } else {
+                this.health = Math.min(100.0f, getHealth() + 5.0f);
+                this.sleep = Math.max(0.0f, getSleep() - 10.0f);
+            }
             //starting exercise body/head
             setHead(characterHeads.get("exercise"));
             setBody(characterBodies.get("workout1"));
