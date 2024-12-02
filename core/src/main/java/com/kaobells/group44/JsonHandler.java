@@ -163,7 +163,7 @@ public class JsonHandler {
 
 
     public int getParentalControlInt(String key) {
-        return (int) database.parentalControls.getOrDefault(key, 0);
+        return (int) database.parentalControls.get(key);
     }
 
     public void setParentalControlInt(String key, int value) {
@@ -171,14 +171,6 @@ public class JsonHandler {
         saveDatabase();
     }
 
-    // Method to get the parental control password
-    public String getParentalControlPassword() {
-        Object passwordObj = database.parentalControls.get("Password");
-        if (passwordObj instanceof String) {
-            return (String) passwordObj;
-        }
-        return ""; // Return an empty string if the password is not set
-    }
 
     // Method to save the parental control password
     public void setParentalControlPassword(String password) {
@@ -190,6 +182,7 @@ public class JsonHandler {
             System.out.println("Password cannot be null.");
         }
     }
+
 
 
 }
