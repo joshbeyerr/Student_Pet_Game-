@@ -281,10 +281,10 @@ public class CharacterClass {
 
             // case 0 = relaxed
             case 0:
-                setHealth(1.0f);
+                setHealth(80.0f);
                 setSleep(80.0f);
-                setHappiness(1.0f);
-                setHunger(1.0f);
+                setHappiness(80.0f);
+                setHunger(80.0f);
                 setStress(80.0f);
                 break;
 
@@ -590,7 +590,6 @@ public class CharacterClass {
         compoundingStates[2] = false;
         setHead(characterHeads.get(""));
         setBody(characterBodies.get("dead"));
-        this.saveTimer = 30.0f;
     }
 
     //exercise action

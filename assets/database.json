@@ -3,58 +3,9 @@
 	"1": {
 		"character": {
 			"class": "com.kaobells.group44.CharacterClass",
-			"name": "",
+			"name": "awdaw",
 			"slot": "1",
-			"score": 5,
-			"characterNumber": 1,
-			"characterType": "quirky",
-			"state": "NEUTRAL",
-			"health": 90,
-			"sleep": 82.5,
-			"happiness": 86.500015,
-			"fullness": 85.999985,
-			"stress": 85,
-			"compoundingStates": [
-				false,
-				false,
-				false
-			],
-			"saveTimer": 5.4405494,
-			"blinkTimer": 2.5986195,
-			"blinkDurationTimer": 0.51677316
-		}
-	},
-	"2": {
-		"character": {
-			"class": "com.kaobells.group44.CharacterClass",
-			"name": "awwda",
-			"slot": "2",
-			"score": 28,
-			"characterNumber": 3,
-			"characterType": "brave",
-			"state": "NEUTRAL",
-			"health": 20,
-			"sleep": 56.200043,
-			"happiness": 92.35001,
-			"fullness": 66.20004,
-			"stress": 72,
-			"compoundingStates": [
-				false,
-				false,
-				false
-			],
-			"playCooldownRemaining": 19.77062,
-			"blinkTimer": 0.3969494,
-			"blinkDurationTimer": 0.4123854,
-			"isBlinking": true
-		}
-	},
-	"3": {
-		"character": {
-			"class": "com.kaobells.group44.CharacterClass",
-			"name": "AWDAWDWA",
-			"slot": "3",
-			"score": 208,
+			"score": 6,
 			"characterNumber": 0,
 			"characterType": "relaxed",
 			"state": "DEAD",
@@ -64,12 +15,91 @@
 			"fullness": 0,
 			"compoundingStates": [
 				false,
-				true,
-				true
+				false,
+				false
 			],
-			"blinkTimer": 0.2775396,
-			"blinkDurationTimer": 0.54011977,
-			"sleepTimer": 0.36595562
+			"playCooldownRemaining": 26.980078,
+			"actionBlockCooldownRemaining": 1.9920487,
+			"blinkTimer": 2.0137458
+		}
+	},
+	"2": {
+		"character": {
+			"class": "com.kaobells.group44.CharacterClass",
+			"name": "",
+			"slot": "2",
+			"score": 275,
+			"characterNumber": 4,
+			"characterType": "serious",
+			"state": "DEAD",
+			"health": 0,
+			"sleep": 0,
+			"happiness": 0,
+			"fullness": 0,
+			"compoundingStates": [
+				false,
+				false,
+				false
+			],
+			"blinkTimer": 1.2159541,
+			"blinkDurationTimer": 0.5024046,
+			"hungerDurationTimer": 0.61361206,
+			"isHungry": true,
+			"sleepTimer": 0.3351458,
+			"isSleepState1": false
+		}
+	},
+	"3": {
+		"character": {
+			"class": "com.kaobells.group44.CharacterClass",
+			"name": "awd",
+			"slot": "3",
+			"characterNumber": 0,
+			"characterType": "relaxed",
+			"state": "NEUTRAL",
+			"health": 1,
+			"sleep": 80,
+			"happiness": 1,
+			"fullness": 1,
+			"stress": 80,
+			"inventory": [
+				{
+					"itemID": 0,
+					"itemStatValue": 30,
+					"itemCount": 0
+				},
+				{
+					"itemID": 1,
+					"itemStatValue": 60,
+					"itemCount": 0
+				},
+				{
+					"itemID": 2,
+					"itemStatValue": 90,
+					"itemCount": 0
+				},
+				{
+					"itemID": 3,
+					"itemStatValue": 30,
+					"itemCount": 0
+				},
+				{
+					"itemID": 4,
+					"itemStatValue": 60,
+					"itemCount": 0
+				},
+				{
+					"itemID": 5,
+					"itemStatValue": 90,
+					"itemCount": 0
+				}
+			],
+			"compoundingStates": [
+				false,
+				false,
+				false
+			],
+			"blinkTimer": 0.2338414
 		}
 	}
 },
@@ -80,7 +110,7 @@
 	},
 	"totalSessionsPlayed": {
 		"class": "java.lang.Integer",
-		"value": 75
+		"value": 83
 	},
 	"averagePlaytimePerSession": {
 		"class": "java.lang.Integer",
@@ -112,7 +142,7 @@
 	},
 	"Password": {
 		"class": "java.lang.String",
-		"value": ""
+		"value": "1234"
 	}
 }
 }
