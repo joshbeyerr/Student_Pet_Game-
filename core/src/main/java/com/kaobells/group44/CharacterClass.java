@@ -366,7 +366,7 @@ public class CharacterClass {
             case 4:
                 setHealth(50.0f);
                 setSleep(10.0f);
-                setHappiness(100.0f);
+                setHappiness(20.0f);
                 setHunger(20.0f);
                 setStress(25.0f);
                 break;
@@ -686,20 +686,21 @@ public class CharacterClass {
 
     //Play action method stat change
     //Will eventually be replaced with mini-game
-    public void play(){
+    public boolean play(){
         if(!actionBlocked()){ //check if action is allowed
             if(!(playCooldownRemaining > 0)){
                 this.happiness = Math.min(100.0f, getHappiness() + 20.0f);
-
                 playCooldownRemaining = 30.0f;
-
                 actionBlockCooldownRemaining = (5f);
+                return true;
             }
             else{
+                return false;
                 //code to tell player that play is on cooldown
             }
         }
         else{
+            return false;
             //Code to say that you cannot play with pet while in the state they are in
         }
     }
