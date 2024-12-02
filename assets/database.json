@@ -8,11 +8,7 @@
 			"score": -131520,
 			"characterNumber": 0,
 			"characterType": "relaxed",
-			"state": "DEAD",
-			"health": 0,
-			"sleep": 0,
-			"happiness": 0,
-			"fullness": 0,
+			"state": "NEUTRAL",
 			"inventory": [
 				{
 					"itemID": 0,
@@ -105,7 +101,7 @@
 	},
 	"totalSessionsPlayed": {
 		"class": "java.lang.Integer",
-		"value": 108
+		"value": 110
 	},
 	"averagePlaytimePerSession": {
 		"class": "java.lang.Integer",

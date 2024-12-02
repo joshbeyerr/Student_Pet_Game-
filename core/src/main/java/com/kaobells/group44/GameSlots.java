@@ -44,6 +44,9 @@ public class GameSlots  extends ScreenAdapter {
         if (screenType.equals("load")){
             screen = Screen.LOAD;
         }
+        else if (screenType.equals("revive")){
+            screen = Screen.REVIVE;
+        }
         else {
             screen = Screen.NEW;
         }
@@ -117,6 +120,9 @@ public class GameSlots  extends ScreenAdapter {
 
         if (screen == Screen.LOAD){
             loadGameTextbox = mainGame.createImage(textures.get("loadGameText"));
+        }
+        else if (screen == Screen.REVIVE){
+            loadGameTextbox = mainGame.createImage(textures.get("reviveText"));
         }
         else{
             loadGameTextbox = mainGame.createImage(textures.get("newGameText"));
@@ -218,7 +224,6 @@ public class GameSlots  extends ScreenAdapter {
                         // just for this state right now, passing through to story screen
 
 
-
                         GameSession newGame = new GameSession(character, mainGame);
                         if(!(newGame.blockedPlayTimeCheck())){  //checks for playing during active parental block
                             mainGame.pushScreen(new GameScreen(mainGame, newGame));
@@ -230,6 +235,30 @@ public class GameSlots  extends ScreenAdapter {
                 });
             }
 
+        }
+        else if (screen == Screen.REVIVE){
+            if (character != null){
+                slot.addListener(new ClickListener(){
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+
+                        character.setHappiness(100f);
+                        character.setHealth(100f);
+                        character.setHunger(100f);
+                        character.setSleep(100f);
+                        character.setState(State.NEUTRAL);
+
+                        character.startLoadCharacter(mainGame);
+                        // Clear all screens except the main menu, memory saver
+                        mainGame.clearStackExceptMain();
+
+                        GameSession newGame = new GameSession(character, mainGame);
+                        mainGame.pushScreen(new GameScreen(mainGame, newGame));
+
+
+                    }
+                });
+            }
         }
 
         else{
@@ -304,6 +333,7 @@ public class GameSlots  extends ScreenAdapter {
         textures.put("newGameText", new Texture(Gdx.files.internal("gameSlot/new-game-textbox.png")));
         textures.put("mysteryHead", new Texture(Gdx.files.internal("gameSlot/mysterious-head.png")));
         textures.put("warningText", new Texture(Gdx.files.internal("gameSlot/load-warning-txt.png")));
+        textures.put("reviveText", new Texture(Gdx.files.internal("gameSlot/revive-box.png")));
 
 
     }
@@ -322,7 +352,7 @@ public class GameSlots  extends ScreenAdapter {
     }
 
     public enum Screen{
-        NEW, LOAD
+        NEW, LOAD, REVIVE
     }
 }
 

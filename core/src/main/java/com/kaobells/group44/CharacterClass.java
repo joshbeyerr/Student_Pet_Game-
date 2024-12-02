@@ -509,6 +509,11 @@ public class CharacterClass {
     //State Getter
     public State getState(){ return state;}
 
+    public void setState(State statee)
+    {
+        this.state = statee;
+    }
+
     //Blink Loop
     public void updateCharacter(float deltaTime){
         stateDetermine();

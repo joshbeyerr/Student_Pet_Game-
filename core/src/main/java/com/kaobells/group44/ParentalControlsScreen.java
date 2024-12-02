@@ -91,6 +91,7 @@ public class ParentalControlsScreen extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("ParentalControls", "Revive Pet clicked");
+                mainGame.pushScreen(new GameSlots(mainGame, "revive"));
                 // Logic for revive pet
             }
         });
