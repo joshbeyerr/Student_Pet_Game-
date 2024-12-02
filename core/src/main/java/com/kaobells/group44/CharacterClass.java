@@ -89,7 +89,7 @@ public class CharacterClass {
         this.sleep = 100.0f;
         this.happiness = 100.0f;
         this.fullness = 100.0f;
-        this.stress = 0.0f;
+        this.stress = 100.0f;
         this.mainGame = null;
         characterHeads = null;
         characterBodies = null;
@@ -470,17 +470,17 @@ public class CharacterClass {
             if (getSleep() < 1.0f && !this.compoundingStates[0]) {
                 this.compoundingStates[0] = true;
                 setHealth(Math.max(0.0f, (getHealth()-10.0f)));
-//                setScore(getScore()-100);
+                setScore(Math.max(0,getScore()-100));
             }
             //check if angry should be triggered
-            if(getHappiness() < 1.0f) {
+            if(getHappiness() < 1.0f && !this.compoundingStates[1]) {
                 this.compoundingStates[1] = true;
-//                setScore(getScore()-50);
+                setScore(Math.max(0,getScore()-50));
             }
             //check if hungry should be triggered
-            if(getHunger() < 1.0f) {
+            if(getHunger() < 1.0f && !this.compoundingStates[2]) {
                 this.compoundingStates[2] = true;
-//                setScore(getScore()-50);
+                setScore(Math.max(0,getScore()-50));
             }
             //check if sleeping should be stopped
             if(compoundingStates[0] && getSleep() > 97.5f){
