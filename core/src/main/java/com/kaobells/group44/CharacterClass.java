@@ -2,6 +2,7 @@ package com.kaobells.group44;
 
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -47,6 +48,9 @@ public class CharacterClass {
     //displayed sprite head and body
     private transient Image currentHead;
     private transient Image currentBody;
+    private transient Sound munchSound;
+    private transient Sound quackSound;
+
     //Hashmap of the heads and bodies
     private transient Map<String, Image> characterHeads;
     private transient Map<String, Image> characterBodies;
@@ -750,7 +754,9 @@ public class CharacterClass {
 
             float actionLength = 5.0f;
 
+            munchSound.play();
             setHead(characterHeads.get("happy"));;
+
 
             actionBlockCooldownRemaining = (actionLength);
 
@@ -789,6 +795,7 @@ public class CharacterClass {
                 setBody(characterBodies.get("bluck"));;
             }
 
+            quackSound.play();
             actionBlockCooldownRemaining = (actionLength + 0.5f);
 
             resumeDefaultCharacterState(actionLength);
@@ -869,6 +876,8 @@ public class CharacterClass {
         characterTextures.put("orangeFrame", new Texture(Gdx.files.internal("game/inventory/orange-frame.png")));
         characterTextures.put("orduckFrame", new Texture(Gdx.files.internal("game/inventory/orduck-frame.png")));
 
+        munchSound = Gdx.audio.newSound(Gdx.files.internal("music/eating.mp3"));
+        quackSound = Gdx.audio.newSound(Gdx.files.internal("music/quack-quack.mp3"));
 
     }
 

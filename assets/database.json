@@ -56,14 +56,14 @@
 			"class": "com.kaobells.group44.CharacterClass",
 			"name": "Josh",
 			"slot": "2",
-			"score": 14,
+			"score": 3,
 			"characterNumber": 0,
 			"characterType": "relaxed",
-			"state": "SLEEPING",
-			"health": 70,
-			"sleep": 70,
+			"state": "ANGRY",
+			"health": 64,
+			"sleep": 86,
 			"happiness": 0,
-			"fullness": 17,
+			"fullness": 0,
 			"stress": 0,
 			"inventory": [
 				{
@@ -92,17 +92,66 @@
 				}
 			],
 			"compoundingStates": [
+				false,
 				true,
-				true,
-				false
+				true
 			],
-			"saveTimer": 4.9910707,
+			"saveTimer": 25.987514,
 			"blinkDurationTimer": 0.50082195,
-			"sleepTimer": 0.39813372,
-			"isSleepState1": false
+			"hungerDurationTimer": 0.81448746,
+			"isHungry": true,
+			"sleepTimer": 0.3250233
 		}
 	},
-	"3": {}
+	"3": {
+		"character": {
+			"class": "com.kaobells.group44.CharacterClass",
+			"name": "Josh",
+			"slot": "3",
+			"score": 30,
+			"characterNumber": 0,
+			"characterType": "relaxed",
+			"state": "NEUTRAL",
+			"health": 80,
+			"sleep": 50,
+			"happiness": 80,
+			"fullness": 50,
+			"stress": 50,
+			"inventory": [
+				{
+					"itemID": 0,
+					"itemCount": 0
+				},
+				{
+					"itemID": 1,
+					"itemCount": 1
+				},
+				{
+					"itemID": 2,
+					"itemCount": 0
+				},
+				{
+					"itemID": 3,
+					"itemCount": 0
+				},
+				{
+					"itemID": 4,
+					"itemCount": 0
+				},
+				{
+					"itemID": 5,
+					"itemCount": 0
+				}
+			],
+			"compoundingStates": [
+				false,
+				false,
+				false
+			],
+			"blinkDurationTimer": 0.1831966,
+			"isBlinking": true
+		}
+	}
 },
 "parentalControls": {
 	"morningParentBlock": {
@@ -111,7 +160,7 @@
 	},
 	"totalSessionsPlayed": {
 		"class": "java.lang.Integer",
-		"value": 119
+		"value": 121
 	},
 	"averagePlaytimePerSession": {
 		"class": "java.lang.Integer",
