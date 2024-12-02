@@ -93,9 +93,10 @@
 				true,
 				true
 			],
-			"blinkTimer": 0.2775396,
-			"blinkDurationTimer": 0.54011977,
-			"sleepTimer": 0.36595562
+			"blinkTimer": 13.149317,
+			"blinkDurationTimer": 0.51753366,
+			"hungerDurationTimer": 0.7325332,
+			"isHungry": true
 		}
 	}
 },
@@ -126,11 +127,7 @@
 	},
 	"totalSecondsPlayed": {
 		"class": "java.lang.Integer",
-		"value": 999
-	},
-	"totalSessionsPlayed ": {
-		"class": "java.lang.Integer",
-		"value": 123
+		"value": 0
 	},
 	"weekdayParentBlock": {
 		"class": "java.lang.Boolean",

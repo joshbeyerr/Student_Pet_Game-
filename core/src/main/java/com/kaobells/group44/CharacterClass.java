@@ -40,6 +40,7 @@ public class CharacterClass {
     private transient float stressChange = 1.0f;
 
     private Item[] inventory;
+
     //displayed sprite head and body
     private transient Image currentHead;
     private transient Image currentBody;
@@ -325,9 +326,9 @@ public class CharacterClass {
             // case 4 == serious
             case 4:
                 setHealth(50.0f);
-                setSleep(50.0f);
-                setHappiness(25.0f);
-                setHunger(25.0f);
+                setSleep(10.0f);
+                setHappiness(100.0f);
+                setHunger(20.0f);
                 setStress(25.0f);
                 break;
 
@@ -361,7 +362,7 @@ public class CharacterClass {
             case ANGRY:
                 return characterHeads.get("angry");
             case HUNGRY:
-                return characterHeads.get("angry"); // CHANGE TO HUNGRY IF/WHEN WE HAVE HUNGRY HEAD SPRITE
+                return characterHeads.get("head");
             default:
                 return characterHeads.get("head");
         }
@@ -382,17 +383,14 @@ public class CharacterClass {
     //determine body to display based on state variable
     private Image bodyDetermine() {
         stateDetermine(); // Update the state before determining the body image
-        switch (state) {
-            case DEAD:
-                return characterBodies.get("dead"); // CHANGE TO DEAD IF/WHEN WE HAVE DEAD BODY SPRITE
-            case SLEEPING:
-                return characterBodies.get("neutral"); // CHANGE TO SLEEPING IF/WHEN WE HAVE SLEEPING BODY SPRITE
-            case ANGRY:
-                return characterBodies.get("neutral"); // CHANGE TO ANGRY IF/WHEN WE HAVE ANGRY BODY SPRITE
-            case HUNGRY:
-                return characterBodies.get("hungry1");
-            default:
-                return characterBodies.get("neutral");
+        if (state == State.DEAD){
+            return characterBodies.get("dead");
+        }
+        else if (compoundingStates[2]){
+            return characterBodies.get("hungry1");
+        }
+        else{
+            return characterBodies.get("neutral");
         }
     }
 
@@ -467,7 +465,7 @@ public class CharacterClass {
             }
         }
 
-        else if (getState() == State.HUNGRY){
+        else if (compoundingStates[2]){
             if (!isHungry) {
                 isHungry = true;
                 hungerDurationTimer = 0f; // Start hunger duration timer
@@ -491,7 +489,7 @@ public class CharacterClass {
 
         else{
             blinkTimer += deltaTime;
-            if (blinkTimer >= blinkInterval && !isBlinking) {
+            if (blinkTimer >= blinkInterval && !isBlinking && this.state != State.SLEEPING && this.state != State.ANGRY) {
                 isBlinking = true;
                 blinkTimer = 0f; // Reset blink interval timer
                 blinkDurationTimer = 0f; // Start blink duration timer
@@ -760,6 +758,11 @@ public class CharacterClass {
     //checks if player is sleeping
     public boolean isSleeping() {
         return (state == State.SLEEPING);
+    }
+
+    //checks if player is dead
+    public boolean isDead() {
+        return (state == State.DEAD);
     }
 
     public void loadImages(){

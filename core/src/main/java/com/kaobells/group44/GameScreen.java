@@ -643,7 +643,9 @@ public class GameScreen extends ScreenAdapter{
 
             // Update score
             Label scoreLabel = (Label) images.get("Score");
-            session.character.incrementScore();
+            if(!session.character.isDead()) {
+                session.character.incrementScore();
+            }
             scoreLabel.setText("Score: " + session.character.getScore());
 
             // Gain item every 50 points

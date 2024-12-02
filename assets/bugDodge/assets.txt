@@ -1,0 +1,14 @@
+background.png
+bucket.png
+bug-box-empty.png
+bug-box-filled.png
+bug-win-txtbox.png
+computer-happy.png
+computer-hit.png
+drop.png
+error.mp3
+libgdx.png
+music.mp3
+score.png
+switch-click.mp3
+title.png
