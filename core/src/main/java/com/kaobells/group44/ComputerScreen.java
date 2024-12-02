@@ -74,7 +74,7 @@ public class ComputerScreen extends ScreenAdapter {
             // Start Jbordle minigame
             Gdx.app.log("ComputerScreen", "Jbordle selected.");
             // Push JbordleScreen or similar
-            mainGame.pushScreen(new JBordle(mainGame));
+            mainGame.pushScreen(new JBordle(mainGame,session.character));
 
         });
 

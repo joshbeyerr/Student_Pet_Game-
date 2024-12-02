@@ -618,7 +618,7 @@ public class GameScreen extends ScreenAdapter{
                 Gdx.app.log("play", "here");
                 if(!session.character.isSleeping()) {
                     session.character.play();
-                    mainGame.pushScreen(new JBordle(mainGame));
+                    mainGame.pushScreen(new JBordle(mainGame,session.character));
                 }
             }
         });

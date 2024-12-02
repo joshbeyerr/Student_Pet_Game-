@@ -96,7 +96,7 @@ class InputBox extends Actor {
 
 public class JBordle extends ScreenAdapter {
     private final Main mainGame;
-
+    private final CharacterClass player;
     private final SpriteBatch spriteBatch;
     private final Stage stage;
     private final Viewport viewport;
@@ -117,8 +117,9 @@ public class JBordle extends ScreenAdapter {
     Container<Actor> container;
     private InputMultiplexer multiplexer;
 
-    public JBordle(Main game) {
+    public JBordle(Main game,CharacterClass playa) {
         mainGame = game;
+        player = playa;
 
         spriteBatch = mainGame.getSharedBatch();
         viewport = mainGame.getViewport();
@@ -363,10 +364,13 @@ public class JBordle extends ScreenAdapter {
             // Win case
             container.setActor(loadEndGame("win"));
             container.setTouchable(Touchable.enabled);
+            player.gainItem((int) (Math.random() * 6));
+
         } else if (rowIndex == rows.size() - 1) {
             // Lose case
             container.setActor(loadEndGame("lose"));
             container.setTouchable(Touchable.enabled);
+            player.setScore(Math.max(0, player.getScore()-20));
         }
 
     }

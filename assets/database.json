@@ -3,7 +3,7 @@
 	"1": {
 		"character": {
 			"class": "com.kaobells.group44.CharacterClass",
-			"name": "Jbordle",
+			"name": "",
 			"slot": "1",
 			"characterNumber": 0,
 			"characterType": "relaxed",
@@ -56,7 +56,7 @@
 	},
 	"totalSessionsPlayed": {
 		"class": "java.lang.Integer",
-		"value": 90
+		"value": 91
 	},
 	"averagePlaytimePerSession": {
 		"class": "java.lang.Integer",
