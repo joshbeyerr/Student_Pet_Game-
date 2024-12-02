@@ -81,6 +81,7 @@ public class ParentalControlsScreen extends ScreenAdapter {
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("ParentalControls", "Playtime Controls clicked");
                 // Logic for playtime controls
+                mainGame.pushScreen(new ParentalPlaytimeLimits(mainGame));
 
             }
         });
