@@ -1,9 +1,18 @@
 package com.kaobells.group44;
 
-public class Item {
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonValue;
+
+public class Item implements Json.Serializable {
     public int itemID;  // Item identifier
-    public float itemStatValue; //Float for calculating how much item will change stat
     public int itemCount;
+    public transient float itemStatValue; //Float for calculating how much item will change stat
+
+
+    public Item(){ //Constructor
+        itemID = 0; // default
+        itemCount = 0; // default
+    }
 
     public Item(int ItemValID, int itemTotal){ //Constructor
     this.itemID = ItemValID;
@@ -69,4 +78,16 @@ public class Item {
     public void setItemCount(int setCount){ this.itemCount = setCount; }
 
     public int getItemCount(){ return this.itemCount; }
+
+    @Override
+    public void write(Json json) {
+        json.writeValue("itemID", itemID);
+        json.writeValue("itemCount", itemCount);
+    }
+
+    @Override
+    public void read(Json json, JsonValue jsonData) {
+        itemID = jsonData.getInt("itemID", 0);
+        itemCount = jsonData.getInt("itemCount", 0);
+    }
 }

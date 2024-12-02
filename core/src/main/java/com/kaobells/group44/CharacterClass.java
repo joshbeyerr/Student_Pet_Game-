@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Timer;
 
 import java.beans.Transient;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -272,11 +273,16 @@ public class CharacterClass {
     // initialize character stats based on character type selected
     private void setUpCharacter(){
         //filling inventory with all the items with the count set to zer0
-        if (this.inventory != null){
-            for (int i = 0; i < 6; i++) {
-                this.inventory[i] = new Item(i,0);
-            }
+        for (int i = 0; i < inventory.length; i++) {
+
+            this.inventory[i] = new Item(i,0);
         }
+
+//        for (int i = 0; i < inventory.length; i++) {
+//            System.out.println(inventory[i].itemID);
+//            System.out.println(inventory[i].itemCount);
+//        }
+
         switch (characterNumber) {
 
             // case 0 = relaxed
@@ -812,7 +818,7 @@ public class CharacterClass {
         // Reset transient fields
         currentHead = null;
         currentBody = null;
-        inventory = null;
+
     }
 
 }

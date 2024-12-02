@@ -3,94 +3,39 @@
 	"1": {
 		"character": {
 			"class": "com.kaobells.group44.CharacterClass",
-			"name": "awdaw",
+			"name": "AWDAWD",
 			"slot": "1",
-			"score": 6,
-			"characterNumber": 0,
-			"characterType": "relaxed",
-			"state": "DEAD",
-			"health": 0,
-			"sleep": 0,
-			"happiness": 0,
-			"fullness": 0,
-			"compoundingStates": [
-				false,
-				false,
-				false
-			],
-			"playCooldownRemaining": 26.980078,
-			"actionBlockCooldownRemaining": 1.9920487,
-			"blinkTimer": 2.0137458
-		}
-	},
-	"2": {
-		"character": {
-			"class": "com.kaobells.group44.CharacterClass",
-			"name": "",
-			"slot": "2",
-			"score": 275,
-			"characterNumber": 4,
-			"characterType": "serious",
-			"state": "DEAD",
-			"health": 0,
-			"sleep": 0,
-			"happiness": 0,
-			"fullness": 0,
-			"compoundingStates": [
-				false,
-				false,
-				false
-			],
-			"blinkTimer": 1.2159541,
-			"blinkDurationTimer": 0.5024046,
-			"hungerDurationTimer": 0.61361206,
-			"isHungry": true,
-			"sleepTimer": 0.3351458,
-			"isSleepState1": false
-		}
-	},
-	"3": {
-		"character": {
-			"class": "com.kaobells.group44.CharacterClass",
-			"name": "awd",
-			"slot": "3",
 			"characterNumber": 0,
 			"characterType": "relaxed",
 			"state": "NEUTRAL",
-			"health": 1,
+			"health": 80,
 			"sleep": 80,
-			"happiness": 1,
-			"fullness": 1,
+			"happiness": 80,
+			"fullness": 80,
 			"stress": 80,
 			"inventory": [
 				{
 					"itemID": 0,
-					"itemStatValue": 30,
 					"itemCount": 0
 				},
 				{
 					"itemID": 1,
-					"itemStatValue": 60,
 					"itemCount": 0
 				},
 				{
 					"itemID": 2,
-					"itemStatValue": 90,
 					"itemCount": 0
 				},
 				{
 					"itemID": 3,
-					"itemStatValue": 30,
 					"itemCount": 0
 				},
 				{
 					"itemID": 4,
-					"itemStatValue": 60,
 					"itemCount": 0
 				},
 				{
 					"itemID": 5,
-					"itemStatValue": 90,
 					"itemCount": 0
 				}
 			],
@@ -99,9 +44,11 @@
 				false,
 				false
 			],
-			"blinkTimer": 0.2338414
+			"blinkTimer": 0.3934197
 		}
-	}
+	},
+	"2": {},
+	"3": {}
 },
 "parentalControls": {
 	"morningParentBlock": {
@@ -110,7 +57,7 @@
 	},
 	"totalSessionsPlayed": {
 		"class": "java.lang.Integer",
-		"value": 83
+		"value": 89
 	},
 	"averagePlaytimePerSession": {
 		"class": "java.lang.Integer",
@@ -130,7 +77,7 @@
 	},
 	"totalSecondsPlayed": {
 		"class": "java.lang.Integer",
-		"value": 65
+		"value": 77
 	},
 	"totalSessionsPlayed ": {
 		"class": "java.lang.Integer",
