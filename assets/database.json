@@ -3,16 +3,16 @@
 	"1": {
 		"character": {
 			"class": "com.kaobells.group44.CharacterClass",
-			"name": "",
+			"name": "Jbordle",
 			"slot": "1",
+			"score": -131632,
 			"characterNumber": 0,
 			"characterType": "relaxed",
-			"state": "NEUTRAL",
-			"health": 80,
-			"sleep": 80,
-			"happiness": 80,
-			"fullness": 80,
-			"stress": 80,
+			"state": "HUNGRY",
+			"health": 32,
+			"sleep": 82,
+			"happiness": 2,
+			"fullness": 0,
 			"inventory": [
 				{
 					"itemID": 0,
@@ -24,7 +24,7 @@
 				},
 				{
 					"itemID": 2,
-					"itemCount": 0
+					"itemCount": 1
 				},
 				{
 					"itemID": 3,
@@ -32,7 +32,7 @@
 				},
 				{
 					"itemID": 4,
-					"itemCount": 0
+					"itemCount": 1
 				},
 				{
 					"itemID": 5,
@@ -42,8 +42,14 @@
 			"compoundingStates": [
 				false,
 				false,
-				false
-			]
+				true
+			],
+			"blinkDurationTimer": 0.1990169,
+			"hungerDurationTimer": 1.0972437,
+			"isBlinking": true,
+			"isHungry": true,
+			"sleepTimer": 0.12784308,
+			"isSleepState1": false
 		}
 	},
 	"2": {},
@@ -56,7 +62,7 @@
 	},
 	"totalSessionsPlayed": {
 		"class": "java.lang.Integer",
-		"value": 91
+		"value": 94
 	},
 	"averagePlaytimePerSession": {
 		"class": "java.lang.Integer",
@@ -77,6 +83,10 @@
 	"totalSecondsPlayed": {
 		"class": "java.lang.Integer",
 		"value": 77
+	},
+	"totalSessionsPlayed ": {
+		"class": "java.lang.Integer",
+		"value": 0
 	},
 	"weekdayParentBlock": {
 		"class": "java.lang.Boolean",

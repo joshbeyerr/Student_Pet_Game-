@@ -3,8 +3,10 @@ package com.kaobells.group44;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Timer;
 
 import java.beans.Transient;
@@ -284,6 +286,10 @@ public class CharacterClass {
     private void setUpInventory(){
         for (int i = 0; i < inventory.length; i++) {
             ImageButton invButton;
+
+            // if true its a good, if false than its a gift
+            boolean feedUse = true;
+
             if (i == 0){
                 invButton = mainGame.createImageButton(characterTextures.get("appleFrame"));
 
@@ -305,7 +311,27 @@ public class CharacterClass {
             else {
                 invButton = mainGame.createImageButton(characterTextures.get("bluckFrame"));
             }
+            inventory[i].setItemValues();
             inventory[i].setImage(invButton);
+            if (inventory[i].isFood()){
+                int finalI = i;
+                invButton.addListener(new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        feed(inventory[finalI]);
+                    }
+                });
+            }
+            else if (inventory[i].isGift()){
+                int finalI = i;
+                invButton.addListener(new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        giveGift(inventory[finalI]);
+                    }
+                });
+            }
+
 
         }
     }
@@ -444,17 +470,17 @@ public class CharacterClass {
             if (getSleep() < 1.0f && !this.compoundingStates[0]) {
                 this.compoundingStates[0] = true;
                 setHealth(Math.max(0.0f, (getHealth()-10.0f)));
-                setScore(getScore()-100);
+//                setScore(getScore()-100);
             }
             //check if angry should be triggered
             if(getHappiness() < 1.0f) {
                 this.compoundingStates[1] = true;
-                setScore(getScore()-50);
+//                setScore(getScore()-50);
             }
             //check if hungry should be triggered
             if(getHunger() < 1.0f) {
                 this.compoundingStates[2] = true;
-                setScore(getScore()-50);
+//                setScore(getScore()-50);
             }
             //check if sleeping should be stopped
             if(compoundingStates[0] && getSleep() > 97.5f){
@@ -572,55 +598,6 @@ public class CharacterClass {
             }
         }, duration); // Reset after the 5-second exercise duration
     }
-
-//    public void startCharacter() {
-//        if (blinkTask != null) {
-//            blinkTask.cancel(); // Cancel existing task if it's running
-//        }
-//
-//        float blinkInterval = 3.0f; // Blink every 3 seconds
-//        float blinkDuration = 0.5f; // Blink lasts for 0.5 seconds
-//
-//        float hungerDuration = 1.5f;
-//
-//        blinkTask = Timer.schedule(new Timer.Task() {
-//            @Override
-//            public void run() {
-//                if (!actionBlocked()) {
-//
-//                    stateDetermine();
-//
-//                    if (getState() == State.HUNGRY){
-//
-//                        Timer.schedule(new Timer.Task() {
-//                            @Override
-//                            public void run() {
-//                                if (!actionBlocked()) {
-//                                    setBody(characterBodies.get("hungry2")); // Revert to normal head
-//                                    setHead(headDetermine());
-//                                }
-//                            }
-//                        }, hungerDuration);
-//
-//                    }
-//
-//                    // Set to blinking head
-//                    setHead(characterHeads.get("blink"));
-//
-//                    // Schedule reverting to normal head after blinkDuration
-//                    Timer.schedule(new Timer.Task() {
-//                        @Override
-//                        public void run() {
-//                            if (!actionBlocked()) {
-//                                setHead(headDetermine());
-//                                setBody(bodyDetermine()); // Revert to normal head
-//                            }
-//                        }
-//                    }, blinkDuration); // Blink lasts for blinkDuration seconds
-//                }
-//            }
-//        }, blinkInterval, blinkInterval); // Repeat every blinkInterval seconds
-//    }
 
     //placeholder function see comment
     public void crashedOut(){
@@ -755,12 +732,14 @@ public class CharacterClass {
 
     //feed action
     //may need to be tweaked to link to GameScreen and to display correct reason it could not be done
-    public void feed(int inventoryIndex){
-        if(!actionBlocked() && !compoundingStates[1] && inventory[inventoryIndex].reduceCount()){ //check if action is allowed
-            this.fullness = Math.min(100.0f, getHunger() + (inventory[inventoryIndex].getItemStatValue()));
+    public void feed(Item item){
+        if(!actionBlocked() && !compoundingStates[1] && item.reduceCount()){ //check if action is allowed
+            this.fullness = Math.min(100.0f, getHunger() + (item.getItemStatValue()));
+
         }
         else{
             //need to throw an error for a player trying to use an item they don't have here
+
         }
     }
     //placeholder visual effect for feed
@@ -779,12 +758,14 @@ public class CharacterClass {
 
     //giveGift action
     //may need to be tweaked to link to GameScreen and to display correct reason it could not be done
-    public void giveGift(int inventoryIndex){
-        if(!actionBlocked() && inventory[inventoryIndex].reduceCount()){ //check if action is allowed
-            this.happiness = Math.min(100.0f, getHappiness() + inventory[inventoryIndex].getItemStatValue());
+    public void giveGift(Item item){
+        if(!actionBlocked() && item.reduceCount()){ //check if action is allowed
+
+            this.happiness = Math.min(100.0f, getHappiness() + item.getItemStatValue());
+
         }
         else{
-            //need to throw an error for a player trying to use an item they don't have here
+           System.out.println("could not give gift");
         }
     }
 

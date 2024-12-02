@@ -19,12 +19,11 @@ public class Item implements Json.Serializable {
     public Item(int ItemValID, int itemTotal){ //Constructor
         this.itemID = ItemValID;
         this.itemCount = itemTotal;
-        setItemValues(itemID);
 
     }
 
-    public void setItemValues(int ItemID){ //based on item ID fills in stats
-        switch (ItemID){
+    public void setItemValues(){ //based on item ID fills in stats
+        switch (this.itemID){
             //case 0 cup noodle food item
             case 0:
                 this.itemStatValue = 30.0f;
@@ -81,6 +80,13 @@ public class Item implements Json.Serializable {
     public void setItemCount(int setCount){ this.itemCount = setCount; }
 
     public int getItemCount(){ return this.itemCount; }
+
+    public boolean isFood(){
+        return itemID == 0 || itemID == 1 || itemID == 2;
+    }
+    public boolean isGift(){
+        return itemID == 3 || itemID == 4 || itemID == 5;
+    }
 
     public ImageButton getImage() {
         return image;
