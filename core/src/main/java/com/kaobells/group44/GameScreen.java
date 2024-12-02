@@ -573,14 +573,18 @@ public class GameScreen extends ScreenAdapter{
         //When Gift is called only the gift items should trigger an action
 
         ImageButton feed = mainGame.createImageButton(textures.get("feed"));
+
+
         feed.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if(!session.character.isSleeping()) {
-                    session.character.feedVisual();//placeholder not final
+                Table inv = tables.get("inventoryTable");
+                if (inv.isVisible()){
+                    tables.get("inventoryTable").setVisible(false);
                 }
-                //This will need to be updated to open inventory where all the food items are buttons
-                //Those item buttons should trigger the feed action's
+                else{
+                    tables.get("inventoryTable").setVisible(true);
+                }
             }
         });
         images.put("feed", feed);
@@ -629,9 +633,12 @@ public class GameScreen extends ScreenAdapter{
         gift.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.log("gift", "here");
-                if(!session.character.isSleeping()) {
-                    //code for the gift stuff
+                Table inv = tables.get("inventoryTable");
+                if (inv.isVisible()){
+                    tables.get("inventoryTable").setVisible(false);
+                }
+                else{
+                    tables.get("inventoryTable").setVisible(true);
                 }
             }
         });

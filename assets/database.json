@@ -103,7 +103,7 @@
 	},
 	"totalSessionsPlayed": {
 		"class": "java.lang.Integer",
-		"value": 113
+		"value": 116
 	},
 	"averagePlaytimePerSession": {
 		"class": "java.lang.Integer",
