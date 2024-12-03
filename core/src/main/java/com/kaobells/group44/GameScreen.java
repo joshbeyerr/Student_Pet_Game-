@@ -568,12 +568,11 @@ public class GameScreen extends ScreenAdapter{
 
     public void loadImageButtons(){
 
-
         ImageButton feed = mainGame.createImageButton(textures.get("feed"));
         feed.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if(!session.character.isDead()) {
+                if(!session.character.isDead() && !session.character.isAngry()) {
                     Table inv = tables.get("inventoryTable");
                     if (inv.isVisible()) {
                         tables.get("inventoryTable").setVisible(false);

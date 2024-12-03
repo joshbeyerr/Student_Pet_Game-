@@ -393,10 +393,10 @@ public class CharacterClass {
 
             // case 4 == serious
             case 4:
-                setHealth(5.0f);
-                setSleep(10.0f);
-                setHappiness(20.0f);
-                setHunger(20.0f);
+                setHealth(50.0f);
+                setSleep(50.0f);
+                setHappiness(2.0f);
+                setHunger(2.0f);
                 setStress(25.0f);
                 break;
 
@@ -630,56 +630,55 @@ public class CharacterClass {
 
     //exercise action
     public void exercise(){
-        if(!actionBlocked() && (!compoundingStates[1]) && state != State.SLEEPING && state != State.DEAD) { //check if action is allowed
+        if(!actionBlocked() && (!compoundingStates[1]) && state != State.SLEEPING && !isDead()) { //check if action is allowed
             //Update Stats
             this.fullness = Math.max(0.0f, getHunger() - 10.0f);
             this.sleep = Math.max(0.0f, getSleep() - 20.0f);
-            if(!compoundingStates[2]) {
-                this.health = Math.min(100.0f, getHealth() + 10.0f);
+            if (!compoundingStates[2]) {
+                this.health = Math.min(100.0f, getHealth() + 5.0f);
             } else {
                 this.health = Math.min(100.0f, getHealth() + 5.0f);
                 this.sleep = Math.max(0.0f, getSleep() - 10.0f);
             }
-
             stateDetermine();
-
-            //if exercising forced character to go to sleep exercise body animation play's while head displays character entered sleep
-            if(this.compoundingStates[0]) {
-                setHead(characterHeads.get("sleep1"));
-            } else {
-                setHead(characterHeads.get("exercise"));
-            }
-            //starting exercise body
-            setBody(characterBodies.get("workout1"));
-
-            float actionLength = 5.0f;
-            actionBlockCooldownRemaining = (actionLength + 0.5f);
-
-            Timer.schedule(new Timer.Task() {
-                boolean toggle = true; // Track which body to show
-
-                @Override
-                public void run() {
-                    if (actionBlockCooldownRemaining < 1) {
-                        // Stop the task when actions are unblocked (after 5 seconds)
-                        this.cancel();
-                        return;
-                    }
-                    // Toggle between workout1 and workout2
-                    if (toggle) {
-                        setBody(characterBodies.get("workout1"), true);
-                    } else {
-                        setBody(characterBodies.get("workout2"), true);
-                    }
-                    toggle = !toggle; // Switch the toggle state
+            if (this.getHealth()>1.0f) {
+                //if exercising forced character to go to sleep exercise body animation play's while head displays character entered sleep
+                if (this.compoundingStates[0]) {
+                    setHead(characterHeads.get("sleep1"));
+                } else {
+                    setHead(characterHeads.get("exercise"));
                 }
-            }, 0, 0.5f); // Start immediately, repeat every 0.5 seconds
+                //starting exercise body
+                setBody(characterBodies.get("workout1"));
 
-            // important
-            resumeDefaultCharacterState(actionLength);
-        }
-        else{
-            //Code to say that you cannot exercise pet while in the state they are in
+                float actionLength = 5.0f;
+                actionBlockCooldownRemaining = (actionLength + 0.5f);
+
+                Timer.schedule(new Timer.Task() {
+                    boolean toggle = true; // Track which body to show
+
+                    @Override
+                    public void run() {
+                        if (actionBlockCooldownRemaining < 1) {
+                            // Stop the task when actions are unblocked (after 5 seconds)
+                            this.cancel();
+                            return;
+                        }
+                        // Toggle between workout1 and workout2
+                        if (toggle) {
+                            setBody(characterBodies.get("workout1"), true);
+                        } else {
+                            setBody(characterBodies.get("workout2"), true);
+                        }
+                        toggle = !toggle; // Switch the toggle state
+                    }
+                }, 0, 0.5f); // Start immediately, repeat every 0.5 seconds
+                // important
+                resumeDefaultCharacterState(actionLength);
+            }
+            else {
+                crashedOut();
+            }
         }
     }
 
@@ -691,6 +690,7 @@ public class CharacterClass {
                 this.happiness = Math.min(100.0f, getHappiness() + 20.0f);
                 playCooldownRemaining = 30.0f;
                 actionBlockCooldownRemaining = (5f);
+                resumeDefaultCharacterState(1.0f);
                 return true;
             }
             else{
@@ -820,7 +820,7 @@ public class CharacterClass {
 
     //go to sleep action
     public void sleep(){
-        if(!actionBlocked() && !isDead()) {
+        if(!actionBlocked() && !compoundingStates[1] && !isDead()) {
             this.compoundingStates[0] = true;
             this.state = State.SLEEPING;
         }
@@ -839,6 +839,9 @@ public class CharacterClass {
     //checks if player is dead
     public boolean isDead() {
         return (state == State.DEAD);
+    }
+    public boolean isAngry() {
+        return compoundingStates[1];
     }
 
     public void loadImages(){
