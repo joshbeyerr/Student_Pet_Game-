@@ -567,22 +567,19 @@ public class GameScreen extends ScreenAdapter{
 
 
     public void loadImageButtons(){
-        //When Open Inventory is called should display all items but only as viewable not as usable
-        //When Feed is called only the food items should trigger an action
-        //When Gift is called only the gift items should trigger an action
+
 
         ImageButton feed = mainGame.createImageButton(textures.get("feed"));
-
-
         feed.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Table inv = tables.get("inventoryTable");
-                if (inv.isVisible()){
-                    tables.get("inventoryTable").setVisible(false);
-                }
-                else{
-                    tables.get("inventoryTable").setVisible(true);
+                if(!session.character.isDead()) {
+                    Table inv = tables.get("inventoryTable");
+                    if (inv.isVisible()) {
+                        tables.get("inventoryTable").setVisible(false);
+                    } else {
+                        tables.get("inventoryTable").setVisible(true);
+                    }
                 }
             }
         });
@@ -593,7 +590,7 @@ public class GameScreen extends ScreenAdapter{
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("sleep", "here");
-                if(!session.character.isSleeping()) {
+                if(!session.character.isSleeping() && !session.character.isDead()) {
                     session.character.sleep();
                 }
             }
@@ -605,7 +602,7 @@ public class GameScreen extends ScreenAdapter{
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("exercise", "here");
-                if(!session.character.isSleeping()) {
+                if(!session.character.isSleeping() && !session.character.isDead()) {
                     session.character.exercise();
                 }
 
@@ -619,10 +616,8 @@ public class GameScreen extends ScreenAdapter{
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("play", "here");
-                //                 if(!session.character.isSleeping() && session.character.play()) {
-                if(!session.character.isSleeping()) {
+                if(!session.character.isSleeping() && !session.character.isDead() && session.character.play()) {
                     mainGame.pushScreen(new ComputerScreen(mainGame, session));
-//
                 }
             }
         });
@@ -632,12 +627,14 @@ public class GameScreen extends ScreenAdapter{
         gift.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Table inv = tables.get("inventoryTable");
-                if (inv.isVisible()){
-                    tables.get("inventoryTable").setVisible(false);
-                }
-                else{
-                    tables.get("inventoryTable").setVisible(true);
+                if(!session.character.isDead()){
+                    Table inv = tables.get("inventoryTable");
+                    if(inv.isVisible()){
+                        tables.get("inventoryTable").setVisible(false);
+                    }
+                    else{
+                        tables.get("inventoryTable").setVisible(true);
+                    }
                 }
             }
         });

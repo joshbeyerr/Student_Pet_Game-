@@ -14,6 +14,7 @@ import java.beans.Transient;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class CharacterClass {
     private transient Main mainGame;
@@ -392,7 +393,7 @@ public class CharacterClass {
 
             // case 4 == serious
             case 4:
-                setHealth(50.0f);
+                setHealth(5.0f);
                 setSleep(10.0f);
                 setHappiness(20.0f);
                 setHunger(20.0f);
@@ -705,7 +706,7 @@ public class CharacterClass {
 
     //Take to doctor action
     public boolean takeToDoctor(){
-        if(!actionBlocked() && !compoundingStates[1]){ //check if action is allowed
+        if(!actionBlocked() && !compoundingStates[1] && (!isDead() || Objects.equals(getName(), "Wiktor"))){ //check if action is allowed
             if(!(doctorCooldownRemaining > 0)){
                 float actionLength = 8.0f;
 
@@ -782,7 +783,7 @@ public class CharacterClass {
     //giveGift action
     //may need to be tweaked to link to GameScreen and to display correct reason it could not be done
     public void giveGift(Item item){
-        if(!actionBlocked() && item.reduceCount()){ //check if action is allowed
+        if(!actionBlocked() && !isDead() && item.reduceCount()){ //check if action is allowed
 
             this.happiness = Math.min(100.0f, getHappiness() + item.getItemStatValue());
             giftVisual(item);
@@ -819,7 +820,7 @@ public class CharacterClass {
 
     //go to sleep action
     public void sleep(){
-        if(!actionBlocked() && state != State.DEAD) {
+        if(!actionBlocked() && !isDead()) {
             this.compoundingStates[0] = true;
             this.state = State.SLEEPING;
         }
