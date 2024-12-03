@@ -92,7 +92,7 @@ public class ParentalPlaytimeLimits extends ScreenAdapter {
     }
 
     private ImageButton createToggleButton(boolean isAllowed, String jsonKey) {
-        TextureRegionDrawable initialDrawable = new TextureRegionDrawable(new TextureRegion(isAllowed ? textures.get("checked") : textures.get("unchecked")));
+        TextureRegionDrawable initialDrawable = new TextureRegionDrawable(new TextureRegion(isAllowed ? textures.get("unchecked") : textures.get("checked")));
         ImageButton button = new ImageButton(initialDrawable);
 
         button.addListener(new ClickListener() {
@@ -104,7 +104,7 @@ public class ParentalPlaytimeLimits extends ScreenAdapter {
                 mainGame.jsonHandler.saveDatabase();
 
                 // Update button texture
-                TextureRegionDrawable newDrawable = new TextureRegionDrawable(new TextureRegion(newState ? textures.get("checked") : textures.get("unchecked")));
+                TextureRegionDrawable newDrawable = new TextureRegionDrawable(new TextureRegion(newState ? textures.get("unchecked") : textures.get("checked")));
                 button.getStyle().imageUp = newDrawable;
             }
         });
