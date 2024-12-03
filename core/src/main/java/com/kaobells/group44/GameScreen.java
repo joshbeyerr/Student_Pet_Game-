@@ -883,6 +883,19 @@ public class GameScreen extends ScreenAdapter{
                         }
                         return true;
                     }
+                    if (keycode == Input.Keys.ESCAPE) {
+                        mainGame.jsonHandler.saveCharacterToGameSlot(session.character.getSlotNumber(), session.character);
+                        session.updateParentalStats();
+                        mainGame.popScreen();
+                        return true;
+                    }
+
+                    if (keycode == Input.Keys.BACKSPACE) {
+                        mainGame.jsonHandler.saveCharacterToGameSlot(session.character.getSlotNumber(), session.character);
+                        session.updateParentalStats();
+                        mainGame.popScreen();
+                        return true;
+                    }
                     return true;
                 }
             };
