@@ -229,6 +229,7 @@ public class GameSlots  extends ScreenAdapter {
                             mainGame.pushScreen(new GameScreen(mainGame, newGame));
                         } else {
                             //blocked playtime error
+                            mainGame.jsonHandler.showBlockedTimeMessage(stage, viewport, mainGame);
                         }
                     }
                 });
@@ -256,6 +257,7 @@ public class GameSlots  extends ScreenAdapter {
                             mainGame.pushScreen(new GameScreen(mainGame, newGame));
                         } else {
                             //playtime block error
+                            mainGame.jsonHandler.showBlockedTimeMessage(stage, viewport, mainGame);
                         }
                     }
                 });

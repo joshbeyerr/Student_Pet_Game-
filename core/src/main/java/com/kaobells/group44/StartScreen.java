@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
@@ -25,14 +26,14 @@ import java.util.Map;
 
 public class StartScreen extends ScreenAdapter {
 
-    private final Main mainGame;  // Main game class for shared resources transitioning screens
+    private final Main mainGame;
     private final SpriteBatch spriteBatch;
     private final Viewport viewport;
     private final Stage stage;
 
     private AssetManager assetManager;
-
     private final BitmapFont font;
+    private Label errorLabel; // Label for displaying error messages
 
 
     private final float SWAP_INTERVAL = 5f; // Interval in seconds for swapping images
@@ -44,25 +45,19 @@ public class StartScreen extends ScreenAdapter {
     private Map<Integer, Float> blinkDurations = new HashMap<>(); // Tracks blink duration for each hea
 
     public StartScreen(Main game) {
-
         mainGame = game;
-
         spriteBatch = mainGame.getSharedBatch();
         viewport = mainGame.getViewport();
-
         stage = new Stage(viewport, spriteBatch);
 
-        // load and set font color
         font = mainGame.resourceManager.getTitleFont();
 
-        if(game.jsonHandler.isEmptyParentalControls()){
+        if (game.jsonHandler.isEmptyParentalControls()) {
             game.jsonHandler.initializeParentalControls();
         }
 
         loadTextures();
-        // Create UI components
         initializeUI();
-
     }
 
 
