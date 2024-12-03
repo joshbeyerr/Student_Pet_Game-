@@ -246,6 +246,7 @@ public class GameSlots  extends ScreenAdapter {
                         character.setHealth(100f);
                         character.setHunger(100f);
                         character.setSleep(100f);
+                        character.setStress(100f);
                         character.setState(State.NEUTRAL);
 
                         character.startLoadCharacter(mainGame);

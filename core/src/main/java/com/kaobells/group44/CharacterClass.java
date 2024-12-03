@@ -629,7 +629,7 @@ public class CharacterClass {
 
     //exercise action
     public void exercise(){
-        if(!actionBlocked() && (!compoundingStates[1])) { //check if action is allowed
+        if(!actionBlocked() && (!compoundingStates[1]) && state != State.SLEEPING && state != State.DEAD) { //check if action is allowed
             //Update Stats
             this.fullness = Math.max(0.0f, getHunger() - 10.0f);
             this.sleep = Math.max(0.0f, getSleep() - 20.0f);
@@ -819,7 +819,7 @@ public class CharacterClass {
 
     //go to sleep action
     public void sleep(){
-        if(!actionBlocked()) {
+        if(!actionBlocked() && state != State.DEAD) {
             this.compoundingStates[0] = true;
             this.state = State.SLEEPING;
         }
