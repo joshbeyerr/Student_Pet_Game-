@@ -212,7 +212,8 @@ public class CharacterClass {
     }}
 
     // Getter for stress
-    public float getStress() { return stress; }
+    public float getStress() {
+        return stress; }
     // Setter for stress
     public void setStress(float stress) {
         if (stress >= 0.0f && stress <= 100.0f) {
@@ -222,6 +223,9 @@ public class CharacterClass {
         } else {
             this.stress = 100.0f;
     }}
+    public void determineStress() {
+        setStress((getHappiness()+getHunger()+getSleep()+getHealth())/4.0f);
+    }
 
     public Item[] getInventory() {
         return this.inventory;
@@ -244,6 +248,7 @@ public class CharacterClass {
         } else {
             setSleep(this.getSleep() - sleepChange);
         }
+        determineStress();
     }
 
     //sets the stat change modifiers based on character type
@@ -266,6 +271,7 @@ public class CharacterClass {
 
             case 2:
                 //sleep is twice as fast but happieness and slowness are slower
+                this.healthChange = 1.0f;
                 this.sleepChange = 2.0f;
                 this.happinessChange = 0.7f;
                 this.fullnessChange = 0.9f;
@@ -388,16 +394,16 @@ public class CharacterClass {
                 setSleep(100.0f);
                 setHappiness(100.0f);
                 setHunger(100.0f);
-                setStress(100.0f);
+                setStress(77.5f);
                 break;
 
             // case 4 == serious
             case 4:
                 setHealth(50.0f);
                 setSleep(50.0f);
-                setHappiness(2.0f);
-                setHunger(2.0f);
-                setStress(25.0f);
+                setHappiness(25.0f);
+                setHunger(25.0f);
+                setStress(37.5f);
                 break;
 
             default: throw new IllegalArgumentException("Invalid character index: " + characterNumber);
