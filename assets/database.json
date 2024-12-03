@@ -47,14 +47,67 @@
 			"blinkDurationTimer": 0.1804547,
 			"hungerDurationTimer": 0.93477273,
 			"isBlinking": true,
+			"isHungry": true,
 			"sleepTimer": 0.45517963
 		}
 	},
 	"2": {
 		"character": {
 			"class": "com.kaobells.group44.CharacterClass",
-			"name": "awdaw",
+			"name": "Josh",
 			"slot": "2",
+			"score": 12,
+			"characterNumber": 0,
+			"characterType": "relaxed",
+			"state": "ANGRY",
+			"health": 46,
+			"sleep": 77,
+			"happiness": 0,
+			"fullness": 0,
+			"stress": 0,
+			"inventory": [
+				{
+					"itemID": 0,
+					"itemCount": 1
+				},
+				{
+					"itemID": 1,
+					"itemCount": 0
+				},
+				{
+					"itemID": 2,
+					"itemCount": 0
+				},
+				{
+					"itemID": 3,
+					"itemCount": 0
+				},
+				{
+					"itemID": 4,
+					"itemCount": 0
+				},
+				{
+					"itemID": 5,
+					"itemCount": 0
+				}
+			],
+			"compoundingStates": [
+				false,
+				true,
+				true
+			],
+			"saveTimer": 5.5407987,
+			"blinkDurationTimer": 0.50082195,
+			"hungerDurationTimer": 1.3336092,
+			"isHungry": true,
+			"sleepTimer": 0.3250233
+		}
+	},
+	"3": {
+		"character": {
+			"class": "com.kaobells.group44.CharacterClass",
+			"name": "wdaw",
+			"slot": "3",
 			"characterNumber": 0,
 			"characterType": "relaxed",
 			"state": "NEUTRAL",
@@ -95,56 +148,6 @@
 				false
 			]
 		}
-	},
-	"3": {
-		"character": {
-			"class": "com.kaobells.group44.CharacterClass",
-			"name": "wdaw",
-			"slot": "3",
-			"characterNumber": 0,
-			"characterType": "relaxed",
-			"state": "DEAD",
-			"health": 0,
-			"sleep": 0,
-			"happiness": 0,
-			"fullness": 0,
-			"stress": 0,
-			"inventory": [
-				{
-					"itemID": 0,
-					"itemCount": 40
-				},
-				{
-					"itemID": 1,
-					"itemCount": 26
-				},
-				{
-					"itemID": 2,
-					"itemCount": 32
-				},
-				{
-					"itemID": 3,
-					"itemCount": 37
-				},
-				{
-					"itemID": 4,
-					"itemCount": 46
-				},
-				{
-					"itemID": 5,
-					"itemCount": 39
-				}
-			],
-			"compoundingStates": [
-				false,
-				false,
-				false
-			],
-			"blinkDurationTimer": 0.5124692,
-			"sleepTimer": 0.031742502,
-			"isSleepState1": false,
-			"hungerTimer": 0.24922219
-		}
 	}
 },
 "parentalControls": {
@@ -154,11 +157,11 @@
 	},
 	"totalSessionsPlayed": {
 		"class": "java.lang.Integer",
-		"value": 149
+		"value": 135
 	},
 	"averagePlaytimePerSession": {
 		"class": "java.lang.Integer",
-		"value": 1
+		"value": 700
 	},
 	"weekendParentBlock": {
 		"class": "java.lang.Boolean",
@@ -174,11 +177,7 @@
 	},
 	"totalSecondsPlayed": {
 		"class": "java.lang.Integer",
-		"value": 194
-	},
-	"totalSessionsPlayed ": {
-		"class": "java.lang.Integer",
-		"value": 0
+		"value": 77
 	},
 	"weekdayParentBlock": {
 		"class": "java.lang.Boolean",
