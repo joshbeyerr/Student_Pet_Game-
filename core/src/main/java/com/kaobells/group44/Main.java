@@ -286,7 +286,7 @@ public class Main extends Game {
         // Create the back button using the loaded texture
 
         if (backButton == null) {
-
+            System.out.println("\n back button created (was null) ");
             Texture backText = new Texture(Gdx.files.internal("globalAssets/backButton.png"));
             backButton = createImageButton(backText);
         }

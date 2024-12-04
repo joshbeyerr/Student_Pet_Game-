@@ -107,7 +107,7 @@ public class ComputerScreen extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 mainGame.popScreen();
-                mainGame.pushScreen(new BugDodger(mainGame, session.character));
+                mainGame.pushScreen(new BugDodge(mainGame, session.character));
             }
         });
 
