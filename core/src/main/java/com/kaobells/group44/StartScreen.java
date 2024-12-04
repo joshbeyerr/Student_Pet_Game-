@@ -10,46 +10,54 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.Viewport;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class StartScreen extends ScreenAdapter {
 
-    private final Main mainGame;  // Main game class for shared resources transitioning screens
+    private final Main mainGame;
     private final SpriteBatch spriteBatch;
     private final Viewport viewport;
     private final Stage stage;
 
     private AssetManager assetManager;
-
     private final BitmapFont font;
+    private Label errorLabel; // Label for displaying error messages
 
+
+    private final float SWAP_INTERVAL = 5f; // Interval in seconds for swapping images
+    private final Array<Container<Image>> containers = new Array<>(); // Containers for the heads
+    private Map<Integer, Float> headTimers = new HashMap<>(); // Individual timers for each head
+    private Map<Integer, Float> headSwapIntervals = new HashMap<>(); // Swap intervals for each head
+    private Map<Integer, Boolean> isBlinking = new HashMap<>(); // Tracks whether each head is blinking
+    private final float BLINK_DURATION = 0.5f; // How long the blink lasts (in seconds)
+    private Map<Integer, Float> blinkDurations = new HashMap<>(); // Tracks blink duration for each hea
 
     public StartScreen(Main game) {
-
         mainGame = game;
-
         spriteBatch = mainGame.getSharedBatch();
         viewport = mainGame.getViewport();
-
         stage = new Stage(viewport, spriteBatch);
 
-        // load and set font color
         font = mainGame.resourceManager.getTitleFont();
 
-        if(game.jsonHandler.isEmptyParentalControls()){
+        if (game.jsonHandler.isEmptyParentalControls()) {
             game.jsonHandler.initializeParentalControls();
         }
 
         loadTextures();
-        // Create UI components
         initializeUI();
-
     }
 
 
@@ -160,25 +168,38 @@ public class StartScreen extends ScreenAdapter {
 
     }
 
+    private void createContainer(Image head){
+        Container<Image> newContainer = new Container<>(head);
+        containers.add(newContainer);
+    }
+
     private Table createHeads() {
         Table newTable = new Table();
 //        newTable.setFillParent(true);
 //        newTable.center();
 
         // Create Images for each Head
-        Image braveHead = mainGame.createImage(assetManager.get("characters/brave-head.png"));
-        Image hastyHead = mainGame.createImage(assetManager.get("characters/hasty-head.png"));
-        Image quirkyHead = mainGame.createImage(assetManager.get("characters/quirky-head.png"));
-        Image relaxedHead = mainGame.createImage(assetManager.get("characters/relaxed-head.png"));
-        Image seriousHead = mainGame.createImage(assetManager.get("characters/serious-head.png"));
+        createContainer(mainGame.createImage(assetManager.get("characters/relaxed-head.png")));
+        createContainer(mainGame.createImage(assetManager.get("characters/quirky-head.png")));
+        createContainer(mainGame.createImage(assetManager.get("characters/hasty-head.png")));
+        createContainer(mainGame.createImage(assetManager.get("characters/brave-head.png")));
+        createContainer(mainGame.createImage(assetManager.get("characters/serious-head.png")));
+
+
+        for (int i = 0; i < containers.size; i++) {
+            headTimers.put(i, i + 0f); // Initial elapsed time
+            headSwapIntervals.put(i, SWAP_INTERVAL - i * 0.5f); // Different intervals for each head
+            isBlinking.put(i, false); // Start with non-blinking
+            blinkDurations.put(i, 0f); // Initialize blink duration
+        }
 
         float padVal = viewport.getWorldWidth() * 0.002f;
 
-        newTable.add(braveHead).padLeft(padVal).padRight(padVal);
-        newTable.add(hastyHead).padLeft(padVal).padRight(padVal);
-        newTable.add(quirkyHead).padLeft(padVal).padRight(padVal);
-        newTable.add(relaxedHead).padLeft(padVal).padRight(padVal);
-        newTable.add(seriousHead).padLeft(padVal).padRight(padVal);
+        newTable.add(containers.get(0)).padLeft(padVal).padRight(padVal);
+        newTable.add(containers.get(1)).padLeft(padVal).padRight(padVal);
+        newTable.add(containers.get(2)).padLeft(padVal).padRight(padVal);
+        newTable.add(containers.get(3)).padLeft(padVal).padRight(padVal);
+        newTable.add(containers.get(4)).padLeft(padVal).padRight(padVal);
 
         return newTable;
     }
@@ -218,6 +239,12 @@ public class StartScreen extends ScreenAdapter {
         assetManager.load("characters/relaxed-head.png", Texture.class);
         assetManager.load("characters/serious-head.png", Texture.class);
 
+        assetManager.load("characters/brave-blink.png", Texture.class);
+        assetManager.load("characters/hasty-blink.png", Texture.class);
+        assetManager.load("characters/quirky-blink.png", Texture.class);
+        assetManager.load("characters/relaxed-blink.png", Texture.class);
+        assetManager.load("characters/serious-blink.png", Texture.class);
+
         assetManager.load("music/jb-sample-lowqual.mp3", Music.class);
 
 
@@ -236,11 +263,62 @@ public class StartScreen extends ScreenAdapter {
 
         spriteBatch.end();
 
+        updateHeadImages(delta);
+
         // Draw the stage
         stage.act(delta);
 
         stage.draw();
     }
+
+    public String getCharacterType(int index) {
+        switch (index) {
+            case 0: return "relaxed";
+            case 1: return "quirky";
+            case 2: return "hasty";
+            case 3: return "brave";
+            case 4: return "serious";
+            default: throw new IllegalArgumentException("Invalid character index: " + index);
+        }
+    }
+
+    private void updateHeadImages(float delta) {
+        for (int i = 0; i < containers.size; i++) {
+            float elapsedTime = headTimers.get(i) + delta;
+            float swapInterval = headSwapIntervals.get(i);
+            boolean currentlyBlinking = isBlinking.get(i);
+            float currentBlinkDuration = blinkDurations.get(i);
+
+            if (currentlyBlinking) {
+                // Handle blinking duration
+                currentBlinkDuration += delta;
+                if (currentBlinkDuration >= BLINK_DURATION) {
+                    // Stop blinking after blink duration
+                    Container<Image> container = containers.get(i);
+                    container.setActor(mainGame.createImage(assetManager.get("characters/" + getCharacterType(i) + "-head.png")));
+                    isBlinking.put(i, false);
+                    blinkDurations.put(i, 0f); // Reset blink duration
+                    headTimers.put(i, 0f); // Reset the timer for the next blink
+                } else {
+                    // Update blink duration if still blinking
+                    blinkDurations.put(i, currentBlinkDuration);
+                }
+            } else {
+                // Handle blinking start based on interval
+                if (elapsedTime >= swapInterval) {
+                    Container<Image> container = containers.get(i);
+                    container.setActor(mainGame.createImage(assetManager.get("characters/" + getCharacterType(i) + "-blink.png")));
+                    isBlinking.put(i, true);
+                    headTimers.put(i, 0f); // Reset the timer for blinking
+                    blinkDurations.put(i, 0f); // Start tracking blink duration
+                } else {
+                    // Update the timer if not blinking
+                    headTimers.put(i, elapsedTime);
+                }
+            }
+        }
+    }
+
 
     @Override
     public void resize(int width, int height) {
@@ -268,9 +346,6 @@ public class StartScreen extends ScreenAdapter {
 
     @Override
     public void show() {
-        mainGame.jsonHandler.printStuff();
-        System.out.println("hereeee2222e");
-
 
         setStage();
     }

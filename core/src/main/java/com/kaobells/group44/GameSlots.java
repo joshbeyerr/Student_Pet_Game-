@@ -229,12 +229,11 @@ public class GameSlots  extends ScreenAdapter {
                             mainGame.pushScreen(new GameScreen(mainGame, newGame));
                         } else {
                             //blocked playtime error
+                            mainGame.jsonHandler.showBlockedTimeMessage(stage, viewport, mainGame);
                         }
-
                     }
                 });
             }
-
         }
         else if (screen == Screen.REVIVE){
             if (character != null){
@@ -246,6 +245,7 @@ public class GameSlots  extends ScreenAdapter {
                         character.setHealth(100f);
                         character.setHunger(100f);
                         character.setSleep(100f);
+                        character.setStress(100f);
                         character.setState(State.NEUTRAL);
 
                         character.startLoadCharacter(mainGame);
@@ -253,14 +253,16 @@ public class GameSlots  extends ScreenAdapter {
                         mainGame.clearStackExceptMain();
 
                         GameSession newGame = new GameSession(character, mainGame);
-                        mainGame.pushScreen(new GameScreen(mainGame, newGame));
-
-
+                        if(!(newGame.blockedPlayTimeCheck())) {
+                            mainGame.pushScreen(new GameScreen(mainGame, newGame));
+                        } else {
+                            //playtime block error
+                            mainGame.jsonHandler.showBlockedTimeMessage(stage, viewport, mainGame);
+                        }
                     }
                 });
             }
         }
-
         else{
             slot.addListener(new ClickListener(){
                 @Override
@@ -270,7 +272,6 @@ public class GameSlots  extends ScreenAdapter {
                 }
             });
         }
-
         return slot;
     }
 

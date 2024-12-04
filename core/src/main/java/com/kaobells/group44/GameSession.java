@@ -40,7 +40,7 @@ public class GameSession {
         since this does not count as a session.
         */
         if(morningParentBlock){
-            if(LocalTime.now().isAfter(LocalTime.of(6,0)) && LocalTime.now().isBefore(LocalTime.of(12,0))){
+            if(LocalTime.now().isAfter(LocalTime.of(5,59)) && LocalTime.now().isBefore(LocalTime.of(12,0))){
                 this.sessionsPlayed = mainGame.jsonHandler.getParentalControlInt("totalSessionsPlayed") - 1;
                 mainGame.jsonHandler.setParentalControlInt("totalSessionsPlayed", sessionsPlayed);
                 return true;
@@ -48,7 +48,7 @@ public class GameSession {
         }
 
         if(afternoonParentBlock){
-            if(LocalTime.now().isAfter(LocalTime.of(12,0)) && LocalTime.now().isBefore(LocalTime.of(18,0))){
+            if(LocalTime.now().isAfter(LocalTime.of(11,59)) && LocalTime.now().isBefore(LocalTime.of(20,1))){
                 this.sessionsPlayed = mainGame.jsonHandler.getParentalControlInt("totalSessionsPlayed") - 1;
                 mainGame.jsonHandler.setParentalControlInt("totalSessionsPlayed", sessionsPlayed);
                 return true;
@@ -56,7 +56,7 @@ public class GameSession {
         }
 
         if(eveningParentBlock){
-            if(LocalTime.now().isAfter(LocalTime.of(18,0)) && LocalTime.now().isBefore(LocalTime.of(23,59))){
+            if(LocalTime.now().isAfter(LocalTime.of(20,0))|| LocalTime.now().isBefore(LocalTime.of(6,0))){
                 this.sessionsPlayed = mainGame.jsonHandler.getParentalControlInt("totalSessionsPlayed") - 1;
                 mainGame.jsonHandler.setParentalControlInt("totalSessionsPlayed", sessionsPlayed);
                 return true;

@@ -1,11 +1,24 @@
 package com.kaobells.group44;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -148,6 +161,47 @@ public class JsonHandler {
         System.out.println("Parental controls initialized with default values.");
     }
 
+    public void showBlockedTimeMessage(Stage stage, Viewport viewport, Main mainGame) {
+        // Clear previous actors
+        stage.clear();
+
+        // Create a semi-transparent overlay
+        Texture overlayTexture = new Texture(Gdx.files.internal("parentalControlsScreen/times-up-txtbox.png"));
+        Image overlayImage = new Image(new TextureRegionDrawable(new TextureRegion(overlayTexture)));
+
+        // Center the overlay image
+        overlayImage.setSize(viewport.getWorldWidth() * 0.7f, viewport.getWorldHeight() * 0.3f);
+        overlayImage.setPosition(
+            (viewport.getWorldWidth() - overlayImage.getWidth()) / 2,
+            (viewport.getWorldHeight() - overlayImage.getHeight()) / 2
+        );
+
+        stage.addActor(overlayImage);
+
+        // Add the back button
+        ImageButton backButton = mainGame.getBackButton();
+        backButton.setSize(viewport.getWorldWidth() * 0.1f, viewport.getWorldHeight() * 0.1f);
+        backButton.setPosition(
+            (viewport.getWorldWidth() - backButton.getWidth()) / 2, // Center horizontally
+            viewport.getWorldHeight() * 0.2f // Place below the message
+        );
+
+        // Clear any existing listeners on the back button to prevent stacking
+        backButton.clearListeners();
+        backButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                mainGame.clearStackExceptMain(); // Go back to the main menu
+            }
+        });
+
+        stage.addActor(backButton);
+
+        // Ensure the stage is set as the input processor
+        Gdx.input.setInputProcessor(stage);
+    }
+
+
     public void setParentalPassword(String password) {
         database.parentalControls.put("Password", password);
         saveDatabase();
@@ -182,6 +236,8 @@ public class JsonHandler {
             System.out.println("Password cannot be null.");
         }
     }
+
+
 
 
 
