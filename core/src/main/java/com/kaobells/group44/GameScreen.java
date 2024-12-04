@@ -60,6 +60,8 @@ public class GameScreen extends ScreenAdapter{
     private float scoreUpdateTimer = 0f;
     private final float scoreUpdateInterval = 1f;
 
+    private int giftCounter = 0;
+
 
     public GameScreen(Main game, GameSession gameSession) {
 
@@ -389,8 +391,6 @@ public class GameScreen extends ScreenAdapter{
     public Table createInventoryTable(){
         Table inventoryTable = getOrCreateTable("inventoryTable");
         inventoryTable.setBackground(new TextureRegionDrawable(new TextureRegion(textures.get("inventoryBox"))));
-//        inventoryTable.setTouchable(Touchable.enabled);
-
 
         float pad = viewport.getWorldWidth() * 0.001f;
 
@@ -398,12 +398,6 @@ public class GameScreen extends ScreenAdapter{
         inventoryTable.add(inventoryCountTable()).center();
         inventoryTable.setVisible(false);
         return inventoryTable;
-
-    /*    // Update score
-        Label scoreLabel = (Label) images.get("Score");
-        session.character.incrementScore();
-        scoreLabel.setText("Score: " + session.character.getScore());*/
-
     }
 
 
@@ -490,11 +484,6 @@ public class GameScreen extends ScreenAdapter{
         bodyContainer.addAction(bodyAction);
     }
 
-
-
-    // ? idk, i think all head and body textures should be stored in character class,
-    // and a call of getHead or getBody will return the image
-
     public void updateHead(Image newHead) {
         // Find the head container
         if (headContainer != null) {
@@ -572,7 +561,7 @@ public class GameScreen extends ScreenAdapter{
         feed.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if(!session.character.isDead() &&!session.character.isSleeping() && !session.character.isAngry()){
+                if(!session.character.isDead() && !session.character.isSleeping() && !session.character.isAngry()){
                     Table inv = tables.get("inventoryTable");
                     if (inv.isVisible()) {
                         tables.get("inventoryTable").setVisible(false);
@@ -737,8 +726,6 @@ public class GameScreen extends ScreenAdapter{
     }
 
     private void handleScoreAndStatUpdates(float deltaTime) {
-
-
         scoreUpdateTimer += deltaTime;
 
         if (scoreUpdateTimer >= scoreUpdateInterval) {
@@ -751,6 +738,7 @@ public class GameScreen extends ScreenAdapter{
             updateStatBar("healthBar", session.character.getHealth());
             updateStatBar("sleepBar", session.character.getSleep());
             updateStatBar("stressBar", session.character.getStress());
+            giftCounter++;
 
             // Update score
             Label scoreLabel = (Label) images.get("Score");
@@ -762,9 +750,10 @@ public class GameScreen extends ScreenAdapter{
             }
             scoreLabel.setText("Score: " + session.character.getScore());
 
-            // Gain item every 50 points
-            if (session.character.getScore() % 50 == 0) {
+            // Gain random item every min
+            if (giftCounter > 60) {
                 session.character.gainItem((int) (Math.random() * 6));
+                giftCounter = 0;
             }
 
             // sneaking inventory count updating in here

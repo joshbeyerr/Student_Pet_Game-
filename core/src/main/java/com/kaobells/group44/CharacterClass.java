@@ -746,15 +746,15 @@ public class CharacterClass {
         if (!actionBlocked()) { //check if action is allowed
             float actionLength = 5.0f;
             //set body to relivent sprite for gift item used
-            setHead(characterHeads.get("happy"));;
+            setHead(characterHeads.get("happy"));
             if (item.getItemID() == 3){
-                setBody(characterBodies.get("duck"));;
+                setBody(characterBodies.get("duck")); //for using normal duck sprite
             }
             else if (item.getItemID() == 4){
-                setBody(characterBodies.get("orduck"));;
+                setBody(characterBodies.get("orduck")); //for using orange duck sprite
             }
             else if (item.getItemID() == 5){
-                setBody(characterBodies.get("bluck"));;
+                setBody(characterBodies.get("bluck")); //for using blue duck sprite
             }
             //play sound and set action timer for animation
             quackSound.play();
@@ -862,5 +862,4 @@ public class CharacterClass {
         currentHead = null;
         currentBody = null;
     }
-
 }

@@ -34,6 +34,7 @@ public class NameInput extends ScreenAdapter {
     private final Viewport viewport;
 
     private final ImageButton backButton;
+    private final Table error;
 
     private final Map<String, Texture> textures;
     private TextField nameInputField;
@@ -54,6 +55,7 @@ public class NameInput extends ScreenAdapter {
         spriteBatch = mainGame.getSharedBatch();
         viewport = mainGame.getViewport();
         backButton = mainGame.getBackButton();
+        error = mainGame.getErrorMessage();
 
         stage = new Stage(viewport, spriteBatch);
 
@@ -70,6 +72,7 @@ public class NameInput extends ScreenAdapter {
         stage.clear();
 
         stage.addActor(backButton);
+        stage.addActor(error);
 
         // Create and configure the custom input box
         nameInputField = createInputBox();
@@ -107,6 +110,9 @@ public class NameInput extends ScreenAdapter {
                     } else {
                         //blocked playtime error
                     }
+                }
+                else{
+                    mainGame.sendError("Sorry buster your not get away with today with XIAO HONG SHUUUUUUU ");
                 }
             }
         });
