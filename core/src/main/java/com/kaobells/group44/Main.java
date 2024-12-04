@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -12,10 +13,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -30,6 +35,8 @@ public class Main extends Game {
 
 
     private ImageButton backButton;
+    private Table errorTable;
+    private Label errorLabel;
     private Sound clickSound;
     private Sound backButtonSound;
     private SpriteBatch sharedBatch;
@@ -215,6 +222,78 @@ public class Main extends Game {
 
     }
 
+    public Table getErrorMessage() {
+        if (errorTable == null) {
+            // Create the error table
+            errorTable = new Table();
+            errorTable.setVisible(false);
+
+            // Load the background texture
+            Texture errorBackground = new Texture(Gdx.files.internal("globalAssets/error-sm-box.png"));
+
+            // Set table background
+            errorTable.setBackground(new TextureRegionDrawable(new TextureRegion(errorBackground)));
+
+            // Create the error label
+            BitmapFont font = resourceManager.getFont(true);
+            font.getData().setScale(0.8f); // Adjust font size as needed
+            Label.LabelStyle labelStyle = new Label.LabelStyle(font, Color.BLACK);
+            errorLabel = new Label("", labelStyle);
+            errorLabel.setAlignment(Align.center);
+
+            // Add label to the table
+            errorTable.add(errorLabel).expand().fill().pad(10); // Add some padding for aesthetics
+
+            // Set size and position of the table
+            float errorWidth = viewport.getWorldWidth() * 0.3f; // 30% of the viewport width
+            float errorHeight = viewport.getWorldHeight() * 0.1f; // 10% of the viewport height
+            errorTable.setSize(errorWidth, errorHeight);
+            errorTable.setPosition(viewport.getWorldWidth() - errorWidth - 10, errorHeight/3); // Bottom-right corner with padding
+
+        }
+
+        return errorTable;
+    }
+
+
+    public void sendError(String message) {
+        if (errorTable == null) {
+            getErrorMessage();
+        }
+        if (errorLabel.isVisible()){
+            // Split the message into multiple lines if it's longer than 20 characters
+            StringBuilder formattedMessage = new StringBuilder();
+            int maxLineLength = 30;
+            int currentIndex = 0;
+
+            while (currentIndex < message.length()) {
+                int endIndex = Math.min(currentIndex + maxLineLength, message.length());
+                formattedMessage.append(message, currentIndex, endIndex);
+
+                // If not the last line, add a newline character
+                if (endIndex < message.length()) {
+                    formattedMessage.append("\n");
+                }
+
+                currentIndex = endIndex;
+            }
+
+            // Set the formatted message text
+            errorLabel.setText(formattedMessage.toString());
+
+            // Make the table visible
+            errorTable.clearActions(); // Clear any ongoing actions
+            errorTable.setVisible(true);
+
+            // Add fade-out animation
+            errorTable.addAction(Actions.sequence(
+                Actions.alpha(1), // Ensure full opacity
+                Actions.delay(5), // Stay visible for 5 seconds
+                Actions.fadeOut(1), // Fade out over 1 second
+                Actions.run(() -> errorTable.setVisible(false)) // Hide after fading out
+            ));
+        }
+    }
 
     public void drawBackground(SpriteBatch batch, Texture backgroundTexture, BitmapFont font, String title) {
         // Draw the background texture
