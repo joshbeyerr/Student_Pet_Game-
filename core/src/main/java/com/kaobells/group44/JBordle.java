@@ -312,6 +312,14 @@ public class JBordle extends ScreenAdapter {
 
     public boolean validWord(String word){
         word = word.toLowerCase();
+
+        if (word.equals("servo")){
+            System.out.println("here");
+
+            player.setActionBlocked(10f);
+        }
+
+
         for (String s : words) {
             if (word.equals(s)) {
                 return true;
@@ -420,6 +428,7 @@ public class JBordle extends ScreenAdapter {
 
         textures.put("win", new Texture(Gdx.files.internal("computerScreen/jbordle-win-txt.png")));
         textures.put("lose", new Texture(Gdx.files.internal("computerScreen/jbordle-lose-txt.png")));
+
 
         // Initialize the font
         font = mainGame.resourceManager.getFont(true);// Replace with your font file

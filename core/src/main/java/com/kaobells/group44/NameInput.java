@@ -90,22 +90,23 @@ public class NameInput extends ScreenAdapter {
         nameBegin.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                if (!nameInputField.getText().isEmpty()){
+                    // starting game
 
-                // starting game
+                    // Clear all screens except the main menu, memory saver
+                    mainGame.clearStackExceptMain();
 
-                // Clear all screens except the main menu, memory saver
-                mainGame.clearStackExceptMain();
+                    Item[] inventory = new Item[6];
 
-                Item[] inventory = new Item[6];
+                    boolean[] compoundingStates= new boolean[3];
+                    CharacterClass newCharacter = new CharacterClass(mainGame, nameInputField.getText(), previousScreenVar.getCharacterIndex(), previousScreenVar.getCharacterType(previousScreenVar.getCharacterIndex()),inventory, compoundingStates, slot,0);
 
-                boolean[] compoundingStates= new boolean[3];
-                CharacterClass newCharacter = new CharacterClass(mainGame, nameInputField.getText(), previousScreenVar.getCharacterIndex(), previousScreenVar.getCharacterType(previousScreenVar.getCharacterIndex()),inventory, compoundingStates, slot,0);
-
-                GameSession newGame = new GameSession(newCharacter,mainGame);
-                if(!(newGame.blockedPlayTimeCheck())){ //checks for playing during active parental block
-                    mainGame.pushScreen(new GameScreen(mainGame, newGame));
-                } else {
-                    //blocked playtime error
+                    GameSession newGame = new GameSession(newCharacter,mainGame);
+                    if(!(newGame.blockedPlayTimeCheck())){ //checks for playing during active parental block
+                        mainGame.pushScreen(new GameScreen(mainGame, newGame));
+                    } else {
+                        //blocked playtime error
+                    }
                 }
             }
         });
