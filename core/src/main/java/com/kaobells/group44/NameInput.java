@@ -108,7 +108,7 @@ public class NameInput extends ScreenAdapter {
                     if(!(newGame.blockedPlayTimeCheck())){ //checks for playing during active parental block
                         mainGame.pushScreen(new GameScreen(mainGame, newGame));
                     } else {
-                        //blocked playtime error
+                        mainGame.jsonHandler.showBlockedTimeMessage(stage, viewport, mainGame);
                     }
                 }
                 else{
