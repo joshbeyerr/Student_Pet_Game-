@@ -1,7 +1,9 @@
 package com.kaobells.group44;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -164,20 +166,17 @@ public class JsonHandler {
     public void showBlockedTimeMessage(Stage stage, Viewport viewport, Main mainGame) {
         // Clear previous actors
         stage.clear();
-
         // Create a semi-transparent overlay
         Texture overlayTexture = new Texture(Gdx.files.internal("parentalControlsScreen/times-up-txtbox.png"));
         Image overlayImage = new Image(new TextureRegionDrawable(new TextureRegion(overlayTexture)));
-
         // Center the overlay image
         overlayImage.setSize(viewport.getWorldWidth() * 0.7f, viewport.getWorldHeight() * 0.3f);
         overlayImage.setPosition(
             (viewport.getWorldWidth() - overlayImage.getWidth()) / 2,
             (viewport.getWorldHeight() - overlayImage.getHeight()) / 2
         );
-
+        //add to stage
         stage.addActor(overlayImage);
-
         // Add the back button
         ImageButton backButton = mainGame.getBackButton();
         backButton.setSize(viewport.getWorldWidth() * 0.1f, viewport.getWorldHeight() * 0.1f);
@@ -188,17 +187,35 @@ public class JsonHandler {
 
         // Clear any existing listeners on the back button to prevent stacking
         backButton.clearListeners();
+        //on click clear stack then push a new StartScreen
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                mainGame.clearStackExceptMain(); // Go back to the main menu
+                mainGame.clearStackExceptMain();
+                mainGame.popScreen();
+                mainGame.pushScreen(new StartScreen(mainGame)); // Go back to the main menu
             }
         });
-
         stage.addActor(backButton);
 
-        // Ensure the stage is set as the input processor
-        Gdx.input.setInputProcessor(stage);
+        //for pressing M to go back
+        InputAdapter inputAdapter = new InputAdapter(){
+            @Override
+            public boolean keyDown(int keycode) {
+                if (keycode == Input.Keys.M) {
+                    mainGame.clearStackExceptMain();
+                    mainGame.popScreen();
+                    mainGame.pushScreen(new StartScreen(mainGame));
+                    return true;
+                }
+                return true;
+            }
+        };
+
+        InputMultiplexer multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor(stage);       // Stage for UI interactions
+        multiplexer.addProcessor(inputAdapter); // InputAdapter for key presses
+        Gdx.input.setInputProcessor(multiplexer);  //setting to multiplexer
     }
 
 
@@ -236,9 +253,4 @@ public class JsonHandler {
             System.out.println("Password cannot be null.");
         }
     }
-
-
-
-
-
 }
