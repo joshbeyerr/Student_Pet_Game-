@@ -22,7 +22,18 @@ import java.lang.Character;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/**
+ * The {@code NameInput} class represents the screen where the user enters
+ * the name of their character. It allows users to type in a name using a
+ * custom text input field and transition to the next screen after confirming.
+ *
+ * <p>The screen includes UI components such as a back button, character image,
+ * and a styled text input field for entering names. Validation ensures that
+ * the name meets specific requirements before proceeding.</p>
+ *
+ * @author group 44
+ * @version 1.0
+ */
 public class NameInput extends ScreenAdapter {
 
     private final Main mainGame;
@@ -42,6 +53,12 @@ public class NameInput extends ScreenAdapter {
     BitmapFont font;
     BitmapFont textFont;
 
+    /**
+     * Constructs a new {@code NameInput} screen.
+     *
+     * @param game       The main game instance, managing resources and transitions.
+     * @param slotNumber The save slot for the character being created.
+     */
     public NameInput(Main game, String slotNumber) {
         mainGame = game;
         slot = slotNumber;
@@ -61,6 +78,10 @@ public class NameInput extends ScreenAdapter {
 
     }
 
+    /**
+     * Called when the screen becomes visible. Loads textures, sets the input processor,
+     * and creates the UI.
+     */
     public void show() {
         super.show();
         loadTextures();
@@ -68,6 +89,10 @@ public class NameInput extends ScreenAdapter {
         createUI();
     }
 
+    /**
+     * Creates the user interface for the name input screen, including the
+     * input field, question box, and confirmation button.
+     */
     public void createUI() {
         stage.clear();
 
@@ -157,6 +182,11 @@ public class NameInput extends ScreenAdapter {
     }
 
 
+    /**
+     * Creates and configures the custom text input field.
+     *
+     * @return A configured {@code TextField} instance.
+     */
     private TextField createInputBox() {
         // Calculate scaling factors relative to the viewport
         float fontScale = viewport.getWorldHeight() * 0.002f; // Scale font size relative to viewport height
@@ -200,6 +230,9 @@ public class NameInput extends ScreenAdapter {
         return textField;
     }
 
+    /**
+     * Loads textures required for the name input screen.
+     */
     public void loadTextures(){
 
         textures.put("inputQuestion", new Texture(Gdx.files.internal("NameInput/name-txtbox.png")));
@@ -212,6 +245,11 @@ public class NameInput extends ScreenAdapter {
     }
 
 
+    /**
+     * Renders the screen, including the background and UI elements.
+     *
+     * @param delta The time in seconds since the last frame.
+     */
     @Override
     public void render(float delta) {
         // Clear the screen
@@ -229,11 +267,20 @@ public class NameInput extends ScreenAdapter {
         stage.draw();
     }
 
+    /**
+     * Updates the viewport size on window resize.
+     *
+     * @param width  The new width of the window.
+     * @param height The new height of the window.
+     */
     public void resize(int width, int height) {
         viewport.update(width, height, true);
 
     }
 
+    /**
+     * Disposes of resources used by the name input screen.
+     */
     @Override
     public void dispose() {
         for (Texture texture : textures.values()) {
@@ -242,6 +289,10 @@ public class NameInput extends ScreenAdapter {
 
         stage.dispose();
     }
+
+    /**
+     * Sets the input processor for the stage.
+     */
     public void setStage(){
         Gdx.input.setInputProcessor(stage);
     }

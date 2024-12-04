@@ -20,6 +20,17 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The {@code ParentalPlaytimeStatsScreen} class represents the screen
+ * for displaying and managing parental control statistics, such as
+ * average and total playtime.
+ *
+ * <p>This screen includes functionality for resetting playtime statistics
+ * and visualizes them in a structured layout.</p>
+ *
+ * @author group 44
+ * @version 1.0
+ */
 public class ParentalPlaytimeStatsScreen extends ScreenAdapter {
 
     private final Main mainGame;
@@ -30,6 +41,11 @@ public class ParentalPlaytimeStatsScreen extends ScreenAdapter {
     private final BitmapFont font;
     private final Map<String, Texture> textures; // Texture management
 
+    /**
+     * Constructs a new {@code ParentalPlaytimeStatsScreen}.
+     *
+     * @param game The main game instance managing resources and transitions.
+     */
     public ParentalPlaytimeStatsScreen(Main game) {
         this.mainGame = game;
         this.spriteBatch = mainGame.getSharedBatch();
@@ -40,6 +56,10 @@ public class ParentalPlaytimeStatsScreen extends ScreenAdapter {
         this.textures = new HashMap<>(); // Initialize textures map
     }
 
+    /**
+     * Prepares the screen for display by setting the input processor,
+     * loading textures, and initializing the UI.
+     */
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
@@ -47,6 +67,10 @@ public class ParentalPlaytimeStatsScreen extends ScreenAdapter {
         initializeUI();
     }
 
+    /**
+     * Initializes the UI components of the screen, including labels,
+     * buttons, and layout tables.
+     */
     private void initializeUI() {
         stage.clear();
 
@@ -98,26 +122,48 @@ public class ParentalPlaytimeStatsScreen extends ScreenAdapter {
         mainTable.add(resetButton).colspan(2).size(viewport.getWorldWidth() * 0.6f, viewport.getWorldHeight() * 0.1f).padTop(20);
     }
 
+    /**
+     * Loads the textures required for the screen's UI components.
+     */
     private void loadTextures() {
         textures.put("avgPlaytimeTextBox", new Texture(Gdx.files.internal("parentalControlsScreen/avg-playtime-txtbox.png")));
         textures.put("totalPlaytimeTextBox", new Texture(Gdx.files.internal("parentalControlsScreen/total-playtime-txtbox.png")));
         textures.put("resetButton", new Texture(Gdx.files.internal("parentalControlsScreen/reset-playtime-txtbox.png")));
     }
 
+    /**
+     * Retrieves the average playtime per session.
+     *
+     * @return The average playtime in seconds.
+     */
     private int getAveragePlaytime() {
         return mainGame.jsonHandler.getParentalControlInt("averagePlaytimePerSession");
     }
 
+    /**
+     * Retrieves the total playtime of all sessions.
+     *
+     * @return The total playtime in seconds.
+     */
     private int getTotalPlaytime() {
         return mainGame.jsonHandler.getParentalControlInt("totalSecondsPlayed");
     }
 
+    /**
+     * Resets the playtime statistics to zero.
+     */
     private void resetPlaytimeStats() {
         mainGame.jsonHandler.setParentalControlInt("averagePlaytimePerSession", 0);
         mainGame.jsonHandler.setParentalControlInt("totalSecondsPlayed", 0);
         mainGame.jsonHandler.setParentalControlInt("totalSessionsPlayed", 0);
     }
 
+    /**
+     * Formats a time value from seconds into HH:mm:ss format.
+     *
+     * @param seconds The time value in seconds.
+     * @return A formatted string representing the time in HH:mm:ss format.
+     */
     private String formatTime(int seconds) {
         int hours = seconds / 3600;
         int minutes = (seconds % 3600) / 60;
@@ -126,6 +172,11 @@ public class ParentalPlaytimeStatsScreen extends ScreenAdapter {
         return String.format("%02d:%02d:%02d", hours, minutes, secs);
     }
 
+    /**
+     * Renders the screen, including the background and UI components.
+     *
+     * @param delta The time in seconds since the last frame.
+     */
     @Override
     public void render(float delta) {
         ScreenUtils.clear(0, 0, 0, 1); // Clear the screen with a black background
@@ -137,11 +188,20 @@ public class ParentalPlaytimeStatsScreen extends ScreenAdapter {
         stage.draw();
     }
 
+    /**
+     * Adjusts the viewport to the new screen dimensions.
+     *
+     * @param width  The new width of the screen.
+     * @param height The new height of the screen.
+     */
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height, true);
     }
 
+    /**
+     * Disposes of resources used by the screen, including textures and the stage.
+     */
     @Override
     public void dispose() {
         // Dispose of all textures

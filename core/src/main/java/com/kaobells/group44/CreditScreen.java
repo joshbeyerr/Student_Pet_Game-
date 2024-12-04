@@ -17,6 +17,16 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The {@code CreditScreen} class represents a screen in the game
+ * where credits are displayed, including motivation and contributors.
+ *
+ * <p>This class is responsible for creating and rendering the credit screen,
+ * managing its layout and transitioning back to the main screen via a back button.</p>
+ *
+ * @author group 44
+ * @version 1.0
+ */
 public class CreditScreen  extends ScreenAdapter {
     private final Main mainGame;
 
@@ -27,6 +37,11 @@ public class CreditScreen  extends ScreenAdapter {
     private final ImageButton backButton;
     private Map<String, Texture> textures;
 
+    /**
+     * Constructs a new {@code CreditScreen} instance.
+     *
+     * @param game The main game instance, used for shared resources and screen transitions.
+     */
     public CreditScreen(Main game) {
         mainGame = game;
 
@@ -37,6 +52,10 @@ public class CreditScreen  extends ScreenAdapter {
         stage = new Stage(viewport, spriteBatch);
     }
 
+    /**
+     * Prepares the screen when it becomes visible, including UI setup
+     * and resetting the input processor.
+     */
     public void show() {
 
         createUI();
@@ -44,10 +63,17 @@ public class CreditScreen  extends ScreenAdapter {
         setStage(); // Reset input processor
     }
 
+    /**
+     * Sets the input processor for the stage to handle user input.
+     */
     public void setStage() {
         Gdx.input.setInputProcessor(stage);
     }
 
+    /**
+     * Creates the user interface for the credit screen, including
+     * text boxes for motivation and contributors.
+     */
     public void createUI() {
 
         stage.addActor(backButton);
@@ -69,6 +95,11 @@ public class CreditScreen  extends ScreenAdapter {
     }
 
 
+    /**
+     * Creates a {@link Table} to manage the layout of the credit screen.
+     *
+     * @return A configured {@code Table} instance for the credit screen layout.
+     */
     private Table createTable() {
         Table newTable = new Table();
         newTable.setFillParent(true);
@@ -77,6 +108,12 @@ public class CreditScreen  extends ScreenAdapter {
         return newTable;
     }
 
+    /**
+     * Adds an {@link Actor} to a {@link Table}, setting its size, padding, and alignment.
+     *
+     * @param table The table to which the actor will be added.
+     * @param actor The actor to be added to the table.
+     */
     private void addToTable(Table table, Actor actor) {
         float width = viewport.getWorldWidth() * 0.4f;
         float height = viewport.getWorldHeight() * 0.3f;
@@ -87,6 +124,11 @@ public class CreditScreen  extends ScreenAdapter {
     }
 
 
+    /**
+     * Renders the credit screen, including the background and all UI elements.
+     *
+     * @param delta The time in seconds since the last frame.
+     */
     @Override
     public void render(float delta) {
         // Clear the screen
@@ -104,11 +146,21 @@ public class CreditScreen  extends ScreenAdapter {
         stage.draw();
     }
 
+    /**
+     * Resizes the viewport to match the new window dimensions.
+     *
+     * @param width  The new width of the window.
+     * @param height The new height of the window.
+     */
     public void resize(int width, int height) {
         viewport.update(width, height, true);
 
     }
 
+    /**
+     * Disposes of resources used by the credit screen, including textures
+     * and the stage.
+     */
     @Override
     public void dispose() {
         for (Texture texture : textures.values()) {

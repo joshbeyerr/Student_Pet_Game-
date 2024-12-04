@@ -2,6 +2,18 @@ package com.kaobells.group44;
 
 import java.time.*;
 
+/**
+ * The {@code GameSession} class manages the active gameplay session,
+ * including parental controls, session statistics, and playtime tracking.
+ * It ensures that gameplay adheres to the rules set by parental controls
+ * and tracks playtime for each session.
+ *
+ * <p>This class is tightly integrated with the {@link Main} and {@link CharacterClass}
+ * to facilitate gameplay and parental statistics functionality.</p>
+ *
+ * @author group 44
+ * @version 1.0
+ */
 //TLDR Class handles the active session for parental control and stats functionality
 public class GameSession {
 
@@ -19,6 +31,15 @@ public class GameSession {
 
 
     //constructor
+    /**
+     * Constructs a new {@code GameSession}.
+     *
+     * <p>Initializes the session's start time, checks parental controls,
+     * and increments the session count in the database.</p>
+     *
+     * @param charc The character associated with this session.
+     * @param game The main game instance.
+     */
     public GameSession(CharacterClass charc, Main game){
         this.mainGame = game;
         this.character = charc;
@@ -33,6 +54,13 @@ public class GameSession {
         mainGame.jsonHandler.setParentalControlInt("totalSessionsPlayed", sessionsPlayed); //increment sessions played on new creation of a GameSession
     }
 
+    /**
+     * Checks if the current playtime falls within a blocked period defined by parental controls.
+     *
+     * <p>If blocked, decrements the session count to account for an invalid session.</p>
+     *
+     * @return {@code true} if the current playtime is blocked; {@code false} otherwise.
+     */
     public boolean blockedPlayTimeCheck(){
         /*
         Returns true if player is playing in a blocked time called post-construction but pre-GameScreen Creation.
@@ -82,6 +110,12 @@ public class GameSession {
         return false;
     }
 
+    /**
+     * Updates parental statistics in the database, such as total playtime
+     * and average playtime per session.
+     *
+     * <p>Typically called when saving the game.</p>
+     */
     public void updateParentalStats(){ //Called on save
         //create values
         int oldTotalSecondsPlayed = mainGame.jsonHandler.getParentalControlInt("totalSecondsPlayed"); //to be replaced by call to JSON
@@ -91,6 +125,11 @@ public class GameSession {
         mainGame.jsonHandler.setParentalControlInt("averagePlaytimePerSession",(newTotalSecondsPlayed/sessionsPlayed));
     }
 
+    /**
+     * Calculates the total seconds played since the session started.
+     *
+     * @return The total seconds played as an {@code int}.
+     */
     //helper method to return the seconds since the GameSession was created as an Int
     public int getSecondsPlayedThisSession(){
         this.secondsPlayed = Duration.between(this.startTime, LocalTime.now()).toSeconds();

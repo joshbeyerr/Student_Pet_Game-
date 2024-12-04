@@ -17,6 +17,17 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The {@code SetParentalPassScreen} class is responsible for handling the
+ * parental password setup and login functionality in the game. This screen
+ * allows users to either set a new parental password or validate an existing one.
+ *
+ * <p>The UI includes pin boxes for entering a 4-digit password, a title indicating
+ * the current operation (set or login), and a submit button to confirm the action.</p>
+ *
+ * @author group 44
+ * @version 1.0
+ */
 public class SetParentalPassScreen extends ScreenAdapter {
 
     private final Main mainGame;
@@ -36,6 +47,11 @@ public class SetParentalPassScreen extends ScreenAdapter {
     private final Texture defaultImageTexture;
     private String enteredPassword;
 
+    /**
+     * Constructs a new {@code SetParentalPassScreen}.
+     *
+     * @param game The main game instance for accessing shared resources.
+     */
     public SetParentalPassScreen(Main game) {
         this.mainGame = game;
         this.spriteBatch = mainGame.getSharedBatch();
@@ -58,6 +74,9 @@ public class SetParentalPassScreen extends ScreenAdapter {
         initializeUI();
     }
 
+    /**
+     * Loads textures for UI elements such as buttons and text images.
+     */
     private void loadTextures() {
         textures = new HashMap<>();
         textures.put("submitButton", new Texture(Gdx.files.internal("parentalControlsScreen/set-pass-btn.png")));
@@ -66,6 +85,9 @@ public class SetParentalPassScreen extends ScreenAdapter {
         textures.put("textImageEnter", new Texture(Gdx.files.internal("parentalControlsScreen/submit-pass-txtbox.png")));
     }
 
+    /**
+     * Initializes the password state and resets the entered password.
+     */
     private void initializeState() {
         String password = mainGame.jsonHandler.getParentalPassword();
         isPasswordSet = password != null && !password.isEmpty();
@@ -73,6 +95,9 @@ public class SetParentalPassScreen extends ScreenAdapter {
         enteredPassword = ""; // Initialize empty password
     }
 
+    /**
+     * Sets up the UI components for the screen, including pin boxes, title, and submit button.
+     */
     private void initializeUI() {
         stage.clear();
 
@@ -127,11 +152,20 @@ public class SetParentalPassScreen extends ScreenAdapter {
         setInputListener();
     }
 
+    /**
+     * Creates an image box for the pin input.
+     *
+     * @return An {@link Image} initialized with the default pin texture.
+     */
     private Image createImageBox() {
         // Create an image box with the default texture
         return new Image(defaultImageTexture);
     }
 
+    /**
+     * Handles submission of the entered password, either validating it
+     * or saving it as a new password.
+     */
     private void handleSubmit() {
         if (enteredPassword.length() == 4) { // Ensure all 4 digits are entered
             if (isPasswordSet) {
@@ -157,6 +191,9 @@ public class SetParentalPassScreen extends ScreenAdapter {
         }
     }
 
+    /**
+     * Sets up the input listener to handle key events for password entry.
+     */
     private void setInputListener() {
         Gdx.input.setInputProcessor(stage);
         stage.addListener(new InputListener() {
@@ -176,6 +213,11 @@ public class SetParentalPassScreen extends ScreenAdapter {
         });
     }
 
+    /**
+     * Changes the pin box at the given index to a hidden image.
+     *
+     * @param index The index of the pin box to update.
+     */
     private void changeImageToHidden(int index) {
         switch (index) {
             case 0:
@@ -193,6 +235,11 @@ public class SetParentalPassScreen extends ScreenAdapter {
         }
     }
 
+    /**
+     * Changes the pin box at the given index to the default image.
+     *
+     * @param index The index of the pin box to update.
+     */
     private void changeImageToDefault(int index) {
         switch (index) {
             case 0:
@@ -211,12 +258,21 @@ public class SetParentalPassScreen extends ScreenAdapter {
     }
 
 
+    /**
+     * Prepares the stage and sets the input processor to handle user interactions.
+     */
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
         stage.addActor(backButton);
     }
 
+    /**
+     * Renders the screen by clearing the background, drawing the main game background,
+     * and rendering the stage elements such as the back button and pin input UI.
+     *
+     * @param delta Time elapsed since the last frame, in seconds.
+     */
     @Override
     public void render(float delta) {
         ScreenUtils.clear(0, 0, 0, 1);
@@ -228,11 +284,20 @@ public class SetParentalPassScreen extends ScreenAdapter {
         stage.draw();
     }
 
+    /**
+     * Updates the viewport dimensions when the window is resized.
+     *
+     * @param width  The new width of the window.
+     * @param height The new height of the window.
+     */
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height, true);
     }
 
+    /**
+     * Releases all resources allocated by this screen, including textures and stage objects.
+     */
     @Override
     public void dispose() {
         hiddenImageTexture.dispose();

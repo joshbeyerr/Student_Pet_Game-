@@ -22,6 +22,16 @@ import com.badlogic.gdx.utils.Timer;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The {@code GameScreen} class manages the main gameplay screen, allowing
+ * the player to interact with the character and perform various actions.
+ *
+ * <p>This class handles the UI layout, character updates, and game logic,
+ * such as feeding, exercising, and managing stats like health and happiness.</p>
+ *
+ * @author group 44
+ * @version 1.0
+ */
 public class GameScreen extends ScreenAdapter{
 
     private final Main mainGame;
@@ -63,6 +73,12 @@ public class GameScreen extends ScreenAdapter{
     private int giftCounter = 0;
 
 
+    /**
+     * Constructs a {@code GameScreen} instance.
+     *
+     * @param game       The main game instance, providing shared resources and transition management.
+     * @param gameSession The game session associated with this screen.
+     */
     public GameScreen(Main game, GameSession gameSession) {
 
         this.mainGame = game;
@@ -91,6 +107,9 @@ public class GameScreen extends ScreenAdapter{
 
     }
 
+    /**
+     * Configures the styles for labels used in the game.
+     */
     public void setLabelStyles(){
         BitmapFont nameFont = mainGame.resourceManager.getFont(true);
         nameFont.getData().setScale((viewport.getWorldHeight() / 500f)); // Scale by 1.5x
@@ -112,6 +131,9 @@ public class GameScreen extends ScreenAdapter{
     }
 
 
+    /**
+     * Creates the main UI layout for the game screen.
+     */
     public void createUI() {
         stage.clear();
 
@@ -143,6 +165,12 @@ public class GameScreen extends ScreenAdapter{
 
     }
 
+    /**
+     * Retrieves an existing {@link Table} or creates a new one with the specified key.
+     *
+     * @param key The identifier for the table.
+     * @return The {@link Table} corresponding to the key.
+     */
     private Table getOrCreateTable(String key) {
         Table table = tables.get(key);
         if (table == null) {
@@ -154,7 +182,10 @@ public class GameScreen extends ScreenAdapter{
         return table;
     }
 
-
+    /**
+     * Creates and configures the sidebar layout, which includes stats
+     * and interaction buttons.
+     */
     public void sideBar() {
         // screen height for dynamics
         float height = viewport.getWorldHeight();
@@ -176,6 +207,12 @@ public class GameScreen extends ScreenAdapter{
         sidebar.add(createButtonsTable()).size(height * 0.42f, height * 0.45f).padTop((height * 0.04f)).padLeft(leftPad);
     }
 
+    /**
+     * Creates the top bar in the sidebar, including buttons for exiting,
+     * saving, and opening inventory.
+     *
+     * @return A {@link Table} containing the top bar layout.
+     */
     // clean method generates the table for name, score and table button
     public Table createTopBar(){
 
@@ -196,6 +233,17 @@ public class GameScreen extends ScreenAdapter{
     }
 
 
+    /**
+     * Creates a table displaying the character's name and score.
+     *
+     * <p>The table is styled with a background using a purple box texture.
+     * The name and score are displayed as labels, centrally aligned within the table.</p>
+     *
+     * <p>The dimensions and padding of the table elements are dynamically calculated
+     * based on the viewport's height to maintain a consistent layout across different screen sizes.</p>
+     *
+     * @return A {@link Table} containing the name and score labels, styled and formatted appropriately.
+     */
     // clean method generates the table for name, score and table button
     public Table createNameScoreTable(){
 
@@ -225,6 +273,12 @@ public class GameScreen extends ScreenAdapter{
         return nameScoreTable;
     }
 
+    /**
+     * Creates a stat bar with a dynamic foreground based on the current value.
+     *
+     * @param currentValue The current value of the stat (0-100).
+     * @return A {@link Table} containing the stat bar.
+     */
     public Table createStatBar(float currentValue) {
         Table statBarTable = new Table();
 
@@ -253,6 +307,12 @@ public class GameScreen extends ScreenAdapter{
         return statBarTable;
     }
 
+    /**
+     * Updates the stat bar with the new value.
+     *
+     * @param statName     The name of the stat (e.g., "fullnessBar").
+     * @param currentValue The new value of the stat (0-100).
+     */
     public void updateStatBar(String statName, float currentValue) {
         // Retrieve the stat bar table from the images map
         Table statBarTable = (Table) images.get(statName);
@@ -285,6 +345,12 @@ public class GameScreen extends ScreenAdapter{
         }
     }
 
+    /**
+     * Determines the color of the stat bar based on its current value.
+     *
+     * @param currentValue The current value of the stat (0-100).
+     * @return An {@link Image} representing the foreground color of the stat bar.
+     */
     public Image getStatBarColor(float currentValue) {
         if (currentValue >= 0.0f && currentValue <= 100.0f) {
             if (currentValue >= 80.0f) {
@@ -303,6 +369,12 @@ public class GameScreen extends ScreenAdapter{
     }
 
 
+    /**
+     * Creates a table containing the stat bars for various attributes such as fullness, sleep, happiness,
+     * health, and stress. Each stat bar is represented by a label and a progress bar.
+     *
+     * @return A {@code Table} containing all the stat bars.
+     */
     public Table createStatBarTable(){
         // Stat Bars Section
         Table statBarsTable = getOrCreateTable("statBarsTable");
@@ -336,6 +408,12 @@ public class GameScreen extends ScreenAdapter{
 
     }
 
+    /**
+     * Creates a table containing buttons for actions such as feeding, sleeping, exercising, playing,
+     * giving gifts, and visiting the doctor.
+     *
+     * @return A {@code Table} containing all action buttons.
+     */
     public Table createButtonsTable(){
         // Buttons Section
         Table buttonsTable = getOrCreateTable("buttonsTable");
@@ -360,6 +438,11 @@ public class GameScreen extends ScreenAdapter{
         return buttonsTable;
     }
 
+    /**
+     * Creates a table containing inventory item images.
+     *
+     * @return A {@code Table} with all inventory item images displayed.
+     */
     public Table inventoryImagesTable(){
         Table inventoryImagesTable = new Table();
         float pad = viewport.getWorldWidth() * 0.0125f;
@@ -373,6 +456,11 @@ public class GameScreen extends ScreenAdapter{
 
     }
 
+    /**
+     * Creates a table displaying the counts of items in the inventory.
+     *
+     * @return A {@code Table} showing the item counts in the inventory.
+     */
     public Table inventoryCountTable(){
         Table inventoryCountTable = new Table();
         float pad = viewport.getWorldWidth() * 0.031f;
@@ -388,6 +476,11 @@ public class GameScreen extends ScreenAdapter{
 
     }
 
+    /**
+     * Creates the inventory table by combining item images and their respective counts.
+     *
+     * @return A {@code Table} representing the inventory.
+     */
     public Table createInventoryTable(){
         Table inventoryTable = getOrCreateTable("inventoryTable");
         inventoryTable.setBackground(new TextureRegionDrawable(new TextureRegion(textures.get("inventoryBox"))));
@@ -401,6 +494,9 @@ public class GameScreen extends ScreenAdapter{
     }
 
 
+    /**
+     * Sets up the game section UI, including character display and inventory.
+     */
     public void gameSection() {
         Table gameSection = getOrCreateTable("gameSection");
 
@@ -438,6 +534,22 @@ public class GameScreen extends ScreenAdapter{
         gameSection.center();
     }
 
+    /**
+     * Animates the character's head and body to walk off the screen to the right and return.
+     *
+     * <p>This method performs the following actions sequentially:
+     * <ul>
+     *     <li>The character's head and body move off-screen to the right.</li>
+     *     <li>The head and body are hidden, and the "door open" sound is played.</li>
+     *     <li>A healing sound effect is played, followed by a short delay.</li>
+     *     <li>The "door close" sound is played, and the head and body are made visible again.</li>
+     *     <li>The head and body return to their original positions on the screen.</li>
+     * </ul>
+     *
+     * <p>This method ensures the containers for the head and body are initialized before proceeding.</p>
+     *
+     * @throws IllegalStateException if either the {@code headContainer} or {@code bodyContainer} is not initialized.
+     */
     public void walkOffScreenAndReturn() {
         // Check if headContainer and bodyContainer are not null
         if (headContainer == null || bodyContainer == null) {
@@ -483,7 +595,11 @@ public class GameScreen extends ScreenAdapter{
         headContainer.addAction(headAction);
         bodyContainer.addAction(bodyAction);
     }
-
+    /**
+     * Updates the character's head image.
+     *
+     * @param newHead The new {@link Image} for the character's head.
+     */
     public void updateHead(Image newHead) {
         // Find the head container
         if (headContainer != null) {
@@ -492,6 +608,11 @@ public class GameScreen extends ScreenAdapter{
 
     }
 
+    /**
+     * Updates the character's body image.
+     *
+     * @param newBody The new {@link Image} for the character's body.
+     */
     public void updateBody(Image newBody) {
         // Find the head container
         if (bodyContainer != null) {
@@ -500,6 +621,9 @@ public class GameScreen extends ScreenAdapter{
 
     }
 
+    /**
+     * Loads textures required for the game screen, including sidebar and inventory assets.
+     */
     public void loadTextures(){
         textures = new HashMap<>();
 
@@ -555,6 +679,9 @@ public class GameScreen extends ScreenAdapter{
     }
 
 
+    /**
+     * Initializes and loads image buttons for UI elements, adding listeners for interactions.
+     */
     public void loadImageButtons(){
 
         ImageButton feed = mainGame.createImageButton(textures.get("feed"));
@@ -725,6 +852,11 @@ public class GameScreen extends ScreenAdapter{
 
     }
 
+    /**
+     * Periodically updates the score, inventory, and stat bars.
+     *
+     * @param deltaTime The time elapsed since the last frame in seconds.
+     */
     private void handleScoreAndStatUpdates(float deltaTime) {
         scoreUpdateTimer += deltaTime;
 
@@ -764,6 +896,11 @@ public class GameScreen extends ScreenAdapter{
         }
     }
 
+    /**
+     * Updates the character's head and body images at regular intervals.
+     *
+     * @param deltaTime The time elapsed since the last frame in seconds.
+     */
     private void handleHeadAndBodyUpdates(float deltaTime) {
         headBodyUpdateTimer += deltaTime;
 
@@ -775,6 +912,11 @@ public class GameScreen extends ScreenAdapter{
         }
     }
 
+    /**
+     * Renders the game screen.
+     *
+     * @param delta The time in seconds since the last frame.
+     */
     @Override
     public void render(float delta) {
         float deltaTime = Gdx.graphics.getDeltaTime();
@@ -802,11 +944,20 @@ public class GameScreen extends ScreenAdapter{
     }
 
 
+    /**
+     * Resizes the viewport.
+     *
+     * @param width  The new width of the screen.
+     * @param height The new height of the screen.
+     */
     public void resize(int width, int height) {
         viewport.update(width, height, true);
 
     }
 
+    /**
+     * Disposes of resources used by the screen.
+     */
     @Override
     public void dispose() {
         session.character.dispose();
@@ -819,6 +970,9 @@ public class GameScreen extends ScreenAdapter{
         stage.dispose();
     }
 
+    /**
+     * Sets the input processor for handling user inputs.
+     */
     public void setStage(){
         if (multiplexer == null){
             // Create an InputAdapter for key press handling

@@ -25,6 +25,17 @@ import com.kaobells.group44.Main;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The {@code GameSlots} class manages the screen for selecting,
+ * loading, reviving, or starting a new game based on save slots.
+ *
+ * <p>It displays the available slots and their respective states
+ * (empty, alive, or dead) and provides appropriate actions based
+ * on the selected slot and the current screen mode.</p>
+ *
+ * @author group 44
+ * @version 1.0
+ */
 public class GameSlots  extends ScreenAdapter {
     private final Main mainGame;
     private final Screen screen;
@@ -37,6 +48,12 @@ public class GameSlots  extends ScreenAdapter {
     private final Map<String, Texture> textures;
     Label.LabelStyle nameLabelStyle;
 
+    /**
+     * Constructs a new {@code GameSlots} screen.
+     *
+     * @param game       The main game instance for managing resources and transitions.
+     * @param screenType The type of screen ("load", "revive", or "new").
+     */
     public GameSlots(Main game, String screenType) {
         mainGame = game;
         textures = new HashMap<>();
@@ -63,6 +80,9 @@ public class GameSlots  extends ScreenAdapter {
 
     }
 
+    /**
+     * Displays the screen and initializes the stage input processor.
+     */
     public void show() {
 
         super.show();
@@ -70,6 +90,9 @@ public class GameSlots  extends ScreenAdapter {
         stage.addActor(backButton);
     }
 
+    /**
+     * Sets the label style for slot names.
+     */
     public void setLabels(){
         BitmapFont nameFont = mainGame.resourceManager.getFont(true);
         nameFont.getData().setScale((viewport.getWorldHeight() / 750f)); // Scale by 1.5x
@@ -78,10 +101,16 @@ public class GameSlots  extends ScreenAdapter {
         nameLabelStyle.fontColor = new Color(0x66 / 255f, 0x2d / 255f, 0x91 / 255f, 1f);
     }
 
+    /**
+     * Sets the input processor to the stage.
+     */
     public void setStage() {
         Gdx.input.setInputProcessor(stage);
     }
 
+    /**
+     * Creates the user interface for the game slots screen.
+     */
     public void createUI() {
 
         loadTextures();
@@ -106,6 +135,11 @@ public class GameSlots  extends ScreenAdapter {
     }
 
 
+    /**
+     * Creates a new table for managing the screen layout.
+     *
+     * @return A new {@link Table} instance.
+     */
     private Table createTable() {
         Table newTable = new Table();
         newTable.setFillParent(true);
@@ -114,6 +148,11 @@ public class GameSlots  extends ScreenAdapter {
         return newTable;
     }
 
+    /**
+     * Creates a table displaying a text box based on the screen type.
+     *
+     * @return A table with a text box image.
+     */
     public Table textTable(){
         Table newTable = new Table();
         Image loadGameTextbox;
@@ -132,6 +171,11 @@ public class GameSlots  extends ScreenAdapter {
         return newTable;
     }
 
+    /**
+     * Creates a table for displaying a warning message.
+     *
+     * @return A table with a warning text image.
+     */
     public Table warningTable(){
         Table newTable = new Table();
         Image warningText = mainGame.createImage(textures.get("warningText"));
@@ -140,11 +184,23 @@ public class GameSlots  extends ScreenAdapter {
 
     }
 
+    /**
+     * Retrieves the file path for a character type.
+     *
+     * @param characterType The type of character.
+     * @return The file path for the character image.
+     */
     public String getCharacterType(String characterType) {
         return "characters/" + characterType + "-head.png";
 
     }
 
+    /**
+     * Retrieves the texture for a slot based on the character's state.
+     *
+     * @param character The character in the slot.
+     * @return A drawable for the slot background.
+     */
     public TextureRegionDrawable getSlotType(CharacterClass character) {
             if (character == null){
                 return new TextureRegionDrawable(new TextureRegion(textures.get("emptySlot")));
@@ -158,6 +214,13 @@ public class GameSlots  extends ScreenAdapter {
     }
 
 
+    /**
+     * Creates a slot table with a character and its respective actions.
+     *
+     * @param character  The character in the slot.
+     * @param slotNumber The slot number.
+     * @return A table representing the slot.
+     */
     public Table createSlot(CharacterClass character, String slotNumber){
         // slot
         Table slot = new Table();
@@ -187,6 +250,16 @@ public class GameSlots  extends ScreenAdapter {
         }
 
         slot.addListener(new ClickListener() {
+            /**
+             * Handles the touch down event, scaling the slot table down for a visual effect.
+             *
+             * @param event   The input event triggering the action.
+             * @param x       The x-coordinate of the touch.
+             * @param y       The y-coordinate of the touch.
+             * @param pointer The pointer for the touch.
+             * @param button  The button pressed during the touch.
+             * @return True if the event is consumed.
+             */
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 mainGame.getClickSound().play();
@@ -199,6 +272,15 @@ public class GameSlots  extends ScreenAdapter {
                 return true; // Consume the event
             }
 
+            /**
+             * Handles the touch up event, resetting the scale of the slot table.
+             *
+             * @param event   The input event triggering the action.
+             * @param x       The x-coordinate of the release.
+             * @param y       The y-coordinate of the release.
+             * @param pointer The pointer for the touch.
+             * @param button  The button released.
+             */
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 // Reset the table scale when the touch is released
@@ -275,6 +357,11 @@ public class GameSlots  extends ScreenAdapter {
         return slot;
     }
 
+    /**
+     * Creates a table with all the available slots.
+     *
+     * @return A table containing all slots.
+     */
     public Table slotTable(){
         Table newTable = new Table();
 
@@ -301,7 +388,11 @@ public class GameSlots  extends ScreenAdapter {
 
     }
 
-
+    /**
+     * Renders the game slots screen.
+     *
+     * @param delta Time elapsed since the last frame.
+     */
     @Override
     public void render(float delta) {
         // Clear the screen
@@ -326,6 +417,9 @@ public class GameSlots  extends ScreenAdapter {
         stage.draw();
     }
 
+    /**
+     * Loads textures for the game slots screen.
+     */
     public void loadTextures(){
         textures.put("aliveSlot", new Texture(Gdx.files.internal("gameSlot/alive-slot-btn.png")));
         textures.put("deadSlot", new Texture(Gdx.files.internal("gameSlot/dead-slot-btn.png")));
@@ -339,11 +433,20 @@ public class GameSlots  extends ScreenAdapter {
 
     }
 
+    /**
+     * Adjusts the viewport on window resize.
+     *
+     * @param width  New window width.
+     * @param height New window height.
+     */
     public void resize(int width, int height) {
         viewport.update(width, height, true);
 
     }
 
+    /**
+     * Disposes of resources used by the screen.
+     */
     @Override
     public void dispose() {
         for (Texture texture : textures.values()) {
@@ -352,6 +455,9 @@ public class GameSlots  extends ScreenAdapter {
         stage.dispose();
     }
 
+    /**
+     * Enum representing the different screen modes.
+     */
     public enum Screen{
         NEW, LOAD, REVIVE
     }

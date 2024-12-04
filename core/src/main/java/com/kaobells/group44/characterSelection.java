@@ -19,7 +19,18 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/**
+ * The {@code characterSelection} class is responsible for displaying a screen
+ * where the player can select a character for their game. The screen includes
+ * UI elements such as arrows for navigating between characters, a preview of
+ * the current character, and a selection button to confirm the choice.
+ *
+ * <p>This class handles the loading of character textures, updating the displayed
+ * character, and transitioning to the next screen upon selection.</p>
+ *
+ * @author group 44
+ * @version 1.0
+ */
 public class characterSelection extends ScreenAdapter {
 
     private final Main mainGame;
@@ -42,6 +53,12 @@ public class characterSelection extends ScreenAdapter {
 
     BitmapFont font;
 
+    /**
+     * Constructs a new {@code characterSelection} screen.
+     *
+     * @param game       The main game instance to manage shared resources and transitions.
+     * @param slotNumber The slot number representing the save slot for the character selection.
+     */
     public characterSelection(Main game, String slotNumber) {
         mainGame = game;
         slot = slotNumber;
@@ -65,6 +82,10 @@ public class characterSelection extends ScreenAdapter {
 
     }
 
+    /**
+     * Resets the input processor and sets up the back button.
+     */
+
     public void show() {
         super.show();
         setStage(); // Reset input processor
@@ -74,7 +95,9 @@ public class characterSelection extends ScreenAdapter {
         stage.addActor(error);
     }
 
-
+    /**
+     * Sets up the UI elements for the character selection screen.
+     */
     public void createUI(){
 
         Gdx.app.log("characterSelection", "createUI");
@@ -84,6 +107,12 @@ public class characterSelection extends ScreenAdapter {
         setupSpriteChooseState();
     }
 
+    /**
+     * Retrieves the type of character based on the provided index.
+     *
+     * @param index The index of the character.
+     * @return The type of character as a {@code String}.
+     */
     public String getCharacterType(int index) {
         switch (index) {
             case 0: return "relaxed";
@@ -95,6 +124,13 @@ public class characterSelection extends ScreenAdapter {
         }
     }
 
+    /**
+     * Retrieves the character {@code Image} for the given index, loading
+     * the texture if necessary.
+     *
+     * @param index The index of the character to retrieve.
+     * @return The {@code Image} of the character.
+     */
     private Image loadChar(int index) {
         if (characters[index] == null) {
             String charKey = "char" + (index + 1); // Generate the key dynamically (e.g., "char1", "char2", ...)
@@ -108,7 +144,9 @@ public class characterSelection extends ScreenAdapter {
         return characters[index];
     }
 
-
+    /**
+     * Loads the textures required for character selection.
+     */
     private void loadTextures() {
         textures = new HashMap<>();
 
@@ -118,6 +156,10 @@ public class characterSelection extends ScreenAdapter {
         textures.put("select", new Texture(Gdx.files.internal("characterSelect/select-btn.png")));
     }
 
+    /**
+     * Sets up the character selection UI, including arrows for navigation,
+     * character preview, and a select button.
+     */
     private void setupSpriteChooseState() {
 
         // Character question
@@ -188,6 +230,10 @@ public class characterSelection extends ScreenAdapter {
             .center();
     }
 
+    /**
+     * Updates the displayed character in the character selection table
+     * to reflect the current selection.
+     */
     private void updateCharacterInTable() {
         // Retrieve the new character Image using getChar
         Image newChar = loadChar(curCharacterIndex);
@@ -198,6 +244,11 @@ public class characterSelection extends ScreenAdapter {
         curChar = newChar;
     }
 
+    /**
+     * Switches the currently displayed character to the next or previous character.
+     *
+     * @param left {@code true} to switch to the previous character, {@code false} for the next character.
+     */
     public void switchCharacter(boolean left) {
         // Update the character index
         if (left) {
@@ -210,11 +261,22 @@ public class characterSelection extends ScreenAdapter {
         updateCharacterInTable();
     }
 
+    /**
+     * Retrieves the index of the currently selected character.
+     *
+     * @return The index of the currently selected character.
+     */
     public int getCharacterIndex(){
         return curCharacterIndex;
     }
 
 
+    /**
+     * Renders the character selection screen, including the background
+     * and stage elements.
+     *
+     * @param delta The time in seconds since the last frame.
+     */
     @Override
     public void render(float delta) {
         // Clear the screen
@@ -231,12 +293,21 @@ public class characterSelection extends ScreenAdapter {
         stage.draw();
     }
 
-
+    /**
+     * Resizes the viewport to fit the new window dimensions.
+     *
+     * @param width  The new width of the window.
+     * @param height The new height of the window.
+     */
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height, true);
     }
 
+    /**
+     * Disposes of all resources used by the screen, including textures
+     * and the stage.
+     */
     @Override
     public void dispose() {
 
@@ -246,6 +317,9 @@ public class characterSelection extends ScreenAdapter {
         stage.dispose();
     }
 
+    /**
+     * Sets the input processor for the stage to handle input events.
+     */
     public void setStage(){
         Gdx.input.setInputProcessor(stage);
     }

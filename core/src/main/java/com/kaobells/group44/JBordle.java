@@ -27,6 +27,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * Represents a single input box in the JBordle game grid.
+ * Each box can display a character and a background image, with additional
+ * state to indicate matching status and correctness.
+ */
 class InputBox extends Actor {
     private char character; // The character typed in this box
     private Image background; // The box's background
@@ -36,6 +41,12 @@ class InputBox extends Actor {
     private boolean isGreen;
     private boolean matched;
 
+    /**
+     * Constructs a new {@code InputBox}.
+     *
+     * @param backgroundTexture The texture to use for the box's background.
+     * @param font              The font used to render characters in the box.
+     */
     public InputBox(Texture backgroundTexture, BitmapFont font) {
         this.character = '\0'; // Empty by default
         this.background = new Image(new TextureRegionDrawable(backgroundTexture));
@@ -48,32 +59,74 @@ class InputBox extends Actor {
         setSize(80, 80); // Set default size for the input box
     }
 
+    /**
+     * Sets the character displayed in the box.
+     *
+     * @param c The character to display.
+     */
     public void setCharacter(char c) {
         this.character = Character.toUpperCase(c);
     }
+
+    /**
+     * Gets the character displayed in the box.
+     *
+     * @return The character in lowercase.
+     */
     public char getCharacter() {
         return Character.toLowerCase(this.character);
     }
 
+    /**
+     * Updates the background image of the box.
+     *
+     * @param backgroundTexture The new background texture.
+     */
     public void setImage(Texture backgroundTexture){
         this.background = new Image(new TextureRegionDrawable(backgroundTexture));
     }
-
+    /**
+     * Gets the "isGreen" status of the box, indicating a correct match.
+     *
+     * @return {@code true} if the box is green; {@code false} otherwise.
+     */
     public boolean getIsGreen(){
         return isGreen;
     }
+
+    /**
+     * Sets the "isGreen" status of the box.
+     *
+     * @param val {@code true} to mark the box as green; {@code false} otherwise.
+     */
     public void setIsGreen(Boolean val){
         isGreen = val;
     }
 
-
+    /**
+     * Gets the "matched" status of the box, indicating if the character was matched.
+     *
+     * @return {@code true} if the box is matched; {@code false} otherwise.
+     */
     public boolean getMatched(){
         return matched;
     }
+
+    /**
+     * Sets the "matched" status of the box.
+     *
+     * @param val {@code true} to mark the box as matched; {@code false} otherwise.
+     */
     public void setMatched(Boolean val){
         matched = val;
     }
 
+    /**
+     * Draws the box and its character on the screen.
+     *
+     * @param batch      The batch used for drawing.
+     * @param parentAlpha The parent's alpha value to use for blending.
+     */
     @Override
     public void draw(Batch batch, float parentAlpha) {
         // Draw the background
@@ -93,7 +146,11 @@ class InputBox extends Actor {
     }
 }
 
-
+/**
+ * Represents the JBordle mini-game where players guess a target word
+ * through a Wordle-like interface. Players type their guesses, and the game
+ * provides feedback on correctness and character positions.
+ */
 public class JBordle extends ScreenAdapter {
     private final Main mainGame;
     private final CharacterClass player;
@@ -117,6 +174,12 @@ public class JBordle extends ScreenAdapter {
     Container<Actor> container;
     private InputMultiplexer multiplexer;
 
+    /**
+     * Constructs the JBordle mini-game screen.
+     *
+     * @param game   The main game instance for shared resources and transitions.
+     * @param playa  The player's character.
+     */
     public JBordle(Main game,CharacterClass playa) {
         mainGame = game;
         player = playa;
@@ -130,6 +193,9 @@ public class JBordle extends ScreenAdapter {
         stage = new Stage(viewport, spriteBatch);
     }
 
+    /**
+     * Displays the JBordle game screen.
+     */
     @Override
     public void show() {
         createUI();
@@ -137,6 +203,9 @@ public class JBordle extends ScreenAdapter {
         setStage(); // Reset input processor
     }
 
+    /**
+     * Sets up the input processor for handling keyboard input.
+     */
     public void setStage() {
         if (multiplexer == null) {
             // Create an InputAdapter for handling keyboard input
@@ -194,7 +263,9 @@ public class JBordle extends ScreenAdapter {
         Gdx.input.setInputProcessor(multiplexer); // Set multiplexer as the input processor
     }
 
-
+    /**
+     * Creates the user interface for the game.
+     */
     public void createUI() {
         // Create and configure the background
 
@@ -228,7 +299,11 @@ public class JBordle extends ScreenAdapter {
         stage.addActor(backButton);
     }
 
-
+    /**
+     * Creates a table containing the game title.
+     *
+     * @return A {@link Table} displaying the title.
+     */
     public Table createTitleTable(){
         Table table = new Table();
         Image title = mainGame.createImage(textures.get("title"));
@@ -236,6 +311,11 @@ public class JBordle extends ScreenAdapter {
         return table;
     }
 
+    /**
+     * Creates a table to display hints during the game.
+     *
+     * @return A {@link Table} containing the hint section.
+     */
     public Table createHintTable(){
         Table table = new Table();
         container = new Container<>();
@@ -250,6 +330,11 @@ public class JBordle extends ScreenAdapter {
         return table;
     }
 
+    /**
+     * Creates the input grid for the JBordle game.
+     *
+     * @return A {@link Table} containing rows of {@link InputBox}.
+     */
     public Table createInputRowsTable(){
 
         // Create a table for layout
@@ -281,6 +366,9 @@ public class JBordle extends ScreenAdapter {
     }
 
 
+    /**
+     * Selects a random target word from the word bank.
+     */
     // Selects a random word from the file
     public void randomWordSelector() {
         String filePath = "computerScreen/word-bank.csv"; // Replace with the path to your CSV file
@@ -310,6 +398,12 @@ public class JBordle extends ScreenAdapter {
         System.out.println("A word has been chosen! Try to guess it." + targetWord);
     }
 
+    /**
+     * Checks if a word is valid.
+     *
+     * @param word The word to validate.
+     * @return {@code true} if the word is valid; {@code false} otherwise.
+     */
     public boolean validWord(String word){
         word = word.toLowerCase();
 
@@ -328,6 +422,11 @@ public class JBordle extends ScreenAdapter {
         return false;
     }
 
+    /**
+     * Validates the player's guessed word for a given row.
+     *
+     * @param rowIndex The index of the row to validate.
+     */
     private void validateWord(int rowIndex) {
         // Extract the word from the row
         ArrayList<InputBox> row = rows.get(rowIndex);
@@ -383,6 +482,14 @@ public class JBordle extends ScreenAdapter {
 
     }
 
+    /**
+     * Loads the end-game screen with a button based on the game status (win/lose).
+     * Updates the input processor to restrict input to the Stage interactions.
+     *
+     * @param status The status of the game, either {@code "win"} or {@code "lose"}.
+     * @return An {@link ImageButton} representing the end-game button. The button
+     *         is configured with the appropriate texture and click listener.
+     */
     public ImageButton loadEndGame(String status) {
         if (multiplexer != null) {
             multiplexer.clear();                // Remove all existing processors
@@ -416,6 +523,9 @@ public class JBordle extends ScreenAdapter {
         return endGameButton;
     }
 
+    /**
+     * Loads textures required for the JBordle game.
+     */
     public void loadTextures() {
         textures = new HashMap<>();
         textures.put("computerScreenBg", new Texture(Gdx.files.internal("computerScreen/computerScreen-bg.png")));
@@ -434,6 +544,11 @@ public class JBordle extends ScreenAdapter {
         font = mainGame.resourceManager.getFont(true);// Replace with your font file
     }
 
+    /**
+     * Renders the game screen.
+     *
+     * @param delta The time since the last frame.
+     */
     @Override
     public void render(float delta) {
         // Clear the screen with a specific color (e.g., black)
@@ -452,12 +567,20 @@ public class JBordle extends ScreenAdapter {
         spriteBatch.end();
     }
 
-
+    /**
+     * Resizes the viewport.
+     *
+     * @param width  The new width of the screen.
+     * @param height The new height of the screen.
+     */
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height, true);
     }
 
+    /**
+     * Disposes of game resources.
+     */
     @Override
     public void dispose() {
         for (Texture texture : textures.values()) {

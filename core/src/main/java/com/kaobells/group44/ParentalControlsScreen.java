@@ -16,6 +16,15 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The screen for accessing and managing parental controls in the game.
+ * Provides functionality to view and modify settings like playtime limits.
+ *
+ * @author group 44
+ * @version 1.0
+ * @see ParentalPlaytimeLimits
+ * @see ParentalPlaytimeStatsScreen
+ */
 public class ParentalControlsScreen extends ScreenAdapter {
 
     private final Main mainGame;
@@ -28,6 +37,11 @@ public class ParentalControlsScreen extends ScreenAdapter {
     private final Table parentTable;
     private final BitmapFont font;
 
+    /**
+     * Initializes the parental controls screen with required resources.
+     *
+     * @param game The main game instance.
+     */
     public ParentalControlsScreen(Main game) {
         this.mainGame = game;
         this.spriteBatch = mainGame.getSharedBatch();
@@ -45,6 +59,9 @@ public class ParentalControlsScreen extends ScreenAdapter {
         initializeUI();
     }
 
+    /**
+     * Loads textures required for rendering UI elements.
+     */
     private void loadTextures() {
         textures = new HashMap<>();
         textures.put("playtimeStatsButton", new Texture(Gdx.files.internal("parentalControlsScreen/parent-stats-btn.png")));
@@ -53,6 +70,10 @@ public class ParentalControlsScreen extends ScreenAdapter {
         textures.put("backButton", new Texture(Gdx.files.internal("globalAssets/backButton.png")));
     }
 
+    /**
+     * Initializes the UI components for the parental controls screen,
+     * including buttons for managing playtime settings and stats.
+     */
     private void initializeUI() {
         stage.clear();
 
@@ -119,6 +140,11 @@ public class ParentalControlsScreen extends ScreenAdapter {
         return mainGame.createImageButton(texture);
     }
 
+    /**
+     * Renders the UI components and background for the parental controls screen.
+     *
+     * @param delta The time in seconds since the last render.
+     */
     @Override
     public void render(float delta) {
         ScreenUtils.clear(0, 0, 0, 1); // Clear with a consistent black background
@@ -130,6 +156,10 @@ public class ParentalControlsScreen extends ScreenAdapter {
         stage.draw();
     }
 
+    /**
+     * Sets the input processor to the stage, loads textures, and initializes the UI
+     * components. This method is called when the screen becomes visible.
+     */
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
@@ -138,11 +168,20 @@ public class ParentalControlsScreen extends ScreenAdapter {
         stage.addActor(backButton);
     }
 
+    /**
+     * Adjusts the screen's viewport to handle window resizing.
+     *
+     * @param width  The new width of the screen.
+     * @param height The new height of the screen.
+     */
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height, true);
     }
 
+    /**
+     * Disposes of the textures and stage to free up resources.
+     */
     @Override
     public void dispose() {
         for (Texture texture : textures.values()) {

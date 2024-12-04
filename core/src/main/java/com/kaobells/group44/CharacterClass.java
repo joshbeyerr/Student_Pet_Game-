@@ -15,6 +15,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * The {@code CharacterClass} represents a game character with specific attributes,
+ * states, and functionality for interacting with the game environment.
+ *
+ * <p>This class manages a character's health, happiness, hunger, sleep, and stress,
+ * and supports various actions such as feeding, exercising, playing, and visiting a doctor.
+ * It also handles animations and visual updates for the character's states.</p>
+ *
+ * @author group 44
+ * @version 1.0
+ */
 public class CharacterClass {
     private transient Main mainGame;
     private final String name;
@@ -81,6 +92,9 @@ public class CharacterClass {
     private float hungerTimer = 0f;
 
     // Add default constructor for LibGDX Json Loader
+    /**
+     * Default constructor for {@code CharacterClass} for LibGDX JSON loader compatibility.
+     */
     public CharacterClass() {
         this.name = "DefaultName";
         this.state = null;
@@ -97,6 +111,11 @@ public class CharacterClass {
     }
 
     //load in a character's data
+    /**
+     * Initializes character's data, textures, and inventory.
+     *
+     * @param mainG The main game instance used for loading resources.
+     */
     public void startLoadCharacter(Main mainG){
         mainGame = mainG;
         characterHeads = new HashMap<>();
@@ -111,10 +130,37 @@ public class CharacterClass {
     }
 
     // Constructor with default state (NEUTRAL)
+    /**
+     * Constructs a new {@link CharacterClass} instance with the specified parameters, defaulting
+     * the character's state to {@link State#NEUTRAL}.
+     *
+     * @param mainGameSession  The {@link Main} game instance managing shared resources and transitions.
+     * @param charName         The name of the character.
+     * @param characterNumber  The unique number identifying the character's type.
+     * @param characterTypeStr The type of the character as a {@link String}.
+     * @param inventory        An array of {@link Item} objects representing the character's inventory.
+     * @param compoundingStates A boolean array representing the character's compounding states
+     *                          (e.g., sleeping, angry, hungry).
+     * @param slotNumber       The save slot number for the character.
+     * @param characterScore   The initial score of the character.
+     */
     public CharacterClass(Main mainGameSession, String charName, int characterNumber, String characterTypeStr, Item[] inventory, boolean[] compoundingStates, String slotNumber, int characterScore) {
         this(mainGameSession, charName, characterNumber, characterTypeStr, inventory, State.NEUTRAL, compoundingStates, slotNumber, characterScore);
     }
 
+    /**
+     * Constructs a new {@code CharacterClass} instance with specified attributes.
+     *
+     * @param mainGameSession   The main game instance.
+     * @param charName          The name of the character.
+     * @param characterNumber   The character's unique identifier.
+     * @param characterTypeStr  The type of the character.
+     * @param inventory         The character's inventory.
+     * @param state             The initial state of the character.
+     * @param compoundingStates An array representing compounding states.
+     * @param slotNumber        The slot number for saving the character.
+     * @param characterScore    The initial score of the character.
+     */
     // Constructor
     public CharacterClass(Main mainGameSession, String charName, int characterNumber, String characterTypeStr, Item[] inventory, State state, boolean[] compoundingStates, String slotNumber, int characterScore) {
         this.mainGame = mainGameSession;
@@ -138,21 +184,66 @@ public class CharacterClass {
     }
 
     // Getter for name
+    /**
+     * Gets the character's name.
+     *
+     * @return The name of the character.
+     */
     public String getName() { return name;}
+
     //Getter for character type
+    /**
+     * Gets the character type.
+     *
+     * @return The type of the character.
+     */
     public String getCharacterType(){return characterType;}
+
     //Getter for slot that character is saved in
+
+    /**
+     * Gets the character's save slot.
+     *
+     * @return The save slot as a string.
+     */
     public String getSlotNumber(){ return slot;}
 
     //Getter for Score
+    /**
+     * Gets the character's current score.
+     *
+     * @return The character's score.
+     */
     public int getScore() { return score;}
+
     //Method to increment score
+    /**
+     * Increments the character's score by 1.
+     */
     public void incrementScore() { this.score = score+1;}
+
+    /**
+     * Sets the character's score to the specified value.
+     *
+     * @param score The new score value.
+     */
     public void setScore(int score) { this.score = score;}
 
     // Getter for health
+    /**
+     * Gets the character's health.
+     *
+     * @return The current health value.
+     */
     public float getHealth() { return health;}
+
     //Setter for health
+    /**
+     * Sets the character's health to the specified value, ensuring it remains within
+     * valid bounds (0-100).
+     *
+     * @param health The new health value.
+     */
     public void setHealth(float health) {
         if (health >= 0.0f && health <= 100.0f) {
             this.health = health;
@@ -163,8 +254,20 @@ public class CharacterClass {
         }}
 
     // Getter for happiness
+    /**
+     * Gets the character's happiness.
+     *
+     * @return The current happiness value.
+     */
     public float getHappiness() { return happiness;}
+
     //Setter for happiness
+    /**
+     * Sets the character's happiness to the specified value, ensuring it remains
+     * within valid bounds (0-100).
+     *
+     * @param happiness The new happiness value.
+     */
     public void setHappiness(float happiness) {
         if (happiness >= 0.0f && happiness <= 100.0f) {
             this.happiness = happiness;
@@ -175,8 +278,20 @@ public class CharacterClass {
     }}
 
     // Getter for hunger
+    /**
+     * Gets the character's hunger level.
+     *
+     * @return The current hunger value.
+     */
     public float getHunger() { return fullness; }
+
     // Setter for hunger
+    /**
+     * Sets the character's hunger level to the specified value, ensuring it remains
+     * within valid bounds (0-100).
+     *
+     * @param hunger The new hunger value.
+     */
     public void setHunger(float hunger) {
         if (hunger >= 0.0f && hunger <= 100.0f) {
             this.fullness = hunger;
@@ -187,8 +302,20 @@ public class CharacterClass {
     }}
 
     // Getter for sleep
+    /**
+     * Gets the character's sleep level.
+     *
+     * @return The current sleep value.
+     */
     public float getSleep() { return sleep; }
+
     // Setter for sleep
+    /**
+     * Sets the character's sleep level to the specified value, ensuring it remains
+     * within valid bounds (0-100).
+     *
+     * @param sleep The new sleep value.
+     */
     public void setSleep(float sleep) {
         if (sleep >= 0.0f && sleep <= 100.0f) {
             this.sleep = sleep;
@@ -199,9 +326,21 @@ public class CharacterClass {
     }}
 
     // Getter for stress
+    /**
+     * Gets the character's stress level.
+     *
+     * @return The current stress value.
+     */
     public float getStress() {
         return stress; }
+
     // Setter for stress
+    /**
+     * Sets the character's stress level to the specified value, ensuring it remains
+     * within valid bounds (0-100).
+     *
+     * @param stress The new stress value.
+     */
     public void setStress(float stress) {
         if (stress >= 0.0f && stress <= 100.0f) {
             this.stress = stress;
@@ -211,16 +350,23 @@ public class CharacterClass {
             this.stress = 100.0f;
     }}
     //stress is calculated using the average of the values of the other stats
+    /**
+     * Determines the character's stress level based on other stats.
+     */
     public void determineStress() {
         setStress((getHappiness()+getHunger()+getSleep()+getHealth())/4.0f);
     }
 
     //Inventory Getter
+
     public Item[] getInventory() {
         return this.inventory;
     }
 
     //Updates the stats based on characters change multipliers and any active states
+    /**
+     * Updates the character's stats based on time progression and compounding states.
+     */
     public void statBarTick(){
         setHappiness(this.getHappiness() - this.happinessChange);
         setHunger(this.getHunger() - this.fullnessChange);
@@ -241,6 +387,11 @@ public class CharacterClass {
     }
 
     //sets the stat change modifiers based on character type
+    /**
+     * Modifies the stat change rates (modifiers) based on the character type.
+     *
+     * @param characterTypeNumber The character type as an integer.
+     */
     public void modifyModifiers(int characterTypeNumber){
         switch (characterTypeNumber){
             // case 0 == relaxed character type selected, the "default" character
@@ -282,6 +433,9 @@ public class CharacterClass {
     }
 
     //function to set up inventory with each item's relivent image and gift/food indicator
+    /**
+     * Sets up the character's inventory with default items.
+     */
     private void setUpInventory(){
         for (int i = 0; i < inventory.length; i++) {
             ImageButton invButton;
@@ -334,6 +488,9 @@ public class CharacterClass {
     }
 
     // initialize a new character's stats based on character type selected
+    /**
+     * Sets up the character's initial stats and visuals based on the type.
+     */
     private void setUpCharacter(){
         //filling inventory with all the items with the count set to zer0
         for (int i = 0; i < inventory.length; i++) {
@@ -391,8 +548,19 @@ public class CharacterClass {
     }
 
     //Head Getter
+    /**
+     * Gets the character's head image.
+     *
+     * @return The character's head image.
+     */
     public Image getHead() { return currentHead; }
+
     //Head Setter
+    /**
+     * Sets the character's head image.
+     *
+     * @param newHead The new head image.
+     */
     public void setHead(Image newHead) {
         if (!actionBlocked()) { // Only allow setting the head if actions aren't blocked
             this.currentHead = newHead;
@@ -403,6 +571,11 @@ public class CharacterClass {
         this.currentHead = newHead;
     }
     //determine head to display based on state variable
+    /**
+     * Determines the appropriate head image based on the character's current state.
+     *
+     * @return The {@link Image} representing the character's head.
+     */
     private Image headDetermine() {
         stateDetermine(); // Update the state before determining the head image
 
@@ -421,8 +594,19 @@ public class CharacterClass {
     }
 
     //Body Getter
+    /**
+     * Gets the character's body image.
+     *
+     * @return The character's body image.
+     */
     public Image getBody() { return currentBody; }
+
     //Body Setter
+    /**
+     * Sets the character's body image.
+     *
+     * @param newBody The new body image.
+     */
     public void setBody(Image newBody) {
         if (!actionBlocked()) { // Only allow setting the body if actions aren't blocked
             this.currentBody = newBody;
@@ -433,6 +617,11 @@ public class CharacterClass {
         this.currentBody = newBody;
     }
     //determine body to display based on state variable
+    /**
+     * Determines the appropriate body image based on the character's current state.
+     *
+     * @return The {@link Image} representing the character's body.
+     */
     private Image bodyDetermine() {
         stateDetermine(); // Update the state before determining the body image
         if (state == State.DEAD){
@@ -448,6 +637,9 @@ public class CharacterClass {
 
     //Method to evaluate if any states should be triggered or resolved
     //After checks sets state variable to highest priority state
+    /**
+     * Determines the character's state based on its attributes.
+     */
     public void stateDetermine() {
         //Checks if dead, if not dead then move further in if not go into the death sequence
         if (getHealth() < 1.0f) {
@@ -484,7 +676,10 @@ public class CharacterClass {
             stateEvaluate();
         }
     }
-    //Sets state variable to highst priority State
+    //Sets state variable to highest priority State
+    /**
+     * Evaluates and assigns the highest-priority state to the character.
+     */
     public void stateEvaluate(){
         if (compoundingStates[0]){
             this.state = State.SLEEPING;
@@ -497,14 +692,30 @@ public class CharacterClass {
         }
     }
     //State Getter
+    /**
+     * Retrieves the current state of the character.
+     *
+     * @return The {@link State} of the character.
+     */
     public State getState(){ return state;}
+
     //State Setter
+    /**
+     * Sets the state of the character.
+     *
+     * @param statee The new {@link State} to be assigned to the character.
+     */
     public void setState(State statee)
     {
         this.state = statee;
     }
 
     //State Animation Loops
+    /**
+     * Updates the character's attributes and state over time.
+     *
+     * @param deltaTime The time elapsed since the last update, in seconds.
+     */
     public void updateCharacter(float deltaTime){
         //start by determining state
         stateDetermine();
@@ -566,16 +777,31 @@ public class CharacterClass {
     }
 
     //Action Block Check
+    /**
+     * Checks if the character's actions are currently blocked.
+     *
+     * @return {@code true} if actions are blocked, otherwise {@code false}.
+     */
     public boolean actionBlocked(){
         return actionBlockCooldownRemaining != 0;
     }
     //Action Block Setter
+    /**
+     * Blocks character actions for a specified duration.
+     *
+     * @param val The duration in seconds.
+     */
     public void setActionBlocked(float val){
         if (actionBlockCooldownRemaining == 0){
             actionBlockCooldownRemaining = val;
         }
     }
     //update action block timer
+    /**
+     * Updates the action block timer to track when actions can be performed again.
+     *
+     * @param deltaTime The time elapsed since the last update, in seconds.
+     */
     public void updateActionBlock(float deltaTime) {
         if (actionBlockCooldownRemaining > 0) {
             actionBlockCooldownRemaining = Math.max(0, actionBlockCooldownRemaining - deltaTime);
@@ -583,6 +809,11 @@ public class CharacterClass {
     }
 
     //method to force re-evaluating state, body, and head after a timer
+    /**
+     * Resumes the character's default state after a given duration.
+     *
+     * @param duration The duration in seconds after which to reset the state.
+     */
     public void resumeDefaultCharacterState(float duration){
         Timer.schedule(new Timer.Task() {
             @Override
@@ -595,6 +826,9 @@ public class CharacterClass {
     }
 
     //function to update character to be dead
+    /**
+     * Sets the character as dead, resetting all attributes to zero and disabling interactions.
+     */
     public void killPet(){
         setHealth(0.0f);
         setSleep(0.0f);
@@ -610,6 +844,9 @@ public class CharacterClass {
     }
 
     //exercise action
+    /**
+     * Allows the character to perform an exercise action, updating relevant stats.
+     */
     public void exercise(){
         if(!actionBlocked() && (!compoundingStates[1]) && state != State.SLEEPING && !isDead()) { //check if action is allowed
             //Update Stats
@@ -662,6 +899,11 @@ public class CharacterClass {
     }
 
     //Play action method stat change and cooldown
+    /**
+     * Allows the character to play, increasing happiness.
+     *
+     * @return {@code true} if the play action was successful, otherwise {@code false}.
+     */
     public boolean play(){
         if(!actionBlocked()){ //check if action is allowed
             if(!(playCooldownRemaining > 0)){
@@ -675,6 +917,11 @@ public class CharacterClass {
     }
 
     //Take to doctor action
+    /**
+     * Allows the character to visit the doctor, increasing health.
+     *
+     * @return {@code true} if the doctor action was successful, otherwise {@code false}.
+     */
     public boolean takeToDoctor(){
         if(!actionBlocked() && !compoundingStates[1] && (!isDead() || Objects.equals(getName(), "Wiktor"))){ //check if action is allowed or easter egg name
             if(!(doctorCooldownRemaining > 0)){ //check if on cooldown
@@ -695,6 +942,11 @@ public class CharacterClass {
     }
 
     //cooldown timer update method
+    /**
+     * Updates timers related to character cooldowns and auto-saving.
+     *
+     * @param deltaTime The time elapsed since the last update, in seconds.
+     */
     public void updateCooldowns(float deltaTime) {
         if (doctorCooldownRemaining > 0) { //update doctor cooldown
             doctorCooldownRemaining = Math.max(0, doctorCooldownRemaining - deltaTime);
@@ -712,6 +964,11 @@ public class CharacterClass {
 
     //feed action
     //may need to be tweaked to link to GameScreen and to display correct reason it could not be done
+    /**
+     * Feeds the character using the specified {@code Item}, increasing hunger levels.
+     *
+     * @param item The item used to feed the character.
+     */
     public void feed(Item item){
         if(!actionBlocked() && !compoundingStates[1] && item.reduceCount()){ //check if action is allowed
             this.fullness = Math.min(100.0f, getHunger() + (item.getItemStatValue()));
@@ -719,6 +976,9 @@ public class CharacterClass {
         }
     }
     //Visual/audio effect for feed action
+    /**
+     * Provides visual and audio feedback when the character is fed.
+     */
     public void feedVisual() {
         if (!actionBlocked()) { // check if an action block is active
             float actionLength = 5.0f;
@@ -733,6 +993,11 @@ public class CharacterClass {
     }
 
     //giveGift action
+    /**
+     * Allows the character to receive a gift, adjusting stats based on the gift's properties.
+     *
+     * @param item The {@link Item} used as a gift.
+     */
     public void giveGift(Item item){
         if(!actionBlocked() && !isDead() && item.reduceCount()){ //check if action is allowed
             //if allowed adjust stats and play effect
@@ -742,6 +1007,11 @@ public class CharacterClass {
         }
     }
     //Visual/audio effect for gift action
+    /**
+     * Plays a visual and audio effect when a gift is given to the character.
+     *
+     * @param item The {@link Item} used as a gift.
+     */
     public void giftVisual(Item item) {
         if (!actionBlocked()) { //check if action is allowed
             float actionLength = 5.0f;
@@ -765,6 +1035,9 @@ public class CharacterClass {
     }
 
     //go to sleep action
+    /**
+     * Allows the character to sleep, replenishing sleep levels.
+     */
     public void sleep(){
         if(!actionBlocked() && !compoundingStates[1] && !isDead()) { //if action is allowed set state to sleeping
             this.compoundingStates[0] = true;
@@ -773,24 +1046,47 @@ public class CharacterClass {
     }
 
     //method to increase count of item at index by 1
+    /**
+     * Increases the count of a specific item in the character's inventory.
+     *
+     * @param index The index of the item in the inventory to increase the count of.
+     */
     public void gainItem(int index) {
         inventory[index].increaseCount();
     }
 
     //checks if player is sleeping
+    /**
+     * Checks if the character is currently in a sleeping state.
+     *
+     * @return {@code true} if the character is sleeping, otherwise {@code false}.
+     */
     public boolean isSleeping() {
         return (state == State.SLEEPING);
     }
     //checks if player is dead
+    /**
+     * Checks if the character is currently in a dead state.
+     *
+     * @return {@code true} if the character is dead, otherwise {@code false}.
+     */
     public boolean isDead() {
         return (state == State.DEAD);
     }
     //checks if player is angry
+    /**
+     * Checks if the character is currently in an angry state.
+     *
+     * @return {@code true} if the character is angry, otherwise {@code false}.
+     */
     public boolean isAngry() {
         return compoundingStates[1];
     }
 
     //loads and names sprites used for pet-type selected
+    /**
+     * Loads and assigns textures for character animations and inventory items.
+     */
     public void loadImages(){
         // Load body textures into the texture map
         characterTextures.put("neutralBody", new Texture(Gdx.files.internal("game/character/body-neutral.png")));
@@ -844,6 +1140,9 @@ public class CharacterClass {
     }
 
     //dispose method for textures
+    /**
+     * Disposes of textures, images, and other resources used by the character.
+     */
     public void dispose() {
         // Dispose textures
         for (Texture texture : characterTextures.values()) {

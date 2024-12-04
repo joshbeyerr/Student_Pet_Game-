@@ -21,6 +21,18 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The {@code ParentalPlaytimeLimits} class represents a screen where users
+ * can configure parental controls for playtime limits. It provides toggle
+ * buttons to set restrictions for specific time periods and days of the week.
+ *
+ * <p>This screen uses a {@link Table} layout to organize UI components, such as
+ * labels and toggle buttons, and interacts with the {@link JsonHandler} to persist
+ * user configurations.</p>
+ *
+ * @author group 44
+ * @version 1.0
+ */
 public class ParentalPlaytimeLimits extends ScreenAdapter {
     private final Main mainGame;
     private final Stage stage;
@@ -29,6 +41,11 @@ public class ParentalPlaytimeLimits extends ScreenAdapter {
     private final SpriteBatch spriteBatch;
     private final BitmapFont font;
 
+    /**
+     * Constructs a new {@code ParentalPlaytimeLimits} screen.
+     *
+     * @param mainGame The main game instance to manage shared resources and transitions.
+     */
     public ParentalPlaytimeLimits(Main mainGame) {
         this.mainGame = mainGame;
         this.stage = new Stage(mainGame.getViewport(), mainGame.getSharedBatch());
@@ -40,12 +57,18 @@ public class ParentalPlaytimeLimits extends ScreenAdapter {
         setupUI();
     }
 
+    /**
+     * Loads the required textures for the UI components.
+     */
     private void loadTextures() {
         textures.put("allowedHoursTitle", new Texture(Gdx.files.internal("parentalControlsScreen/allowed-hrs-txtbox.png")));
         textures.put("checked", new Texture(Gdx.files.internal("parentalControlsScreen/checked-parent-btn.png")));
         textures.put("unchecked", new Texture(Gdx.files.internal("parentalControlsScreen/unchecked-parent-btn.png")));
     }
 
+    /**
+     * Sets up the user interface components, including title, labels, and toggle buttons.
+     */
     private void setupUI() {
         stage.clear();
         stage.addActor(mainGame.getBackButton()); // Add back button
@@ -75,7 +98,16 @@ public class ParentalPlaytimeLimits extends ScreenAdapter {
         stage.addActor(rootTable);
     }
 
-
+    /**
+     * Adds a row for a specific playtime restriction in the table.
+     *
+     * @param table      The table to add the row to.
+     * @param labelText  The label text for the row.
+     * @param jsonKey    The JSON key associated with this restriction.
+     * @param labelWidth The width of the label.
+     * @param buttonSize The size of the toggle button.
+     * @param rowPadding The padding between rows.
+     */
     private void addPlaytimeRow(Table table, String labelText, String jsonKey, float labelWidth, float buttonSize, float rowPadding) {
         // Label configuration
         Label label = new Label(labelText, new Label.LabelStyle(mainGame.resourceManager.getFont(true), com.badlogic.gdx.graphics.Color.BLACK));
@@ -91,6 +123,13 @@ public class ParentalPlaytimeLimits extends ScreenAdapter {
         table.add(toggleButton).size(buttonSize).align(Align.center).padBottom(rowPadding).row();
     }
 
+    /**
+     * Creates a toggle button for enabling or disabling a specific playtime restriction.
+     *
+     * @param isAllowed Initial state of the restriction (enabled or disabled).
+     * @param jsonKey   The JSON key associated with this restriction.
+     * @return An {@link ImageButton} configured for toggling the playtime restriction.
+     */
     private ImageButton createToggleButton(boolean isAllowed, String jsonKey) {
         TextureRegionDrawable initialDrawable = new TextureRegionDrawable(new TextureRegion(isAllowed ? textures.get("unchecked") : textures.get("checked")));
         ImageButton button = new ImageButton(initialDrawable);
@@ -112,11 +151,19 @@ public class ParentalPlaytimeLimits extends ScreenAdapter {
         return button;
     }
 
+    /**
+     * Sets the input processor for this screen.
+     */
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
     }
 
+    /**
+     * Renders the playtime limits screen, including the background and stage elements.
+     *
+     * @param delta Time elapsed since the last frame.
+     */
     @Override
     public void render(float delta) {
         ScreenUtils.clear(0, 0, 0, 1); // Clear the screen with a black background
@@ -131,11 +178,20 @@ public class ParentalPlaytimeLimits extends ScreenAdapter {
         stage.draw();
     }
 
+    /**
+     * Resizes the viewport to match new screen dimensions.
+     *
+     * @param width  The new width of the screen.
+     * @param height The new height of the screen.
+     */
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height, true);
     }
 
+    /**
+     * Disposes of resources used by this screen.
+     */
     @Override
     public void dispose() {
         // Dispose of all textures

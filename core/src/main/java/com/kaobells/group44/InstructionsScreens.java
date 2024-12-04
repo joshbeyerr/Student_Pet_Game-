@@ -8,6 +8,18 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.Stack;
 
+/**
+ * The {@code InstructionsScreens} class manages a sequence of instructional
+ * screens, allowing users to navigate through multiple instruction textures.
+ * The class handles input to advance through the instructions and manages
+ * texture disposal to ensure efficient resource usage.
+ *
+ * <p>This class is part of the game's UI flow, providing step-by-step guidance
+ * to players before they enter gameplay.</p>
+ *
+ * @author group 44
+ * @version 1.0
+ */
 public class InstructionsScreens extends ScreenAdapter {
     private final Main mainGame;
 
@@ -19,6 +31,11 @@ public class InstructionsScreens extends ScreenAdapter {
 
     private InputMultiplexer multiplexer;
 
+    /**
+     * Constructs a new {@code InstructionsScreens} instance.
+     *
+     * @param game The main game instance for resource management and transitions.
+     */
     public InstructionsScreens(Main game) {
         this.mainGame = game;
 
@@ -35,6 +52,10 @@ public class InstructionsScreens extends ScreenAdapter {
         }
     }
 
+    /**
+     * Loads the textures for the instruction screens and pushes them onto the stack.
+     * Textures are added in reverse order to facilitate stack-based navigation.
+     */
     private void loadInstructionTextures() {
         // Push instruction textures in reverse order (last screen first)
         instructionTextures.push(new Texture(Gdx.files.internal("instructionsScreens/instructions-screen4.png")));
@@ -44,6 +65,11 @@ public class InstructionsScreens extends ScreenAdapter {
         instructionTextures.push(new Texture(Gdx.files.internal("instructionsScreens/instructions-screen0.png")));
     }
 
+    /**
+     * Handles key press events to navigate to the next instruction screen.
+     * Disposes of the current texture and loads the next one in the sequence.
+     * If no more textures remain, the screen exits back to the previous screen.
+     */
     private void handleKeyPress() {
         if (currentTexture != null) {
             currentTexture.dispose();
@@ -57,6 +83,10 @@ public class InstructionsScreens extends ScreenAdapter {
         }
     }
 
+    /**
+     * Called when this screen becomes the current screen.
+     * Sets up input processing for handling key press events.
+     */
     @Override
     public void show() {
         super.show();
@@ -79,6 +109,11 @@ public class InstructionsScreens extends ScreenAdapter {
         Gdx.input.setInputProcessor(multiplexer); // Set the multiplexer as the input processor
     }
 
+    /**
+     * Renders the currently displayed instruction texture.
+     *
+     * @param delta The time in seconds since the last frame.
+     */
     @Override
     public void render(float delta) {
         // Clear the screen
@@ -94,11 +129,21 @@ public class InstructionsScreens extends ScreenAdapter {
         spriteBatch.end();
     }
 
+    /**
+     * Adjusts the viewport dimensions to fit the new screen size.
+     *
+     * @param width  The new width of the screen.
+     * @param height The new height of the screen.
+     */
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height, true);
     }
 
+    /**
+     * Disposes of all remaining textures and the currently displayed texture
+     * to free up resources.
+     */
     @Override
     public void dispose() {
         // Dispose all remaining textures

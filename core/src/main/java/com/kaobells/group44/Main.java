@@ -26,8 +26,19 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.Stack;
 
-
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
+/**
+ * The {@code Main} class is the entry point of the application and serves
+ * as the primary controller for managing screens, resources, and global
+ * functionality across the game.
+ *
+ * <p>This class handles the game's lifecycle, manages screen transitions,
+ * and provides utility methods for shared components such as the back button,
+ * error messages, and custom UI elements.</p>
+ *
+ * @author Group 44
+ * @version 1.0
+ */
 public class Main extends Game {
 
     private Viewport viewport;
@@ -49,6 +60,9 @@ public class Main extends Game {
 
     private Stack<Screen> screenStack;
 
+    /**
+     * Initializes the game, setting up resources, the viewport, and the initial screen.
+     */
     @Override
     public void create() {
 
@@ -77,6 +91,11 @@ public class Main extends Game {
 
     }
 
+    /**
+     * Pushes a new screen onto the screen stack and sets it as the active screen.
+     *
+     * @param newScreen The screen to be displayed.
+     */
     // Push a screen onto the stack and set it as the active screen
     public void pushScreen(Screen newScreen) {
         if (!screenStack.isEmpty()) {
@@ -86,6 +105,9 @@ public class Main extends Game {
         setScreen(newScreen);
     }
 
+    /**
+     * Pops the current screen from the stack, disposes of it, and resumes the previous screen.
+     */
     // Pop the current screen, dispose of it, and set the previous one
     public void popScreen() {
         if (!screenStack.isEmpty()) {
@@ -100,6 +122,11 @@ public class Main extends Game {
         }
     }
 
+    /**
+     * Retrieves the previous screen from the stack without popping it.
+     *
+     * @return The previous screen, or {@code null} if no previous screen exists.
+     */
     public Screen getPreviousScreen() {
         if (screenStack.size() > 1) {
             // Get the second-to-last screen in the stack
@@ -108,6 +135,9 @@ public class Main extends Game {
         return null; // No previous screen exists
     }
 
+    /**
+     * Clears all screens from the stack except the main menu.
+     */
     // for when a game is loading, clear all menu screens in memory except for very main menu
     public void clearStackExceptMain() {
         while (screenStack.size() > 1) {
@@ -118,6 +148,9 @@ public class Main extends Game {
     }
 
 
+    /**
+     * Loads textures and sounds required for the game.
+     */
     private void loadTextures(){
 
         resourceManager.add("mainBackground", new Texture(Gdx.files.internal("globalAssets/menu-bg.png")));
@@ -126,27 +159,50 @@ public class Main extends Game {
         backButtonSound = Gdx.audio.newSound(Gdx.files.internal("music/back-click.mp3"));
     }
 
+    /**
+     * Renders the game, delegating rendering tasks to the active screen.
+     */
     @Override
     public void render() {
         super.render(); // important!
     }
 
+
+    /**
+     * Disposes of all shared resources, including the sprite batch and super resources.
+     */
     @Override
     public void dispose() {
         sharedBatch.dispose();
         super.dispose();
     }
 
+    /**
+     * Retrieves the viewport used for managing screen layouts.
+     *
+     * @return The game's {@link Viewport}.
+     */
     public Viewport getViewport(){
         return viewport;
     }
 
+    /**
+     * Retrieves the click sound used for button interactions.
+     *
+     * @return A {@link Sound} object for the click sound effect.
+     */
     public Sound getClickSound(){
         return clickSound;
     }
 
 
 
+    /**
+     * Creates a custom {@link ImageButton} with a click effect.
+     *
+     * @param upTexture The texture to display for the button's normal state.
+     * @return An {@link ImageButton} instance with the specified texture and effects.
+     */
     // for creating any custom Button !
     public ImageButton createImageButton(Texture upTexture) {
         TextureRegionDrawable upDrawable = new TextureRegionDrawable(new TextureRegion(upTexture));
@@ -156,6 +212,17 @@ public class Main extends Game {
 
         ImageButton button = new ImageButton(buttonStyle);
         button.addListener(new ClickListener() {
+
+            /**
+             * Plays the click sound and scales the image down for a pressed button effect.
+             *
+             * @param event   The {@link InputEvent} triggered by the button press.
+             * @param x       The x-coordinate of the touch.
+             * @param y       The y-coordinate of the touch.
+             * @param pointer The pointer for the touch event.
+             * @param button  The button involved in the touch event.
+             * @return {@code true} if the event was handled successfully.
+             */
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 
@@ -173,6 +240,15 @@ public class Main extends Game {
                 return true;
             }
 
+            /**
+             * Resets the image to its original size after the button is released.
+             *
+             * @param event   The {@link InputEvent} triggered by the button release.
+             * @param x       The x-coordinate of the touch.
+             * @param y       The y-coordinate of the touch.
+             * @param pointer The pointer for the touch event.
+             * @param button  The button involved in the touch event.
+             */
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
 
@@ -191,10 +267,21 @@ public class Main extends Game {
         return button;
     }
 
+    /**
+     * Creates an {@link Image} using the specified texture.
+     *
+     * @param texture The texture for the image.
+     * @return A new {@link Image} instance.
+     */
     public Image createImage(Texture texture) {
         return new Image(new TextureRegionDrawable(new TextureRegion(texture)));
     }
 
+    /**
+     * Retrieves the global back button, creating it if necessary.
+     *
+     * @return The {@link ImageButton} instance for the back button.
+     */
     public ImageButton getBackButton(){
         // Create the back button using the loaded texture
 
@@ -222,6 +309,11 @@ public class Main extends Game {
 
     }
 
+    /**
+     * Retrieves the error message table, creating it if necessary.
+     *
+     * @return A {@link Table} containing the error message UI.
+     */
     public Table getErrorMessage() {
         if (errorTable == null) {
             // Create the error table
@@ -256,6 +348,11 @@ public class Main extends Game {
     }
 
 
+    /**
+     * Displays an error message on the screen.
+     *
+     * @param message The error message to display.
+     */
     public void sendError(String message) {
         if (errorTable == null) {
             getErrorMessage();
@@ -295,6 +392,14 @@ public class Main extends Game {
         }
     }
 
+    /**
+     * Draws the background and title text.
+     *
+     * @param batch              The {@link SpriteBatch} for rendering.
+     * @param backgroundTexture  The background texture.
+     * @param font               The font for the title text.
+     * @param title              The title text to display.
+     */
     public void drawBackground(SpriteBatch batch, Texture backgroundTexture, BitmapFont font, String title) {
         // Draw the background texture
         batch.draw(backgroundTexture, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
@@ -315,10 +420,21 @@ public class Main extends Game {
         font.draw(batch, title, textX, textY);
     }
 
+    /**
+     * Retrieves the shared {@link SpriteBatch} for rendering.
+     *
+     * @return The shared {@link SpriteBatch}.
+     */
     public SpriteBatch getSharedBatch() {
         return sharedBatch;
     }
 
+    /**
+     * Updates the viewport size when the window is resized.
+     *
+     * @param width  The new width of the window.
+     * @param height The new height of the window.
+     */
     @Override
     public void resize(int width, int height) {
         // Ensure the viewport updates its size while maintaining aspect ratio

@@ -11,7 +11,21 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-
+/**
+ * The {@code StoryScreen} class represents the story introduction screen of the game.
+ * This screen displays narrative text about the game's objectives and mechanics.
+ * It supports navigation through different pages of the story.
+ *
+ * <p>Key Features:</p>
+ * <ul>
+ *     <li>Displays multiple pages of story text with navigation buttons.</li>
+ *     <li>Allows the user to progress through the story or return to previous pages.</li>
+ *     <li>Transitions to the character selection screen upon completion of the story.</li>
+ * </ul>
+ *
+ * @author group 44
+ * @version 1.0
+ */
 public class StoryScreen extends ScreenAdapter {
 
     private final Main mainGame;
@@ -34,7 +48,12 @@ public class StoryScreen extends ScreenAdapter {
 
     InputMultiplexer multiplexer;
 
-
+    /**
+     * Constructs a new {@code StoryScreen}.
+     *
+     * @param game       The main game instance for managing transitions and shared resources.
+     * @param slotNumber The save slot number associated with this game instance.
+     */
     public StoryScreen(Main game, String slotNumber) {
         mainGame = game;
         slot = slotNumber;
@@ -52,12 +71,19 @@ public class StoryScreen extends ScreenAdapter {
 
     }
 
+    /**
+     * Called when this screen becomes the current screen for the game.
+     * Sets up the stage and initializes the UI.
+     */
     public void show() {
         super.show();
         setStage(); // Reset input processor
         createUI();
     }
 
+    /**
+     * Creates the user interface for the story screen, including the back button and story text.
+     */
     public void createUI(){
 
         Gdx.app.log("heloo", "hello");
@@ -73,6 +99,10 @@ public class StoryScreen extends ScreenAdapter {
         LoadText();
     }
 
+    /**
+     * Creates a back button for navigating to the previous page of the story.
+     * If on the first page, it uses the default back button from the main game.
+     */
     private void createBackButton() {
         if (currentTextIndex > 0){
             backButton.clearListeners(); // Clear any previous listeners to avoid stacking
@@ -93,6 +123,12 @@ public class StoryScreen extends ScreenAdapter {
     }
 
 
+    /**
+     * Formats the given string to fit within the screen by adding line breaks at appropriate positions.
+     *
+     * @param text The input string to format.
+     * @return A formatted string with line breaks for better readability.
+     */
     // method to adjust story text to fix perfectly on the screen, put new lines in the right place
     public String stringFormatter(String text) {
         StringBuilder newString = new StringBuilder();
@@ -121,6 +157,9 @@ public class StoryScreen extends ScreenAdapter {
         return newString.toString();
     }
 
+    /**
+     * Loads the story text to be displayed on the screen and initializes the font properties.
+     */
     public void LoadText(){
 
         if (storyTexts[0] == null){
@@ -136,6 +175,9 @@ public class StoryScreen extends ScreenAdapter {
 
     }
 
+    /**
+     * Calculates the position and renders the story text on the screen.
+     */
     public void calculateTextRender(){
         // Draw the story text
 
@@ -153,6 +195,11 @@ public class StoryScreen extends ScreenAdapter {
         textFont.draw(spriteBatch, storyTexts[currentTextIndex], textX, textY);
     }
 
+    /**
+     * Renders the story screen, including the background and current story text.
+     *
+     * @param delta The time elapsed since the last frame.
+     */
     @Override
     public void render(float delta) {
         // Clear the screen
@@ -173,6 +220,9 @@ public class StoryScreen extends ScreenAdapter {
         stage.draw();
     }
 
+    /**
+     * Handles user input for navigating through the story text pages.
+     */
     private void handleKeyPress() {
         if (currentTextIndex == 3) {
             mainGame.pushScreen(new characterSelection(mainGame, slot));
@@ -183,16 +233,28 @@ public class StoryScreen extends ScreenAdapter {
 
     }
 
+    /**
+     * Resizes the viewport when the window dimensions change.
+     *
+     * @param width  The new width of the window.
+     * @param height The new height of the window.
+     */
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height, true);
     }
 
+    /**
+     * Releases resources used by this screen, such as the stage.
+     */
     @Override
     public void dispose() {
         stage.dispose();
     }
 
+    /**
+     * Sets the stage as the input processor to handle user interactions.
+     */
     public void setStage(){
         if (multiplexer == null){
             // Create an InputAdapter for key press handling

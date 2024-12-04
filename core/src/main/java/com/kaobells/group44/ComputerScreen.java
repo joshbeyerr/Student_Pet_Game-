@@ -17,6 +17,17 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The {@code ComputerScreen} class represents a screen in the game
+ * where the player can interact with the computer and select mini-games to play.
+ * It handles the UI layout, button interactions, and screen transitions.
+ *
+ * <p>The class utilizes LibGDX's {@link Stage} and {@link Table} for UI management,
+ * and it dynamically loads textures and resources required for the screen.</p>
+ *
+ * @author group 44
+ * @version 1.0
+ */
 public class ComputerScreen extends ScreenAdapter {
     private final Main mainGame;
     private final GameSession session;
@@ -29,6 +40,12 @@ public class ComputerScreen extends ScreenAdapter {
     private Map<String, Texture> textures;
     private final Map<String, ImageButton> buttons;
 
+    /**
+     * Constructs a new {@code ComputerScreen} instance.
+     *
+     * @param mainGame The main game instance managing shared resources and screen transitions.
+     * @param session  The current game session containing player and game state data.
+     */
     public ComputerScreen(Main mainGame, GameSession session) {
         this.mainGame = mainGame;
         this.session = session;
@@ -44,6 +61,10 @@ public class ComputerScreen extends ScreenAdapter {
         createUI();
     }
 
+    /**
+     * Loads the textures required for the {@code ComputerScreen}.
+     * The textures are stored in a {@code Map} for efficient access.
+     */
     private void loadTextures() {
         textures = new HashMap<>();
 
@@ -54,6 +75,10 @@ public class ComputerScreen extends ScreenAdapter {
         textures.put("backBtn", new Texture(Gdx.files.internal("computerScreen/minigame-back-btn.png")));
     }
 
+    /**
+     * Creates the UI elements for the {@code ComputerScreen} and sets up
+     * their layout using a {@link Table}.
+     */
     private void createUI() {
         // Set the background
         Image background = new Image(new TextureRegionDrawable(textures.get("computerScreenBg")));
@@ -105,7 +130,9 @@ public class ComputerScreen extends ScreenAdapter {
 
     }
 
-
+    /**
+     * Prepares the screen when it becomes visible, including setting the back button's position.
+     */
     @Override
     public void show() {
         float buttonWidth = viewport.getWorldWidth() * 0.1f; // 10% of the viewport width
@@ -117,17 +144,33 @@ public class ComputerScreen extends ScreenAdapter {
         Gdx.input.setInputProcessor(stage);
     }
 
+    /**
+     * Renders the {@code ComputerScreen} and processes user interactions.
+     *
+     * @param delta The time elapsed since the last frame, in seconds.
+     */
     @Override
     public void render(float delta) {
         stage.act(delta);
         stage.draw();
     }
 
+    /**
+     * Handles the resizing of the viewport to fit new window dimensions.
+     *
+     * @param width  The new width of the window.
+     * @param height The new height of the window.
+     */
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
     }
 
+
+    /**
+     * Releases resources used by the {@code ComputerScreen}.
+     * This includes disposing of all textures and the {@link Stage}.
+     */
     @Override
     public void dispose() {
         for (Texture texture : textures.values()) {

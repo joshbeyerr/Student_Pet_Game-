@@ -5,14 +5,14 @@
 			"class": "com.kaobells.group44.CharacterClass",
 			"name": "Jbordle",
 			"slot": "1",
-			"score": -131488,
+			"score": -131490,
 			"characterNumber": 0,
 			"characterType": "relaxed",
 			"state": "NEUTRAL",
-			"sleep": 69,
-			"happiness": 76,
-			"fullness": 87,
-			"stress": 83,
+			"sleep": 70,
+			"happiness": 77,
+			"fullness": 88,
+			"stress": 70,
 			"inventory": [
 				{
 					"itemID": 0,
@@ -44,30 +44,31 @@
 				false,
 				false
 			],
-			"saveTimer": 1.6086869,
-			"blinkDurationTimer": 0.5071508,
+			"blinkDurationTimer": 0.1804547,
 			"hungerDurationTimer": 0.93477273,
+			"isBlinking": true,
+			"isHungry": true,
 			"sleepTimer": 0.45517963
 		}
 	},
 	"2": {
 		"character": {
 			"class": "com.kaobells.group44.CharacterClass",
-			"name": "awdaw",
+			"name": "Josh",
 			"slot": "2",
-			"score": 18,
+			"score": 12,
 			"characterNumber": 0,
 			"characterType": "relaxed",
-			"state": "NEUTRAL",
-			"health": 80,
-			"sleep": 71,
-			"happiness": 91,
-			"fullness": 71,
-			"stress": 78.25,
+			"state": "ANGRY",
+			"health": 46,
+			"sleep": 77,
+			"happiness": 0,
+			"fullness": 0,
+			"stress": 0,
 			"inventory": [
 				{
 					"itemID": 0,
-					"itemCount": 0
+					"itemCount": 1
 				},
 				{
 					"itemID": 1,
@@ -92,28 +93,29 @@
 			],
 			"compoundingStates": [
 				false,
-				false,
-				false
+				true,
+				true
 			],
-			"playCooldownRemaining": 24.920525,
-			"saveTimer": 8.750249,
-			"blinkDurationTimer": 0.11566918,
-			"isBlinking": true
+			"saveTimer": 5.5407987,
+			"blinkDurationTimer": 0.50082195,
+			"hungerDurationTimer": 1.3336092,
+			"isHungry": true,
+			"sleepTimer": 0.3250233
 		}
 	},
 	"3": {
 		"character": {
 			"class": "com.kaobells.group44.CharacterClass",
-			"name": "wad",
+			"name": "wdaw",
 			"slot": "3",
-			"characterNumber": 1,
-			"characterType": "quirky",
+			"characterNumber": 0,
+			"characterType": "relaxed",
 			"state": "NEUTRAL",
-			"health": 90,
-			"sleep": 90,
-			"happiness": 90,
-			"fullness": 90,
-			"stress": 90,
+			"health": 80,
+			"sleep": 80,
+			"happiness": 80,
+			"fullness": 80,
+			"stress": 80,
 			"inventory": [
 				{
 					"itemID": 0,
@@ -155,11 +157,11 @@
 	},
 	"totalSessionsPlayed": {
 		"class": "java.lang.Integer",
-		"value": 157
+		"value": 135
 	},
 	"averagePlaytimePerSession": {
 		"class": "java.lang.Integer",
-		"value": 0
+		"value": 700
 	},
 	"weekendParentBlock": {
 		"class": "java.lang.Boolean",
@@ -175,7 +177,11 @@
 	},
 	"totalSecondsPlayed": {
 		"class": "java.lang.Integer",
-		"value": 80
+		"value": 77
+	},
+	"totalSessionsPlayed ": {
+		"class": "java.lang.Integer",
+		"value": 0
 	},
 	"weekdayParentBlock": {
 		"class": "java.lang.Boolean",

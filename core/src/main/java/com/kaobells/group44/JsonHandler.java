@@ -24,13 +24,31 @@ import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The {@code Database} class serves as a container for game data, including
+ * game slots, character definitions, and parental controls.
+ *
+ * This class provides methods for managing data persistence and ensures that
+ * all fields are initialized to prevent null references.
+ *
+ * @author group44
+ * @version 1.0
+ * @see JsonHandler
+ */
 class Database {
+    /** Map representing game slots and their associated data. */
     public HashMap<String, HashMap<String, Object>> games;
+    /** Map of available character classes and their attributes. */
     public HashMap<String, CharacterClass> characters;
+    /** Map for parental controls data, such as playtime limits and password settings. */
     public HashMap<String, Object> parentalControls; // Field for "Parental Controls"
+    /** Flag indicating whether a parental control password has been set. */
     private boolean isPasswordSet;
 
-    // Constructor for initializing fields if null
+    /**
+     * Constructs a new {@code Database} instance and initializes all fields.
+     * Constructor for initializing fields if null
+     */
     public Database() {
         games = new HashMap<>();
         characters = new HashMap<>();
@@ -40,16 +58,36 @@ class Database {
 
 }
 
+/**
+ * The {@code JsonHandler} class handles data persistence for the application,
+ * reading from and writing to a JSON file that stores the game's database.
+ *
+ * This class integrates with LibGDX utilities for file handling and JSON processing.
+ *
+ * @author group44
+ * @version 1.0
+ * @see Database
+ */
 public class JsonHandler {
+    /** The local file used for storing the JSON database. */
     private FileHandle localFile;
+    /** The in-memory representation of the game's database. */
     private Database database;
+    /** JSON utility object for serialization and deserialization. */
     private final Json json = new Json(); // LibGDX JSON utility
 
+    /**
+     * Initializes the {@code JsonHandler} by ensuring the local file exists
+     * and loading the database from it.
+     */
     public JsonHandler() {
         initializeLocalFile();
         loadDatabase();
     }
 
+    /**
+     * Ensures that the local file exists, creating it if necessary.
+     */
     private void initializeLocalFile() {
         FileHandle internalFile = Gdx.files.internal("database.json");
         localFile = Gdx.files.local("database.json");
@@ -62,6 +100,9 @@ public class JsonHandler {
         }
     }
 
+    /**
+     * Loads the database from the local file, initializing it with default values if the file is missing.
+     */
     private void loadDatabase() {
         if (localFile.exists()) {
             String jsonString = localFile.readString();
@@ -74,6 +115,9 @@ public class JsonHandler {
         }
     }
 
+    /**
+     * Saves the current state of the database to the local JSON file.
+     */
     public void saveDatabase() {
         // Serialize the database object to a string
         json.setOutputType(JsonWriter.OutputType.json);
@@ -86,10 +130,20 @@ public class JsonHandler {
         System.out.println("Database saved successfully in proper JSON format.");
     }
 
+    /**
+     * Returns the current in-memory {@code Database} object.
+     *
+     * @return The game's database.
+     */
     public Database getDatabase() {
         return database;
     }
 
+    /**
+     * Checks if there are any saved game files in the database.
+     *
+     * @return {@code true} if any game slots contain saved data, {@code false} otherwise.
+     */
     public boolean isSavedFiles() {
         // Iterate over all game slots
         for (Map.Entry<String, HashMap<String, Object>> entry : database.games.entrySet()) {
@@ -101,16 +155,30 @@ public class JsonHandler {
         return false; // No saves found
     }
 
+    /**
+     * Checks if the parental controls are empty or uninitialized.
+     *
+     * @return {@code true} if parental controls are null or empty, {@code false} otherwise.
+     */
     public boolean isEmptyParentalControls() {
         return database.parentalControls == null || database.parentalControls.isEmpty();
     }
 
+    /**
+     * Prints the current state of parental controls to the console.
+     */
     public void printStuff(){
 
         System.out.println(database.parentalControls);
     }
 
 
+    /**
+     * Saves a character to a specified game slot in the database.
+     *
+     * @param slotId    The ID of the game slot where the character should be saved.
+     * @param character The {@link CharacterClass} object representing the character to save.
+     */
     // Method to save a CharacterClass to a specific game slot
     public void saveCharacterToGameSlot(String slotId, CharacterClass character) {
         if (database.games.containsKey(slotId)) {
@@ -124,6 +192,13 @@ public class JsonHandler {
         }
     }
 
+    /**
+     * Retrieves a character from a specified game slot in the database.
+     *
+     * @param slotId The ID of the game slot from which to retrieve the character.
+     * @return The {@link CharacterClass} object representing the character,
+     * or {@code null} if no character is found in the specified slot.
+     */
     // Optional: Retrieve a character from a specific game slot
     public CharacterClass getCharacterFromGameSlot(String slotId) {
         if (database.games.containsKey(slotId) && database.games.get(slotId).containsKey("character")) {
@@ -133,6 +208,12 @@ public class JsonHandler {
     }
 
     // Method to get a human-readable representation of a game slot
+    /**
+     * Provides a human-readable representation of the data in a game slot.
+     *
+     * @param slotId The ID of the game slot to convert to a string.
+     * @return A string representation of the game slot's data, or an error message if the slot does not exist.
+     */
     public String gameToString(String slotId) {
         if (database.games.containsKey(slotId)) {
             HashMap<String, Object> gameData = database.games.get(slotId);
@@ -149,6 +230,10 @@ public class JsonHandler {
         }
     }
 
+    /**
+     * Initializes the parental controls in the database with default values.
+     * This includes settings for playtime blocks, total playtime, and sessions.
+     */
     public void initializeParentalControls() {
         //database.parentalControls.put("Password", "");
         database.parentalControls.put("morningParentBlock", false);
@@ -163,6 +248,13 @@ public class JsonHandler {
         System.out.println("Parental controls initialized with default values.");
     }
 
+    /**
+     * Displays a message when playtime is blocked due to parental controls.
+     *
+     * @param stage    The stage on which the message should be displayed.
+     * @param viewport The viewport used to size and position elements.
+     * @param mainGame The main game instance, used for navigation.
+     */
     public void showBlockedTimeMessage(Stage stage, Viewport viewport, Main mainGame) {
         // Clear previous actors
         stage.clear();
@@ -219,24 +311,52 @@ public class JsonHandler {
     }
 
 
+    /**
+     * Updates the parental control password if the given password is not null or empty.
+     *
+     * @param password The new password for parental controls.
+     */
     public void setParentalPassword(String password) {
         database.parentalControls.put("Password", password);
         saveDatabase();
 
     }
+
+    /**
+     * Retrieves the parental control password.
+     *
+     * @return The parental control password as a {@link String}.
+     */
     public String getParentalPassword() {
         return (String) database.parentalControls.get("Password");
     }
 
+    /**
+     * Retrieves a boolean value for a specified parental control key.
+     *
+     * @param key The key of the parental control to retrieve.
+     * @return The boolean value associated with the specified key.
+     */
     public boolean getParentalControlBoolean(String key) {
         return (boolean) database.parentalControls.getOrDefault(key, false);
     }
 
-
+    /**
+     * Retrieves an integer value for a specified parental control key.
+     *
+     * @param key The key of the parental control to retrieve.
+     * @return The integer value associated with the specified key.
+     */
     public int getParentalControlInt(String key) {
         return (int) database.parentalControls.get(key);
     }
 
+    /**
+     * Updates the value of a specified parental control key with a new integer value.
+     *
+     * @param key   The key of the parental control to update.
+     * @param value The new integer value to set.
+     */
     public void setParentalControlInt(String key, int value) {
         database.parentalControls.put(key, value);
         saveDatabase();
@@ -244,6 +364,11 @@ public class JsonHandler {
 
 
     // Method to save the parental control password
+    /**
+     * Sets the parental control password.
+     *
+     * @param password The password to set for parental controls.
+     */
     public void setParentalControlPassword(String password) {
         if (password != null && !password.isEmpty()) {
             database.parentalControls.put("Password", password);

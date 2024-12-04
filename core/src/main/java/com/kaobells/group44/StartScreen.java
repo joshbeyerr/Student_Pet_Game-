@@ -23,7 +23,18 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/**
+ * The {@code StartScreen} class represents the starting screen of the game.
+ * It provides options for starting a new game, loading an existing game,
+ * accessing parental controls, and viewing credits or instructions.
+ * This class also manages UI initialization and background music playback.
+ *
+ * <p>All UI components and assets for the start screen are loaded and
+ * managed within this class, ensuring smooth transitions to other screens.</p>
+ *
+ * @author group 44
+ * @version 1.0
+ */
 public class StartScreen extends ScreenAdapter {
 
     private final Main mainGame;
@@ -35,7 +46,11 @@ public class StartScreen extends ScreenAdapter {
     private final BitmapFont font;
     private Label errorLabel; // Label for displaying error messages
 
-
+    /**
+     * Constructs a new {@code StartScreen}.
+     *
+     * @param game The main game instance to manage shared resources and transitions.
+     */
     private final float SWAP_INTERVAL = 5f; // Interval in seconds for swapping images
     private final Array<Container<Image>> containers = new Array<>(); // Containers for the heads
     private Map<Integer, Float> headTimers = new HashMap<>(); // Individual timers for each head
@@ -62,6 +77,9 @@ public class StartScreen extends ScreenAdapter {
 
 
 
+    /**
+     * Initializes the UI components for the start screen.
+     */
     private void initializeUI() {
         // Create a unified parent table for all elements
         Table parentTable = new Table();
@@ -173,6 +191,11 @@ public class StartScreen extends ScreenAdapter {
         containers.add(newContainer);
     }
 
+    /**
+     * Creates the heads section of the start screen.
+     *
+     * @return A {@link Table} containing character heads.
+     */
     private Table createHeads() {
         Table newTable = new Table();
 //        newTable.setFillParent(true);
@@ -204,6 +227,17 @@ public class StartScreen extends ScreenAdapter {
         return newTable;
     }
 
+
+    /**
+     * Creates a button for the start screen with specified properties.
+     *
+     * @param texturePath   The path to the button texture.
+     * @param widthRatio    The width ratio for the button.
+     * @param heightRatio   The height ratio for the button.
+     * @param xOffsetRatio  The X offset ratio for the button position.
+     * @param yOffsetRatio  The Y offset ratio for the button position.
+     * @return The {@link ImageButton} created with the specified properties.
+     */
     private ImageButton startScreenButton(String texturePath, float widthRatio, float heightRatio, float xOffsetRatio, float yOffsetRatio) {
         ImageButton button = mainGame.createImageButton(assetManager.get(texturePath));
         float buttonWidth = viewport.getWorldWidth() * widthRatio;
@@ -213,6 +247,13 @@ public class StartScreen extends ScreenAdapter {
         return button;
     }
 
+    /**
+     * Adds an actor to a table and optionally creates a new row.
+     *
+     * @param table  The {@link Table} to add the actor to.
+     * @param actor  The {@link Actor} to add.
+     * @param newRow Whether to create a new row after adding the actor.
+     */
     private void addActorToTable(Table table, Actor actor, boolean newRow) {
         table.add(actor).size(viewport.getWorldWidth() * 0.3f, viewport.getWorldWidth() * 0.11f).pad(viewport.getWorldWidth() * 0.01f);
 
@@ -221,6 +262,9 @@ public class StartScreen extends ScreenAdapter {
         }
     }
 
+    /**
+     * Loads textures and assets for the start screen.
+     */
     private void loadTextures() {
         assetManager = new AssetManager();
 
@@ -252,6 +296,11 @@ public class StartScreen extends ScreenAdapter {
         assetManager.finishLoading();
     }
 
+    /**
+     * Renders the start screen.
+     *
+     * @param delta The time in seconds since the last frame.
+     */
     @Override
     public void render(float delta) {
         // Clear the screen
@@ -320,6 +369,12 @@ public class StartScreen extends ScreenAdapter {
     }
 
 
+    /**
+     * Resizes the viewport when the screen size changes.
+     *
+     * @param width  The new width of the screen.
+     * @param height The new height of the screen.
+     */
     @Override
     public void resize(int width, int height) {
         if (width != 0 && height != 0) {
@@ -329,6 +384,9 @@ public class StartScreen extends ScreenAdapter {
 
     }
 
+    /**
+     * Disposes of resources used by the start screen.
+     */
     public void dispose() {
         if (stage != null) {
             stage.dispose();
@@ -338,12 +396,18 @@ public class StartScreen extends ScreenAdapter {
         }
     }
 
+    /**
+     * Sets the input processor to the stage for handling user input.
+     */
     public void setStage(){
         // Set the input processor to the stage
         Gdx.input.setInputProcessor(stage);
 
     }
 
+    /**
+     * Displays the start screen and sets the input processor.
+     */
     @Override
     public void show() {
 
