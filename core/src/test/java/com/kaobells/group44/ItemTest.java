@@ -1,50 +1,54 @@
 package com.kaobells.group44;
 
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 class ItemTest {
 
-    @org.junit.jupiter.api.Test
+    @Test
     void setItemValues() {
+        Item item = new Item(0, 1);
+        item.setItemValues();
+        assertEquals(30.0f, item.getItemStatValue(), "Stat value for itemID 0 should be 30.0f");
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void getItemStatValue() {
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void getItemID() {
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void reduceCount() {
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void increaseCount() {
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void setItemCount() {
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void getItemCount() {
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void isFood() {
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void isGift() {
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void getImage() {
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void setImage() {
     }
 }
