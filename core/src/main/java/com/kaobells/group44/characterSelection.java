@@ -30,6 +30,7 @@ public class characterSelection extends ScreenAdapter {
     private final Viewport viewport;
 
     private final ImageButton backButton;
+    private final Table error;
 
     private Map<String, Texture> textures;
     private final Table characterTable;
@@ -49,6 +50,7 @@ public class characterSelection extends ScreenAdapter {
         viewport = mainGame.getViewport();
 
         backButton = mainGame.getBackButton();
+        error = mainGame.getErrorMessage();
 
         stage = new Stage(viewport, spriteBatch);
 
@@ -69,6 +71,7 @@ public class characterSelection extends ScreenAdapter {
 
         // idk rn, this just works
         stage.addActor(backButton);
+        stage.addActor(error);
     }
 
 
