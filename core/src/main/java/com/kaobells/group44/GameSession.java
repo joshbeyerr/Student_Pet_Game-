@@ -82,7 +82,6 @@ public class GameSession {
         return false;
     }
 
-
     public void updateParentalStats(){ //Called on save
         //create values
         int oldTotalSecondsPlayed = mainGame.jsonHandler.getParentalControlInt("totalSecondsPlayed"); //to be replaced by call to JSON
