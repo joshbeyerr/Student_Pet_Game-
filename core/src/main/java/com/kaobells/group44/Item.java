@@ -55,15 +55,15 @@ public class Item implements Json.Serializable {
         switch (this.itemID){
             //case 0 = apple food item
             case 0:
-                this.itemStatValue = 30.0f;
+                this.itemStatValue = 50.0f;
                 break;
             //case 1 = lemon food item
             case 1:
-                this.itemStatValue = 60.0f;
+                this.itemStatValue = 75.0f;
                 break;
             //case 2 = orange food item
             case 2:
-                this.itemStatValue = 90.0f;
+                this.itemStatValue = 100.0f;
                 break;
             //case 3 = duck gift item
             case 3:

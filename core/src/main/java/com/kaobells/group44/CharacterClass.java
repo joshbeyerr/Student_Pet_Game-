@@ -914,7 +914,7 @@ public class CharacterClass {
     public void exercise(){
         if(!actionBlocked() && (!compoundingStates[1]) && state != State.SLEEPING && !isDead()) { //check if action is allowed
             //Update Stats
-            this.fullness = Math.max(0.0f, getHunger() - 10.0f);
+            this.fullness = Math.max(0.0f, getHunger() - 5.0f);
             this.sleep = Math.max(0.0f, getSleep() - 20.0f);
             if (!compoundingStates[2]) { //if not hungry health goes up by 10
                 this.health = Math.min(100.0f, getHealth() + 5.0f);
