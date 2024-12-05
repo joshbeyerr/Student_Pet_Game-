@@ -14,7 +14,6 @@ import java.time.*;
  * @author group 44
  * @version 1.0
  */
-//TLDR Class handles the active session for parental control and stats functionality
 public class GameSession {
 
     CharacterClass character;
@@ -30,7 +29,7 @@ public class GameSession {
     private int sessionsPlayed;
 
 
-    //constructor
+
     /**
      * Constructs a new {@code GameSession}.
      *
@@ -130,7 +129,6 @@ public class GameSession {
      *
      * @return The total seconds played as an {@code int}.
      */
-    //helper method to return the seconds since the GameSession was created as an Int
     public int getSecondsPlayedThisSession(){
         this.secondsPlayed = Duration.between(this.startTime, LocalTime.now()).toSeconds();
         return (int) secondsPlayed;

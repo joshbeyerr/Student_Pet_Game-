@@ -679,7 +679,7 @@ public class GameScreen extends ScreenAdapter{
 
         textures.put("inventoryBox", new Texture(Gdx.files.internal("game/inventory/inventory-box.png")));
         textures.put("inventoryClose", new Texture(Gdx.files.internal("game/inventory/inventory-close.png")));
-
+        textures.put("gameOverBox", new Texture(Gdx.files.internal("game/game-over-txtbox.png")));
 
 
         doorOpen = Gdx.audio.newSound(Gdx.files.internal("music/door-open.mp3"));
@@ -1066,6 +1066,12 @@ public class GameScreen extends ScreenAdapter{
                     }
 
                     if (keycode == Input.Keys.BACKSPACE) {
+                        mainGame.jsonHandler.saveCharacterToGameSlot(session.character.getSlotNumber(), session.character);
+                        session.updateParentalStats();
+                        mainGame.popScreen();
+                        return true;
+                    }
+                    if (keycode == Input.Keys.M && session.character.isDead()){
                         mainGame.jsonHandler.saveCharacterToGameSlot(session.character.getSlotNumber(), session.character);
                         session.updateParentalStats();
                         mainGame.popScreen();
