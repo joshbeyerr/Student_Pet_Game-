@@ -907,13 +907,17 @@ public class CharacterClass {
     public boolean play(){
         if(!actionBlocked()){ //check if action is allowed
             if(!(playCooldownRemaining > 0)){
-                this.happiness = Math.min(100.0f, getHappiness() + 20.0f);
                 playCooldownRemaining = 30.0f;
                 actionBlockCooldownRemaining = (5f);
                 resumeDefaultCharacterState(1.0f);
                 return true; //return true to let gamescreen know that play method was used and mini-game screen can be pushed
             } else{ return false;}//return false to let gamescreen know that play method cannot be used and mini-game screen cannot be pushed
         } else{ return false; }//return false to let gamescreen know that play method cannot be used and mini-game screen cannot be pushed
+    }
+
+    // give this boy some play gah damnit
+    public void givePlay(){
+        this.happiness = Math.min(100.0f, getHappiness() + 20.0f);
     }
 
     //Take to doctor action
@@ -970,7 +974,7 @@ public class CharacterClass {
      * @param item The item used to feed the character.
      */
     public void feed(Item item){
-        if(!actionBlocked() && !compoundingStates[1] && item.reduceCount()){ //check if action is allowed
+        if(!actionBlocked() && !compoundingStates[1] && item.reduceCount() && !isDead() && !isSleeping()){ //check if action is allowed
             this.fullness = Math.min(100.0f, getHunger() + (item.getItemStatValue()));
             feedVisual();
         }
@@ -999,7 +1003,7 @@ public class CharacterClass {
      * @param item The {@link Item} used as a gift.
      */
     public void giveGift(Item item){
-        if(!actionBlocked() && !isDead() && item.reduceCount()){ //check if action is allowed
+        if(!actionBlocked() && !isDead() && item.reduceCount() && !isSleeping()){ //check if action is allowed
             //if allowed adjust stats and play effect
             this.happiness = Math.min(100.0f, getHappiness() + item.getItemStatValue());
             giftVisual(item);

@@ -106,6 +106,7 @@ public class ComputerScreen extends ScreenAdapter {
         bugdodgeBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                session.character.givePlay();
                 mainGame.popScreen();
                 mainGame.pushScreen(new BugDodge(mainGame, session.character));
             }
@@ -115,6 +116,7 @@ public class ComputerScreen extends ScreenAdapter {
         jbordle.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                session.character.givePlay();
                 mainGame.popScreen();
                 mainGame.pushScreen(new JBordle(mainGame,session.character));
 

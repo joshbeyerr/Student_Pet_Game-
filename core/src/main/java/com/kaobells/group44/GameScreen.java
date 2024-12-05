@@ -21,6 +21,7 @@ import com.badlogic.gdx.utils.Timer;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The {@code GameScreen} class manages the main gameplay screen, allowing
@@ -52,6 +53,7 @@ public class GameScreen extends ScreenAdapter{
     private final Map<String, Table> tables;
     private Map<String, TextureRegionDrawable> drawables;
 
+    private final Table error;
 
     // stores in images and image buttons
     private final Map<String, Actor> images;
@@ -91,6 +93,8 @@ public class GameScreen extends ScreenAdapter{
         tables = new HashMap<>();
         images = new HashMap<>();
 
+        error = mainGame.getErrorMessage();
+
         // handling font shit
 
         setLabelStyles();
@@ -103,6 +107,7 @@ public class GameScreen extends ScreenAdapter{
 
     @Override
     public void show() {
+        stage.addActor(error);
         setStage();
 
     }
@@ -162,6 +167,10 @@ public class GameScreen extends ScreenAdapter{
             .height(height * 0.95f)
             .padLeft(width * 0.04f) // Proportional left padding
             .align(Align.right);
+
+        if (Objects.equals(session.character.getName(), "servos")){
+            mainGame.sendError("Love and prosperity from the republic of servos. Carry on my legacy");
+        }
 
     }
 

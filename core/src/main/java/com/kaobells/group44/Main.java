@@ -360,20 +360,21 @@ public class Main extends Game {
         if (errorLabel.isVisible()){
             // Split the message into multiple lines if it's longer than 20 characters
             StringBuilder formattedMessage = new StringBuilder();
-            int maxLineLength = 30;
-            int currentIndex = 0;
+            int maxLineLength = 25;
+            int currentLineLength= 0;
 
-            while (currentIndex < message.length()) {
-                int endIndex = Math.min(currentIndex + maxLineLength, message.length());
-                formattedMessage.append(message, currentIndex, endIndex);
+            String[] spl = message.split(" ");
 
-                // If not the last line, add a newline character
-                if (endIndex < message.length()) {
+            for (String s : spl) {
+                if (currentLineLength + s.length() > maxLineLength) {
                     formattedMessage.append("\n");
+                    currentLineLength = 0;
                 }
-
-                currentIndex = endIndex;
+                formattedMessage.append(s);
+                formattedMessage.append(" ");
+                currentLineLength += s.length();
             }
+
 
             // Set the formatted message text
             errorLabel.setText(formattedMessage.toString());

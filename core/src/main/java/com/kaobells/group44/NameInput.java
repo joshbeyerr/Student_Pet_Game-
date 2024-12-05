@@ -21,6 +21,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import java.lang.Character;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The {@code NameInput} class represents the screen where the user enters
