@@ -9,14 +9,14 @@ class ItemTest {
     void setItemValues() {
         Item item = new Item(0, 1);
         item.setItemValues();
-        assertEquals(30.0f, item.getItemStatValue(), "Stat value for itemID 0 should be 30.0f");
+        assertEquals(50.0f, item.getItemStatValue(), "Stat value for itemID 0 should be 50.0f");
     }
 
     @Test
     void getItemStatValue() {
         Item item = new Item(2, 1);
         item.setItemValues();
-        assertEquals(90.0f, item.getItemStatValue(), "Stat value for itemID 2 should be 90.0f");
+        assertEquals(100.0f, item.getItemStatValue(), "Stat value for itemID 2 should be 100.0f");
     }
 
     @Test
