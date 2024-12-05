@@ -113,20 +113,20 @@ Mini-Game:
 
 Parental Controls:
 
-Access:
+**Access:**
 - Navigate to "Parental Controls" from the main menu.
 - Set or enter a 4-digit pin to access settings.
 
-Features:
+**Features:**
 - Configure allowed play hours (mornings, afternoons, nights).
 - View average and total playtime statistics.
 - Reset playtime stats.
 - Enable/disable gameplay blocks during restricted hours.
 
-Default Credentials:
+**Default Credentials:**
 - Username/Password: None required.
 
-Parental Pin:
+**Parental Pin:**
 - Default: 1234
 - You can change the pin in the parental control settings.
 
