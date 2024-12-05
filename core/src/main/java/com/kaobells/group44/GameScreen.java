@@ -655,6 +655,7 @@ public class GameScreen extends ScreenAdapter{
 
         textures.put("openInventory", new Texture(Gdx.files.internal("game/" + sideBar + "/inventory-btn.png")));
         textures.put("saveButton", new Texture(Gdx.files.internal("game/" + sideBar + "/save-btn.png")));
+        textures.put("saveSucc", new Texture(Gdx.files.internal("game/" + sideBar + "/save-succ-box.png")));
         textures.put("exitButton", new Texture(Gdx.files.internal("globalAssets/exit-btn.png")));
 
         textures.put("purpleBox", new Texture(Gdx.files.internal("game/" + sideBar + "/purple-box.png")));
@@ -803,11 +804,33 @@ public class GameScreen extends ScreenAdapter{
         saveButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                // Save the character and update parental stats
                 mainGame.jsonHandler.saveCharacterToGameSlot(session.character.getSlotNumber(), session.character);
                 session.updateParentalStats();
 
+                // Create the success box image
+                Image successBox = new Image(new TextureRegionDrawable(textures.get("saveSucc")));
+                float boxWidth = viewport.getWorldWidth() * 0.4f; // Adjust width as needed
+                float boxHeight = boxWidth * (textures.get("saveSucc").getHeight() / (float) textures.get("saveSucc").getWidth());
+
+                // Position at the top-middle, slightly to the right
+                float boxX = (viewport.getWorldWidth() - boxWidth) / 2 + 250; // Slightly to the right
+                float boxY = viewport.getWorldHeight() - boxHeight - 80;     // Near the top with padding
+                successBox.setSize(boxWidth, boxHeight);
+                successBox.setPosition(boxX, boxY);
+
+                // Add the success box to the stage
+                stage.addActor(successBox);
+
+                // Add fade-out animation
+                successBox.addAction(Actions.sequence(
+                    Actions.alpha(1),               // Ensure full opacity
+                    Actions.delay(5),               // Stay visible for 5 seconds
+                    Actions.run(() -> successBox.remove()) // Remove from stage after fading out
+                ));
             }
         });
+
 
         images.put("saveButton", saveButton);
 
