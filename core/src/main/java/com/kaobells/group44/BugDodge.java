@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -28,45 +27,79 @@ import java.util.*;
  * It handles rendering, input, and game logic.
  */
 public class BugDodge extends ScreenAdapter {
+
+    /** Reference to the main game instance. */
     private final Main mainGame;
+
+    /** Player's character data. */
     private final CharacterClass player;
+
+    /** Shared SpriteBatch for rendering. */
     private final SpriteBatch spriteBatch;
+
+    /** Stage for handling UI and actors. */
     private final Stage stage;
+
+    /** Viewport for screen scaling. */
     private final Viewport viewport;
+
+    /** Shared back button for navigation. */
     private final ImageButton backButton;
 
-    private HashMap<String, Texture> textures; // stores game textures
-    private HashMap<String, Sound> sounds;    // stores game sounds
-    private Music music;                      // background music
+    /** Stores game textures. */
+    private HashMap<String, Texture> textures;
 
-    private Image computerImage;              // the computer actor
-    private Array<Image> bugImages;           // actors for falling bugs
-    private Array<Boolean> bugBoxStatus;      // tracks filled bug boxes
+    /** Stores game sounds. */
+    private HashMap<String, Sound> sounds;
 
-    private int maxBugs = 5;                  // total number of bug boxes
-    private float bugTimer = 0;               // timer to spawn bugs
-    private boolean gameOver = false;         // whether the game is over
+    /** Background music. */
+    private Music music;
 
-    private Rectangle computerRectangle = new Rectangle(); // bounds for computer
-    private Rectangle bugRectangle = new Rectangle();      // bounds for bugs
+    /** Actor for the computer image. */
+    private Image computerImage;
+
+    /** Actors for falling bugs. */
+    private Array<Image> bugImages;
+
+    /** Tracks filled bug boxes. */
+    private Array<Boolean> bugBoxStatus;
+
+    /** Maximum number of bug boxes. */
+    private int maxBugs = 5;
+
+    /** Timer for spawning bugs. */
+    private float bugTimer = 0;
+
+    /** Whether the game is over. */
+    private boolean gameOver = false;
+
+    /** Bounding rectangle for the computer. */
+    private final Rectangle computerRectangle = new Rectangle();
+
+    /** Bounding rectangle for bugs. */
+    private final Rectangle bugRectangle = new Rectangle();
 
     /**
      * Constructor for the BugDodge screen.
      *
      * @param game   The main game instance.
-     * @param playa  The player character data.
+     * @param player  The player character data.
      */
-    public BugDodge(Main game, CharacterClass playa) {
-        mainGame = game;
-        player = playa;
+    public BugDodge(Main game, CharacterClass player) {
+        // initialize game and player references
+        this.mainGame = game;
+        this.player = player;
 
-        spriteBatch = mainGame.getSharedBatch();
-        viewport = mainGame.getViewport();
+        // get shared resources
+        this.spriteBatch = mainGame.getSharedBatch();
+        this.viewport = mainGame.getViewport();
 
-        loadAssets(); // load all textures, sounds, and music
+        // load assets for the game
+        loadAssets();
 
-        backButton = mainGame.getBackButton(); // retrieve the shared back button
-        stage = new Stage(viewport, spriteBatch); // create a new stage
+        // initialize stage and back button
+        this.backButton = mainGame.getBackButton();
+        this.stage = new Stage(viewport, spriteBatch);
     }
 
     /**
@@ -74,42 +107,55 @@ public class BugDodge extends ScreenAdapter {
      */
     @Override
     public void show() {
-        createUI(); // set up the user interface
+        // create the user interface
+        createUI();
+
+        // set the stage as the input processor
+        Gdx.input.setInputProcessor(stage);
+
         super.show();
-        Gdx.input.setInputProcessor(stage); // make the stage handle inputs
     }
 
     /**
      * Sets up the user interface, including background, title, and game elements.
      */
     public void createUI() {
-        // add the background
+        // add the background image to the stage
         Image background = new Image(new TextureRegionDrawable(textures.get("background")));
         background.setSize(viewport.getWorldWidth(), viewport.getWorldHeight());
         stage.addActor(background);
 
-        // add the title at the top of the screen
+        // add the title at the top center
         Image title = new Image(new TextureRegionDrawable(textures.get("title")));
         float titleWidth = viewport.getWorldWidth() * 0.5f;
         float titleHeight = titleWidth * (textures.get("title").getHeight() / (float) textures.get("title").getWidth());
         title.setSize(titleWidth, titleHeight);
-        title.setPosition((viewport.getWorldWidth() - titleWidth) / 2 + 70, viewport.getWorldHeight() - titleHeight - 120);
-        title.setTouchable(Touchable.disabled); // disable touch for the title
+        title.setPosition(
+            (viewport.getWorldWidth() - titleWidth) / 2 + 70,
+            viewport.getWorldHeight() - titleHeight - 120
+        );
+        title.setTouchable(Touchable.disabled); // disable interactions
         stage.addActor(title);
 
-        // add the computer at the bottom center
+        // add the computer image at the bottom center
         computerImage = new Image(new TextureRegionDrawable(textures.get("computer")));
         computerImage.setSize(viewport.getWorldWidth() * 0.1f, viewport.getWorldHeight() * 0.15f);
-        computerImage.setPosition((viewport.getWorldWidth() - computerImage.getWidth()) / 2, viewport.getWorldHeight() * 0.13f);
+        computerImage.setPosition(
+            (viewport.getWorldWidth() - computerImage.getWidth()) / 2,
+            viewport.getWorldHeight() * 0.13f
+        );
         stage.addActor(computerImage);
 
         // position and add the back button
         float buttonWidth = viewport.getWorldWidth() * 0.1f;
         float buttonHeight = viewport.getWorldHeight() * 0.1f;
-        backButton.setPosition(buttonWidth + viewport.getWorldWidth() * 0.08f, viewport.getWorldHeight() - buttonHeight * 2);
+        backButton.setPosition(
+            buttonWidth + viewport.getWorldWidth() * 0.08f,
+            viewport.getWorldHeight() - buttonHeight * 2
+        );
         stage.addActor(backButton);
 
-        // initialize bug boxes and add to the UI
+        // initialize bug boxes
         bugBoxStatus = new Array<>(maxBugs);
         for (int i = 0; i < maxBugs; i++) {
             bugBoxStatus.add(false);
@@ -123,22 +169,24 @@ public class BugDodge extends ScreenAdapter {
      * @param delta The time elapsed since the last frame.
      */
     private void handleInput(float delta) {
-        if (gameOver) return; // no input allowed if the game is over
+        // skip input handling if the game is over
+        if (gameOver) return;
 
-        float speed = viewport.getWorldWidth() * 0.5f; // speed of movement
+        // calculate movement speed
+        float speed = viewport.getWorldWidth() * 0.5f;
 
-        // get the current position of the computer
+        // get current position of the computer
         float currentX = computerImage.getX();
         float currentY = computerImage.getY();
 
-        // move left or right based on input keys
+        // move the computer based on key input
         if (Gdx.input.isKeyPressed(Input.Keys.D)) {
             computerImage.setPosition(currentX + speed * delta, currentY);
         } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
             computerImage.setPosition(currentX - speed * delta, currentY);
         }
 
-        // clamp the position so it stays within bounds
+        // ensure the computer stays within screen bounds
         float minX = 200f;
         float maxX = viewport.getWorldWidth() - computerImage.getWidth();
         computerImage.setPosition(MathUtils.clamp(computerImage.getX(), minX, maxX), currentY);
@@ -148,6 +196,7 @@ public class BugDodge extends ScreenAdapter {
      * Loads all assets like textures, sounds, and music into HashMaps.
      */
     public void loadAssets() {
+        // load textures for game visuals
         textures = new HashMap<>();
         textures.put("background", new Texture(Gdx.files.internal("bugDodge/background.png")));
         textures.put("computer", new Texture(Gdx.files.internal("bugDodge/computer-happy.png")));
@@ -157,10 +206,12 @@ public class BugDodge extends ScreenAdapter {
         textures.put("bugBoxFilled", new Texture(Gdx.files.internal("bugDodge/bug-box-filled.png")));
         textures.put("win", new Texture(Gdx.files.internal("bugDodge/bug-win-txtbox.png")));
 
+        // load sound effects
         sounds = new HashMap<>();
         sounds.put("hit", Gdx.audio.newSound(Gdx.files.internal("bugDodge/error.mp3")));
         sounds.put("dodge", Gdx.audio.newSound(Gdx.files.internal("bugDodge/switch-click.mp3")));
 
+        // load background music
         music = Gdx.audio.newMusic(Gdx.files.internal("bugDodge/music.mp3"));
         music.setLooping(true);
         music.setVolume(0.5f);
@@ -173,15 +224,18 @@ public class BugDodge extends ScreenAdapter {
      */
     @Override
     public void render(float delta) {
+        // clear the screen
         ScreenUtils.clear(Color.BLACK);
 
+        // handle game logic if the game is not over
         if (!gameOver) {
-            handleInput(delta); // check for user input
-            updateGameLogic(delta); // update game logic
+            handleInput(delta);
+            updateGameLogic(delta);
         }
 
-        stage.act(delta); // update stage actors
-        stage.draw();     // draw all actors
+        // update and draw all stage actors
+        stage.act(delta);
+        stage.draw();
     }
 
     /**
@@ -190,27 +244,43 @@ public class BugDodge extends ScreenAdapter {
      * @param delta Time elapsed since the last frame.
      */
     private void updateGameLogic(float delta) {
-        // update the computer's collision bounds
-        computerRectangle.set(computerImage.getX(), computerImage.getY(), computerImage.getWidth(), computerImage.getHeight());
+        // update collision bounds for the computer
+        computerRectangle.set(
+            computerImage.getX(),
+            computerImage.getY(),
+            computerImage.getWidth(),
+            computerImage.getHeight()
+        );
 
+        // increment the bug timer
         bugTimer += delta;
-        if (bugTimer > 1f) { // spawn bugs every 1 second
+
+        // spawn a new bug if the timer exceeds 1 second
+        if (bugTimer > 1f) {
             bugTimer = 0;
             createBug();
         }
 
+        // iterate through all bugs
         for (int i = bugImages.size - 1; i >= 0; i--) {
             Image bug = bugImages.get(i);
             bug.moveBy(0, -viewport.getWorldHeight() * 0.3f * delta);
 
-            bugRectangle.set(bug.getX(), bug.getY(), bug.getWidth(), bug.getHeight());
+            // update bug collision bounds
+            bugRectangle.set(
+                bug.getX(),
+                bug.getY(),
+                bug.getWidth(),
+                bug.getHeight()
+            );
 
-            if (bug.getY() < 150f) { // bug falls off-screen
+            // check if the bug falls off-screen
+            if (bug.getY() < 150f) {
                 bugImages.removeIndex(i);
                 stage.getActors().removeValue(bug, true);
                 fillBugBox();
                 sounds.get("dodge").play();
-            } else if (bugRectangle.overlaps(computerRectangle)) { // collision with computer
+            } else if (bugRectangle.overlaps(computerRectangle)) { // check for collision with computer
                 bugImages.removeIndex(i);
                 stage.getActors().removeValue(bug, true);
                 removeBugBox();
@@ -218,9 +288,10 @@ public class BugDodge extends ScreenAdapter {
             }
         }
 
-        if (!bugBoxStatus.contains(false, false)) { // all bug boxes are filled
+        // end the game if all bug boxes are filled
+        if (!bugBoxStatus.contains(false, false)) {
             gameOver = true;
-            loadEndGame(); // display end game screen
+            loadEndGame();
         }
     }
 
@@ -228,13 +299,16 @@ public class BugDodge extends ScreenAdapter {
      * Creates a new bug and adds it to the stage.
      */
     private void createBug() {
+        // create a new bug image
         Image bug = new Image(new TextureRegionDrawable(textures.get("bug")));
         bug.setSize(viewport.getWorldWidth() * 0.05f, viewport.getWorldWidth() * 0.05f);
 
+        // position the bug at a random horizontal location
         float bugX = MathUtils.random(300f, viewport.getWorldWidth() - bug.getWidth() - 300f);
         float bugY = viewport.getWorldHeight() - bug.getHeight() - 250f;
         bug.setPosition(bugX, bugY);
 
+        // add the bug to the list and stage
         bugImages.add(bug);
         stage.addActor(bug);
     }
@@ -267,18 +341,22 @@ public class BugDodge extends ScreenAdapter {
      * Displays the end game screen with a win button.
      */
     public void loadEndGame() {
+        // create the end game button
         ImageButton endGameButton = mainGame.createImageButton(textures.get("win"));
 
+        // set size and position of the button
         float buttonWidth = viewport.getWorldWidth() * 0.6f;
         float buttonHeight = buttonWidth * (textures.get("win").getHeight() / (float) textures.get("win").getWidth());
         endGameButton.setSize(buttonWidth, buttonHeight);
+        endGameButton.setPosition(
+            (viewport.getWorldWidth() - buttonWidth) / 2,
+            (viewport.getWorldHeight() - buttonHeight) / 2
+        );
 
-        float winX = (viewport.getWorldWidth() - buttonWidth) / 2;
-        float winY = (viewport.getWorldHeight() - buttonHeight) / 2;
-        endGameButton.setPosition(winX, winY);
-
+        // add the button to the stage
         stage.addActor(endGameButton);
 
+        // add a click listener to the button
         endGameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -304,9 +382,12 @@ public class BugDodge extends ScreenAdapter {
      */
     @Override
     public void dispose() {
+        // dispose of all textures
         for (Texture texture : textures.values()) {
             texture.dispose();
         }
+
+        // dispose of stage and music
         stage.dispose();
         music.dispose();
     }
