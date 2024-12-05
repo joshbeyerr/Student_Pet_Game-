@@ -156,7 +156,7 @@ public class NameInput extends ScreenAdapter {
                     }
                 }
                 else{
-                    mainGame.sendError("Sorry buster your not get away with today with XIAO HONG SHUUUUUUU ");
+                    mainGame.sendError("Sorry buster but you need to name your student");
                 }
             }
         });

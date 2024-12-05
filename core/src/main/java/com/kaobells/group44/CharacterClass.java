@@ -1067,7 +1067,7 @@ public class CharacterClass {
      * @param item The {@link Item} used as a gift.
      */
     public void giveGift(Item item){
-        if(!actionBlocked() && !isDead() && item.reduceCount() && !isSleeping()){ //check if action is allowed
+        if(!actionBlocked() && !isDead() && !isSleeping() && item.reduceCount() ){ //check if action is allowed
             //if allowed adjust stats and play effect
             this.happiness = Math.min(100.0f, getHappiness() + item.getItemStatValue());
             giftVisual(item);
