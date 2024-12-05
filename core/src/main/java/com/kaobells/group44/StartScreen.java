@@ -58,20 +58,33 @@ public class StartScreen extends ScreenAdapter {
     /** Label for displaying error messages. */
     private Label errorLabel;
 
+    /** Interval in seconds for swapping images. */
+    private final float SWAP_INTERVAL = 5f;
+
+    /** Containers for storing and displaying the head images. */
+    private final Array<Container<Image>> containers = new Array<>();
+
+    /** Map storing individual timers for each head, keyed by head ID. */
+    private Map<Integer, Float> headTimers = new HashMap<>();
+
+    /** Map storing the swap intervals for each head, keyed by head ID. */
+    private Map<Integer, Float> headSwapIntervals = new HashMap<>();
+
+    /** Map tracking whether each head is currently blinking, keyed by head ID. */
+    private Map<Integer, Boolean> isBlinking = new HashMap<>();
+
+    /** Duration of a blink, in seconds. */
+    private final float BLINK_DURATION = 0.5f;
+
+    /** Map tracking the blink duration for each head, keyed by head ID. */
+    private Map<Integer, Float> blinkDurations = new HashMap<>();
+
 
     /**
      * Constructs a new {@code StartScreen}.
      *
      * @param game The main game instance to manage shared resources and transitions.
      */
-    private final float SWAP_INTERVAL = 5f; // Interval in seconds for swapping images
-    private final Array<Container<Image>> containers = new Array<>(); // Containers for the heads
-    private Map<Integer, Float> headTimers = new HashMap<>(); // Individual timers for each head
-    private Map<Integer, Float> headSwapIntervals = new HashMap<>(); // Swap intervals for each head
-    private Map<Integer, Boolean> isBlinking = new HashMap<>(); // Tracks whether each head is blinking
-    private final float BLINK_DURATION = 0.5f; // How long the blink lasts (in seconds)
-    private Map<Integer, Float> blinkDurations = new HashMap<>(); // Tracks blink duration for each hea
-
     public StartScreen(Main game) {
         mainGame = game;
         spriteBatch = mainGame.getSharedBatch();
