@@ -467,31 +467,31 @@ public class CharacterClass {
                 break;
             // case 1 == quirky character type selected, health and sleep go down faster but happiness and hunger go down slower
             case 1:
-                this.healthChange = 1.0f;
-                this.sleepChange = 1.0f;
-                this.happinessChange = 0.7f;
-                this.fullnessChange = 0.8f;
+                this.healthChange = 0.75f;
+                this.sleepChange = 0.75f;
+                this.happinessChange = 0.75f;
+                this.fullnessChange = 0.75f;
                 break;
             // case 2 == hasty character type selected, sleep is twice as fast but happiness and slowness are slower
             case 2:
                 this.healthChange = 1.0f;
-                this.sleepChange = 2.0f;
-                this.happinessChange = 0.7f;
+                this.sleepChange = 1.5f;
+                this.happinessChange = 0.9f;
                 this.fullnessChange = 0.9f;
                 break;
             // case 3 == brave character type selected, start with a super low health but if you can pull it up then you have a 15% slower tick speed
             case 3:
-                this.healthChange = 0.85f;
-                this.sleepChange = 0.85f;
-                this.happinessChange = 0.85f;
-                this.fullnessChange = 0.85f;
+                this.healthChange = 1.25f;
+                this.sleepChange = 1.25f;
+                this.happinessChange = 1.25f;
+                this.fullnessChange = 1.25f;
                 break;
             // case 4 == serious character type selected, starts you in a rough spot but if you can pull up your stats the reduced tick rate will be crazy useful
             case 4:
-                this.healthChange = 0.5f;
-                this.sleepChange = 0.75f;
-                this.happinessChange = 0.75f;
-                this.fullnessChange = 0.75f;
+                this.healthChange = 2f;
+                this.sleepChange = 1.5f;
+                this.happinessChange = 1.5f;
+                this.fullnessChange = 1.5f;
                 break;
         }
     }
