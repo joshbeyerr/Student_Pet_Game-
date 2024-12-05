@@ -35,22 +35,42 @@ import java.util.Map;
  */
 public class NameInput extends ScreenAdapter {
 
+    /** Reference to the main game instance. */
     private final Main mainGame;
+
+    /** Slot identifier associated with this instance. */
     private final String slot;
+
+    /** Reference to the previous character selection screen. */
     private final CharacterSelection previousScreenVar;
 
+    /** Sprite batch used for rendering. */
     private final SpriteBatch spriteBatch;
+
+    /** Stage for managing and rendering UI components. */
     private final Stage stage;
+
+    /** Viewport for handling screen size and scaling. */
     private final Viewport viewport;
 
+    /** Button for navigating back in the UI. */
     private final ImageButton backButton;
+
+    /** Table for displaying error messages. */
     private final Table error;
 
+    /** Map containing textures used in the scene. */
     private final Map<String, Texture> textures;
+
+    /** Input field for entering the character's name. */
     private TextField nameInputField;
 
+    /** Font used for general rendering purposes. */
     BitmapFont font;
+
+    /** Font used for rendering text in the scene. */
     BitmapFont textFont;
+
 
     /**
      * Constructs a new {@code NameInput} screen.

@@ -33,13 +33,27 @@ import java.util.Map;
  */
 public class ParentalPlaytimeStatsScreen extends ScreenAdapter {
 
+    /** Reference to the main game instance. */
     private final Main mainGame;
+
+    /** Sprite batch used for rendering. */
     private final SpriteBatch spriteBatch;
+
+    /** Stage for managing and rendering UI components. */
     private final Stage stage;
+
+    /** Viewport for handling screen size and scaling. */
     private final Viewport viewport;
+
+    /** Button for navigating back in the UI. */
     private final ImageButton backButton;
+
+    /** Font used for rendering text in the UI. */
     private final BitmapFont font;
-    private final Map<String, Texture> textures; // Texture management
+
+    /** Map containing textures for texture management. */
+    private final Map<String, Texture> textures;
+
 
     /**
      * Constructs a new {@code ParentalPlaytimeStatsScreen}.

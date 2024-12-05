@@ -34,12 +34,25 @@ import java.util.Map;
  * @version 1.0
  */
 public class ParentalPlaytimeLimits extends ScreenAdapter {
+
+    /** Reference to the main game instance. */
     private final Main mainGame;
+
+    /** Stage for managing and rendering UI components. */
     private final Stage stage;
+
+    /** Viewport for handling screen size and scaling. */
     private final Viewport viewport;
+
+    /** Map containing textures used in the scene. */
     private final Map<String, Texture> textures;
+
+    /** Sprite batch used for rendering. */
     private final SpriteBatch spriteBatch;
+
+    /** Font used for rendering text in the UI. */
     private final BitmapFont font;
+
 
     /**
      * Constructs a new {@code ParentalPlaytimeLimits} screen.

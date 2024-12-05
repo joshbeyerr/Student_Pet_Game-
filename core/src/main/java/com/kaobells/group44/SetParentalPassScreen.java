@@ -30,22 +30,57 @@ import java.util.Map;
  */
 public class SetParentalPassScreen extends ScreenAdapter {
 
+    /** Reference to the main game instance. */
     private final Main mainGame;
+
+    /** Sprite batch used for rendering. */
     private final SpriteBatch spriteBatch;
+
+    /** Stage for managing and rendering UI components. */
     private final Stage stage;
+
+    /** Viewport for handling screen size and scaling. */
     private final Viewport viewport;
+
+    /** Button for navigating back in the UI. */
     private final ImageButton backButton;
 
+    /** Map containing textures used in the scene. */
     private Map<String, Texture> textures;
+
+    /** Parent table for organizing UI components. */
     private final Table parentTable;
+
+    /** Font used for rendering text in the UI. */
     private final BitmapFont font;
 
-    private Image pinBox1, pinBox2, pinBox3, pinBox4;
+    /** First pin box for entering the password. */
+    private Image pinBox1;
+
+    /** Second pin box for entering the password. */
+    private Image pinBox2;
+
+    /** Third pin box for entering the password. */
+    private Image pinBox3;
+
+    /** Fourth pin box for entering the password. */
+    private Image pinBox4;
+
+    /** Indicates whether the password is set. */
     private boolean isPasswordSet;
+
+    /** Index of the current pin box being filled. */
     private int currentIndex;
+
+    /** Texture used for hidden pin box images. */
     private final Texture hiddenImageTexture;
+
+    /** Texture used for default pin box images. */
     private final Texture defaultImageTexture;
+
+    /** The password entered by the user. */
     private String enteredPassword;
+
 
     /**
      * Constructs a new {@code SetParentalPassScreen}.

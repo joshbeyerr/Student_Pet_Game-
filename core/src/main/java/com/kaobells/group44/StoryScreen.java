@@ -28,25 +28,39 @@ import com.badlogic.gdx.utils.viewport.Viewport;
  */
 public class StoryScreen extends ScreenAdapter {
 
+    /** Reference to the main game instance. */
     private final Main mainGame;
+
+    /** Slot identifier associated with this instance. */
     private final String slot;
 
-    // only need to make this a class variable because of the back button logic custom to this class
-
+    /** Sprite batch used for rendering. */
     private final SpriteBatch spriteBatch;
+
+    /** Stage for managing and rendering UI components. */
     private final Stage stage;
+
+    /** Viewport for handling screen size and scaling. */
     private final Viewport viewport;
 
-    // two fonts because this page has two different font colors/sizes needed
+    /** Primary font used for rendering text. */
     private final BitmapFont font;
+
+    /** Secondary font used for rendering text with different color or size. */
     private final BitmapFont textFont;
 
+    /** Array of story texts displayed on this page. */
     private final String[] storyTexts = new String[4];
+
+    /** Index of the current story text being displayed. */
     private int currentTextIndex = 0;
 
+    /** Button for navigating back in the UI. */
     private ImageButton backButton;
 
+    /** Multiplexer for handling multiple input processors. */
     InputMultiplexer multiplexer;
+
 
     /**
      * Constructs a new {@code StoryScreen}.

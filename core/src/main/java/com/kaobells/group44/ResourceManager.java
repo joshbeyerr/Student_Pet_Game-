@@ -18,10 +18,14 @@ import java.util.Map;
  * @version 1.0
  */
 public class ResourceManager {
+
+    /** Instance of the resource manager. */
     private static ResourceManager instance;
 
+    /** Map containing textures for managing game assets. */
     private Map<String, Texture> textures;
 
+    /** Font used for rendering text in the game. */
     private BitmapFont font;
 
 

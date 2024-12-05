@@ -36,12 +36,16 @@ import java.util.Map;
  * @see JsonHandler
  */
 class Database {
+
     /** Map representing game slots and their associated data. */
     public HashMap<String, HashMap<String, Object>> games;
+
     /** Map of available character classes and their attributes. */
     public HashMap<String, CharacterClass> characters;
+
     /** Map for parental controls data, such as playtime limits and password settings. */
     public HashMap<String, Object> parentalControls; // Field for "Parental Controls"
+
     /** Flag indicating whether a parental control password has been set. */
     private boolean isPasswordSet;
 
@@ -69,10 +73,13 @@ class Database {
  * @see Database
  */
 public class JsonHandler {
+
     /** The local file used for storing the JSON database. */
     private FileHandle localFile;
+
     /** The in-memory representation of the game's database. */
     private Database database;
+
     /** JSON utility object for serialization and deserialization. */
     private final Json json = new Json(); // LibGDX JSON utility
 

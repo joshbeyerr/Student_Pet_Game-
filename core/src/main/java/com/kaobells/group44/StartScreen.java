@@ -37,14 +37,27 @@ import java.util.Map;
  */
 public class StartScreen extends ScreenAdapter {
 
+    /** Reference to the main game instance. */
     private final Main mainGame;
+
+    /** Sprite batch used for rendering. */
     private final SpriteBatch spriteBatch;
+
+    /** Viewport for handling screen size and scaling. */
     private final Viewport viewport;
+
+    /** Stage for managing and rendering UI components. */
     private final Stage stage;
 
+    /** Manager for loading and managing game assets. */
     private AssetManager assetManager;
+
+    /** Font used for rendering text in the UI. */
     private final BitmapFont font;
-    private Label errorLabel; // Label for displaying error messages
+
+    /** Label for displaying error messages. */
+    private Label errorLabel;
+
 
     /**
      * Constructs a new {@code StartScreen}.

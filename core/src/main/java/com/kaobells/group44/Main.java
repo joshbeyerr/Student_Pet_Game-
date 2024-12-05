@@ -41,24 +41,39 @@ import java.util.Stack;
  */
 public class Main extends Game {
 
+    /** Viewport for managing screen size and scaling. */
     private Viewport viewport;
+
+    /** Handler for processing JSON data. */
     public JsonHandler jsonHandler;
 
-
+    /** Button for navigating back in the UI. */
     private ImageButton backButton;
+
+    /** Table used for displaying error messages. */
     private Table errorTable;
+
+    /** Label displaying error messages. */
     private Label errorLabel;
+
+    /** Sound effect played when an element is clicked. */
     private Sound clickSound;
+
+    /** Sound effect played when the back button is clicked. */
     private Sound backButtonSound;
+
+    /** Shared sprite batch used for rendering. */
     private SpriteBatch sharedBatch;
 
-    // global resource manager GOING TO ERASE THIS
-
+    /** Asset manager for loading and managing game assets. */
     private AssetManager assetManager;
 
+    /** Resource manager for handling in-game resources. */
     public ResourceManager resourceManager;
 
+    /** Stack used for managing and switching between screens. */
     private Stack<Screen> screenStack;
+
 
     /**
      * Initializes the game, setting up resources, the viewport, and the initial screen.
