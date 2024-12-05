@@ -789,13 +789,16 @@ public class GameScreen extends ScreenAdapter{
         openInventory.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Table inv = tables.get("inventoryTable");
-                if (inv.isVisible()){
-                    tables.get("inventoryTable").setVisible(false);
+                if (!session.character.isDead()){
+                    Table inv = tables.get("inventoryTable");
+                    if (inv.isVisible()){
+                        tables.get("inventoryTable").setVisible(false);
+                    }
+                    else{
+                        tables.get("inventoryTable").setVisible(true);
+                    }
                 }
-                else{
-                    tables.get("inventoryTable").setVisible(true);
-                }
+
             }
         });
         images.put("openInventory", openInventory);
@@ -912,6 +915,9 @@ public class GameScreen extends ScreenAdapter{
                     session.character.incrementScore();
                 }
             }
+            else{
+                generateGameOver();
+            }
             scoreLabel.setText("Score: " + session.character.getScore());
 
             // Gain random item every min
@@ -926,6 +932,32 @@ public class GameScreen extends ScreenAdapter{
                 invLabel.setText(session.character.getInventory()[i].getItemCount());
             }
         }
+    }
+
+    public void generateGameOver(){
+        if (tables.get("genGame") == null){
+            Table genGame = new Table();
+            tables.put("genGame", genGame);
+
+//            genGame.setSize(200, 100);
+            Image gameOver = mainGame.createImage(textures.get("gameOverBox"));
+
+            float boxWidth = viewport.getWorldWidth() * 0.4f; // Adjust width as needed
+            float boxHeight = boxWidth * gameOver.getHeight() / gameOver.getWidth();
+
+            // Position at the top-middle, slightly to the right
+            float boxX = (viewport.getWorldWidth() - boxWidth) / 2 + 250; // Slightly to the right
+            float boxY = viewport.getWorldHeight() - boxHeight - 80;     // Near the top with padding
+            gameOver.setSize(boxWidth, boxHeight);
+            gameOver.setPosition(boxX, boxY);
+
+            // Add the success box to the stage
+            stage.addActor(gameOver);
+
+        }
+
+
+
     }
 
     /**

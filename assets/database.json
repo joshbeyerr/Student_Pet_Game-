@@ -55,15 +55,14 @@
 			"class": "com.kaobells.group44.CharacterClass",
 			"name": "servos",
 			"slot": "2",
-			"score": 108,
 			"characterNumber": 0,
 			"characterType": "relaxed",
-			"state": "SLEEPING",
+			"state": "NEUTRAL",
 			"health": 80,
-			"sleep": 16,
-			"happiness": 30,
-			"fullness": 10,
-			"stress": 34,
+			"sleep": 80,
+			"happiness": 80,
+			"fullness": 80,
+			"stress": 80,
 			"inventory": [
 				{
 					"itemID": 0,
@@ -91,31 +90,25 @@
 				}
 			],
 			"compoundingStates": [
-				true,
+				false,
 				false,
 				false
-			],
-			"playCooldownRemaining": 23.5251,
-			"saveTimer": 11.87447,
-			"blinkDurationTimer": 0.51470983,
-			"sleepTimer": 0.33767772,
-			"isSleepState1": false
+			]
 		}
 	},
 	"3": {
 		"character": {
 			"class": "com.kaobells.group44.CharacterClass",
-			"name": "wad",
+			"name": "josh",
 			"slot": "3",
-			"score": 56,
-			"characterNumber": 1,
-			"characterType": "quirky",
+			"score": 133,
+			"characterNumber": 0,
+			"characterType": "relaxed",
 			"state": "NEUTRAL",
-			"health": 90,
-			"sleep": 48,
-			"happiness": 82.50008,
-			"fullness": 67.599915,
-			"stress": 72.024994,
+			"sleep": 72.5,
+			"happiness": 92.5,
+			"fullness": 82.5,
+			"stress": 86.875,
 			"inventory": [
 				{
 					"itemID": 0,
@@ -123,7 +116,7 @@
 				},
 				{
 					"itemID": 1,
-					"itemCount": 1
+					"itemCount": 0
 				},
 				{
 					"itemID": 2,
@@ -131,7 +124,7 @@
 				},
 				{
 					"itemID": 3,
-					"itemCount": 0
+					"itemCount": 2
 				},
 				{
 					"itemID": 4,
@@ -139,7 +132,7 @@
 				},
 				{
 					"itemID": 5,
-					"itemCount": 0
+					"itemCount": 1
 				}
 			],
 			"compoundingStates": [
@@ -147,8 +140,12 @@
 				false,
 				false
 			],
-			"playCooldownRemaining": 2.4382622,
-			"blinkDurationTimer": 0.516195
+			"playCooldownRemaining": 19.294683,
+			"actionBlockCooldownRemaining": 0.8417222,
+			"blinkDurationTimer": 0.51479125,
+			"isHungry1": false,
+			"sleepTimer": 0.36544392,
+			"hungerTimer": 0.0155201
 		}
 	}
 },
@@ -159,7 +156,7 @@
 	},
 	"totalSessionsPlayed": {
 		"class": "java.lang.Integer",
-		"value": 176
+		"value": 197
 	},
 	"averagePlaytimePerSession": {
 		"class": "java.lang.Integer",
@@ -179,7 +176,7 @@
 	},
 	"totalSecondsPlayed": {
 		"class": "java.lang.Integer",
-		"value": 80
+		"value": 112
 	},
 	"weekdayParentBlock": {
 		"class": "java.lang.Boolean",

@@ -396,19 +396,19 @@ public class CharacterClass {
         switch (characterTypeNumber){
             // case 0 == relaxed character type selected, the "default" character
             case 0:
-                this.healthChange = 1.0f;
-                this.sleepChange = 1.0f;
-                this.happinessChange = 1.0f;
-                this.fullnessChange = 1.0f;
+                this.healthChange = 0.5f;
+                this.sleepChange = 0.5f;
+                this.happinessChange = 0.5f;
+                this.fullnessChange = 0.5f;
                 break;
             // case 1 == quirky character type selected, health and sleep go down faster but happiness and hunger go down slower
             case 1:
-                this.healthChange = 1.5f;
-                this.sleepChange = 1.5f;
+                this.healthChange = 1.0f;
+                this.sleepChange = 1.0f;
                 this.happinessChange = 0.7f;
                 this.fullnessChange = 0.8f;
                 break;
-            // case 2 == hasty character type selected, sleep is twice as fast but happieness and slowness are slower
+            // case 2 == hasty character type selected, sleep is twice as fast but happiness and slowness are slower
             case 2:
                 this.healthChange = 1.0f;
                 this.sleepChange = 2.0f;
