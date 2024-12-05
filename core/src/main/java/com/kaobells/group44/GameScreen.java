@@ -958,7 +958,7 @@ public class GameScreen extends ScreenAdapter{
             scoreLabel.setText("Score: " + session.character.getScore());
 
             // Gain random item every min
-            if (giftCounter > 60) {
+            if (giftCounter > 30) {
                 session.character.gainItem((int) (Math.random() * 6));
                 giftCounter = 0;
             }
@@ -1133,7 +1133,6 @@ public class GameScreen extends ScreenAdapter{
                         mainGame.popScreen();
                         return true;
                     }
-
                     if (keycode == Input.Keys.BACKSPACE) {
                         mainGame.jsonHandler.saveCharacterToGameSlot(session.character.getSlotNumber(), session.character);
                         session.updateParentalStats();
