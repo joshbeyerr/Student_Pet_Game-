@@ -27,69 +27,133 @@ import java.util.Objects;
  * @version 1.0
  */
 public class CharacterClass {
+
+    /** Reference to the main game instance. */
     private transient Main mainGame;
+
+    /** Name of the character. */
     private final String name;
 
-    // slot 1 through 3;
+    /** Slot used, values range from 1 through 3. */
     private String slot;
+
+    /** Current score of the character. */
     private int score;
 
-    // 0 through to 4
+    /** Character number, ranging from 0 through 4. */
     private final int characterNumber;
-    // e.g relaxed, brave
+
+    /** Type of character, e.g., relaxed, brave. */
     private final String characterType;
-    //"prime state" meaning it is the state highest in the priority and the one that the character will display as
+
+    /** Prime state of the character, highest priority state displayed. */
     private State state = State.NEUTRAL;
-    //current stat values for a character
+
+    /** Current health value for the character. */
     private float health;
+
+    /** Current sleep value for the character. */
     private float sleep;
+
+    /** Current happiness value for the character. */
     private float happiness;
+
+    /** Current fullness value for the character. */
     private float fullness;
+
+    /** Current stress value for the character. */
     private float stress;
 
-    //variables uses as multipliers for tick rates
+    /** Health change multiplier for tick rates. */
     private transient float healthChange;
+
+    /** Sleep change multiplier for tick rates. */
     private transient float sleepChange;
+
+    /** Happiness change multiplier for tick rates. */
     private transient float happinessChange;
+
+    /** Fullness change multiplier for tick rates. */
     private transient float fullnessChange;
+
+    /** Stress change multiplier for tick rates. */
     private transient float stressChange = 1.0f;
 
-    //inventory array filled with Item objects
+    /** Inventory array filled with Item objects. */
     private Item[] inventory;
 
-    //displayed sprite head and body
+    /** Displayed sprite head image. */
     private transient Image currentHead;
+
+    /** Displayed sprite body image. */
     private transient Image currentBody;
+
+    /** Sound effect played when the character eats. */
     private transient Sound munchSound;
+
+    /** Sound effect played when the character quacks. */
     private transient Sound quackSound;
 
-    //Hashmap of the heads and bodies
+    /** Map of character head images. */
     private transient Map<String, Image> characterHeads;
+
+    /** Map of character body images. */
     private transient Map<String, Image> characterBodies;
+
+    /** Map of character textures. */
     private transient final Map<String, Texture> characterTextures = new HashMap<>();
 
-    // a button has been clicked, no other animations or buttons are allowed to be clicked during this
+    /** Timer task for the blinking animation, blocking other actions while active. */
     private transient Timer.Task blinkTask;
 
-    //Array holding booleans representing the states that can have compounding effects with other states (sleeping,angry,hungry).
+    /** Array representing states that can compound effects with other states (e.g., sleeping, angry, hungry). */
     private boolean[] compoundingStates;
 
-    //variables used to track cooldowns and animation loop timers
-    private float doctorCooldownRemaining = 0; // Remaining cooldown time in seconds
-    private float playCooldownRemaining = 0; // Remaining cooldown time in seconds
-    private float actionBlockCooldownRemaining  = 0;
-    private float saveTimer = 30f; // starts off at 30 so that game saves right when character is created
+    /** Remaining cooldown time for doctor action, in seconds. */
+    private float doctorCooldownRemaining = 0;
+
+    /** Remaining cooldown time for play action, in seconds. */
+    private float playCooldownRemaining = 0;
+
+    /** Remaining cooldown time for blocking actions. */
+    private float actionBlockCooldownRemaining = 0;
+
+    /** Timer for auto-save functionality, starts at 30 seconds for initial save. */
+    private float saveTimer = 30f;
+
+    /** Timer for tracking the blinking interval. */
     private transient float blinkTimer = 0f;
+
+    /** Timer for tracking the duration of a single blink. */
     private float blinkDurationTimer = 0f;
+
+    /** Indicates whether the character is currently blinking. */
     private boolean isBlinking = false;
+
+    /** Indicates whether the character is in a hungry state. */
     private boolean isHungry1 = true;
-    private final float blinkInterval = 3.0f; // Blink every 3 seconds
-    private final float blinkDuration = 0.5f; // Blink lasts for 0.5 seconds
-    private final float hungerDuration = 1.5f; // Hunger effect lasts for 1.5 seconds
+
+    /** Interval between blinks, in seconds. */
+    private final float blinkInterval = 3.0f;
+
+    /** Duration of a single blink, in seconds. */
+    private final float blinkDuration = 0.5f;
+
+    /** Duration of hunger effects, in seconds. */
+    private final float hungerDuration = 1.5f;
+
+    /** Duration of the dead state, in seconds. */
     private final float deadDuration = 100.0f;
-    private float sleepTimer = 0f; // Tracks time for sleep animation
-    private boolean isSleepState1 = true; // Tracks which sleep state is active
+
+    /** Timer for tracking sleep animation. */
+    private float sleepTimer = 0f;
+
+    /** Indicates which sleep state is active. */
+    private boolean isSleepState1 = true;
+
+    /** Timer for tracking the duration of the hunger effect. */
     private float hungerTimer = 0f;
+
 
     // Add default constructor for LibGDX Json Loader
     /**

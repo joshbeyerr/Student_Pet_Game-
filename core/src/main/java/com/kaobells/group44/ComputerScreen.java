@@ -29,16 +29,31 @@ import java.util.Map;
  * @version 1.0
  */
 public class ComputerScreen extends ScreenAdapter {
+
+    /** Reference to the main game instance. */
     private final Main mainGame;
+
+    /** Current game session instance. */
     private final GameSession session;
+
+    /** Viewport for managing screen size and scaling. */
     private final Viewport viewport;
 
+    /** Sprite batch used for rendering. */
     private final SpriteBatch spriteBatch;
+
+    /** Stage for managing and rendering UI components. */
     private final Stage stage;
+
+    /** Button for navigating back in the UI. */
     private final ImageButton backButton;
 
+    /** Map containing textures used in the scene. */
     private Map<String, Texture> textures;
+
+    /** Map of button names to their corresponding ImageButton objects. */
     private final Map<String, ImageButton> buttons;
+
 
     /**
      * Constructs a new {@code ComputerScreen} instance.

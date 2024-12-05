@@ -225,7 +225,7 @@ public class StoryScreen extends ScreenAdapter {
      */
     private void handleKeyPress() {
         if (currentTextIndex == 3) {
-            mainGame.pushScreen(new characterSelection(mainGame, slot));
+            mainGame.pushScreen(new CharacterSelection(mainGame, slot));
         } else if (0 <= currentTextIndex && currentTextIndex < 3) {
             currentTextIndex++;
             createUI();

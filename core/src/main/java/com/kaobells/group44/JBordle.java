@@ -33,13 +33,25 @@ import java.util.*;
  * state to indicate matching status and correctness.
  */
 class InputBox extends Actor {
-    private char character; // The character typed in this box
-    private Image background; // The box's background
-    private final BitmapFont font; // Font for rendering the character
-    private final GlyphLayout layout; // Helps center the character
 
+    /** The character typed in this box. */
+    private char character;
+
+    /** The background image of the box. */
+    private Image background;
+
+    /** Font used for rendering the character. */
+    private final BitmapFont font;
+
+    /** Glyph layout used to center the character within the box. */
+    private final GlyphLayout layout;
+
+    /** Indicates whether the box is displayed in green. */
     private boolean isGreen;
+
+    /** Indicates whether the character in this box matches the expected value. */
     private boolean matched;
+
 
     /**
      * Constructs a new {@code InputBox}.
@@ -152,27 +164,52 @@ class InputBox extends Actor {
  * provides feedback on correctness and character positions.
  */
 public class JBordle extends ScreenAdapter {
+
+    /** Reference to the main game instance. */
     private final Main mainGame;
+
+    /** The player's character. */
     private final CharacterClass player;
+
+    /** Sprite batch used for rendering. */
     private final SpriteBatch spriteBatch;
+
+    /** Stage for managing and rendering UI components. */
     private final Stage stage;
+
+    /** Viewport for handling screen size and scaling. */
     private final Viewport viewport;
 
+    /** Button for navigating back in the UI. */
     private final ImageButton backButton;
+
+    /** Map containing textures used in the scene. */
     private Map<String, Texture> textures;
 
+    /** Grid of input boxes organized into rows. */
     private final ArrayList<ArrayList<InputBox>> rows = new ArrayList<>();
+
+    /** Index of the current row being processed. */
     private int currentRowIndex = 0;
+
+    /** Index of the current input box in the current row. */
     private int currentBoxIndex = 0;
 
-    private String targetWord; // The word the user needs to guess
+    /** The word the user needs to guess. */
+    private String targetWord;
+
+    /** List of valid words for the game. */
     List<String> words;
 
+    /** Font used for rendering text. */
     private BitmapFont font;
 
-    // CONTAINER THING FOR EITHER HINT, WIN OR LOSE
+    /** Container for displaying hints, win messages, or lose messages. */
     Container<Actor> container;
+
+    /** Multiplexer for handling multiple input processors. */
     private InputMultiplexer multiplexer;
+
 
     /**
      * Constructs the JBordle mini-game screen.

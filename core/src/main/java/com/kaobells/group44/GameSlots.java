@@ -37,16 +37,31 @@ import java.util.Map;
  * @version 1.0
  */
 public class GameSlots  extends ScreenAdapter {
+
+    /** Reference to the main game instance. */
     private final Main mainGame;
+
+    /** The current screen being displayed. */
     private final Screen screen;
 
+    /** Sprite batch used for rendering. */
     private final SpriteBatch spriteBatch;
+
+    /** Stage for managing and rendering UI components. */
     private final Stage stage;
+
+    /** Viewport for handling screen size and scaling. */
     private final Viewport viewport;
 
+    /** Button for navigating back in the UI. */
     private final ImageButton backButton;
+
+    /** Map containing textures used in the scene. */
     private final Map<String, Texture> textures;
+
+    /** Label style used for displaying names. */
     Label.LabelStyle nameLabelStyle;
+
 
     /**
      * Constructs a new {@code GameSlots} screen.

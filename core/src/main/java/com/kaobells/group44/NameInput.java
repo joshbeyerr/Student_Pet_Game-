@@ -18,10 +18,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import java.lang.Character;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * The {@code NameInput} class represents the screen where the user enters
@@ -39,7 +37,7 @@ public class NameInput extends ScreenAdapter {
 
     private final Main mainGame;
     private final String slot;
-    private final characterSelection previousScreenVar;
+    private final CharacterSelection previousScreenVar;
 
     private final SpriteBatch spriteBatch;
     private final Stage stage;
@@ -63,7 +61,7 @@ public class NameInput extends ScreenAdapter {
     public NameInput(Main game, String slotNumber) {
         mainGame = game;
         slot = slotNumber;
-        previousScreenVar = (characterSelection)mainGame.getPreviousScreen();
+        previousScreenVar = (CharacterSelection)mainGame.getPreviousScreen();
 
         font = mainGame.resourceManager.getTitleFont();
         textFont = mainGame.resourceManager.getFont(true);

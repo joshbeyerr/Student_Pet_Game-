@@ -16,17 +16,39 @@ import java.time.*;
  */
 public class GameSession {
 
+    /** The character associated with the current session. */
     CharacterClass character;
+
+    /** The time the session started. */
     private LocalTime startTime;
+
+    /** Total seconds played in the current session. */
     private long secondsPlayed;
+
+    /** The current day of the week. */
     private DayOfWeek currentDay;
+
+    /** Indicates if the morning parent block is active. */
     private boolean morningParentBlock;
+
+    /** Indicates if the afternoon parent block is active. */
     private boolean afternoonParentBlock;
+
+    /** Indicates if the evening parent block is active. */
     private boolean eveningParentBlock;
+
+    /** Indicates if the weekday parent block is active. */
     private boolean weekdayParentBlock;
+
+    /** Indicates if the weekend parent block is active. */
     private boolean weekendParentBlock;
+
+    /** Reference to the main game instance. */
     private final Main mainGame;
+
+    /** Total number of sessions played. */
     private int sessionsPlayed;
+
 
 
 

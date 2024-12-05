@@ -21,15 +21,25 @@ import java.util.Stack;
  * @version 1.0
  */
 public class InstructionsScreens extends ScreenAdapter {
+
+    /** Reference to the main game instance. */
     private final Main mainGame;
 
+    /** Sprite batch used for rendering. */
     private final SpriteBatch spriteBatch;
+
+    /** Viewport for handling screen size and scaling. */
     private final Viewport viewport;
 
-    private final Stack<Texture> instructionTextures; // Stack for instruction images
-    private Texture currentTexture; // Currently displayed texture
+    /** Stack containing textures for instruction images. */
+    private final Stack<Texture> instructionTextures;
 
+    /** The texture currently being displayed. */
+    private Texture currentTexture;
+
+    /** Multiplexer for handling multiple input processors. */
     private InputMultiplexer multiplexer;
+
 
     /**
      * Constructs a new {@code InstructionsScreens} instance.

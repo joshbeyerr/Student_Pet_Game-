@@ -31,27 +31,47 @@ import java.util.Map;
  * @author group 44
  * @version 1.0
  */
-public class characterSelection extends ScreenAdapter {
+public class CharacterSelection extends ScreenAdapter {
 
+    /** Reference to the main game instance. */
     private final Main mainGame;
+
+    /** Slot identifier associated with this instance. */
     private final String slot;
 
+    /** Sprite batch used for rendering. */
     private final SpriteBatch spriteBatch;
+
+    /** Stage for managing and rendering UI components. */
     private final Stage stage;
+
+    /** Viewport for handling screen size and scaling. */
     private final Viewport viewport;
 
+    /** Button used for navigating back in the UI. */
     private final ImageButton backButton;
+
+    /** Table displaying error messages. */
     private final Table error;
 
+    /** Map of textures used in the scene. */
     private Map<String, Texture> textures;
+
+    /** Table containing character-related elements. */
     private final Table characterTable;
 
+    /** Array holding the character images. */
     private final Image[] characters = new Image[5];
+
+    /** Index of the currently selected character in the array. */
     private int curCharacterIndex = 0;
 
-    Image curChar;
+    /** Currently displayed character image. */
+    private Image curChar;
 
-    BitmapFont font;
+    /** Bitmap font used for rendering text. */
+    private BitmapFont font;
+
 
     /**
      * Constructs a new {@code characterSelection} screen.
@@ -59,7 +79,7 @@ public class characterSelection extends ScreenAdapter {
      * @param game       The main game instance to manage shared resources and transitions.
      * @param slotNumber The slot number representing the save slot for the character selection.
      */
-    public characterSelection(Main game, String slotNumber) {
+    public CharacterSelection(Main game, String slotNumber) {
         mainGame = game;
         slot = slotNumber;
 

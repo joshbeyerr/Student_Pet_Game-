@@ -35,44 +35,81 @@ import java.util.Objects;
  */
 public class GameScreen extends ScreenAdapter{
 
+    /** Reference to the main game instance. */
     private final Main mainGame;
+
+    /** Current game session instance. */
     private final GameSession session;
 
+    /** Sprite batch used for rendering. */
     private final SpriteBatch spriteBatch;
+
+    /** Stage for managing and rendering UI components. */
     private final Stage stage;
+
+    /** Viewport for handling screen size and scaling. */
     private final Viewport viewport;
 
+    /** Label style used for displaying names. */
     Label.LabelStyle nameLabelStyle;
+
+    /** Label style used for displaying scores. */
     Label.LabelStyle scoreLabelStyle;
+
+    /** Label style used for displaying inventory information. */
     Label.LabelStyle inventoryLabelStyle;
 
+    /** Sound effect for door opening. */
     private Sound doorOpen;
+
+    /** Sound effect for door closing. */
     private Sound doorClose;
+
+    /** Sound effect for full healing. */
     private Sound fullHeal;
+
+    /** Map containing textures used in the scene. */
     private Map<String, Texture> textures;
+
+    /** Map of table names to their corresponding Table objects. */
     private final Map<String, Table> tables;
+
+    /** Map containing drawable textures for UI elements. */
     private Map<String, TextureRegionDrawable> drawables;
 
+    /** Table for displaying error messages. */
     private final Table error;
 
-    // stores in images and image buttons
+    /** Map storing images and image buttons as actors. */
     private final Map<String, Actor> images;
 
+    /** Container for displaying the character's head image. */
     Container<Image> headContainer;
+
+    /** Container for displaying the character's body image. */
     Container<Image> bodyContainer;
 
-    // Root table for storing the sidebar section, and the game section
+    /** Root table for storing the sidebar and game sections. */
     Table rootTable;
+
+    /** Multiplexer for handling multiple input processors. */
     InputMultiplexer multiplexer;
 
+    /** Timer for updating the head and body images. */
     private float headBodyUpdateTimer = 0f;
+
+    /** Interval for updating the head and body images, in seconds. */
     private final float headBodyUpdateInterval = 0.1f;
 
-
+    /** Timer for updating the score display. */
     private float scoreUpdateTimer = 0f;
+
+    /** Interval for updating the score display, in seconds. */
     private final float scoreUpdateInterval = 1f;
 
+    /** Counter for tracking the number of gifts. */
     private int giftCounter = 0;
+
 
 
     /**

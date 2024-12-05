@@ -16,10 +16,19 @@ import com.badlogic.gdx.utils.JsonValue;
  * @version 1.0
  */
 public class Item implements Json.Serializable {
-    public int itemID;  // Item identifier
+
+    /** Unique identifier for the item. */
+    public int itemID;
+
+    /** Count of the item in inventory. */
     public int itemCount;
-    public transient float itemStatValue; //Float for calculating how much item will change stat
+
+    /** Float value used to calculate how much the item will change a stat. */
+    public transient float itemStatValue;
+
+    /** Image button representing the item in the UI. */
     private ImageButton image;
+
 
 
     public Item(){ //default constructor for JSON
