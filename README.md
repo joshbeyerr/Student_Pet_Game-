@@ -1,5 +1,8 @@
 # Group44
 
+Here is a full demo of our game explaining all features, functionality, and more!
+https://youtu.be/wC6BpTtEbio?si=YfSP7vNqzPbbpWMx
+
 A [libGDX](https://libgdx.com/) project generated with [gdx-liftoff](https://github.com/libgdx/gdx-liftoff).
 
 This project was generated with a template including simple application launchers and a main class extending `Game` that sets the first screen.
